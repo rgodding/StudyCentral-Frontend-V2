@@ -2,12 +2,16 @@ import type { ApiDate, Guid } from "@/types/api/common";
 
 export type CourseDto = {
   id: Guid;
-  name: string | null;
-  description: string | null;
+  name: string;
+  description: string;
   studentCount: number;
+  teacherId: Guid | null;
+  teacherFirstName: string | null;
+  teacherLastName: string | null;
   createdAt: ApiDate;
   updatedAt: ApiDate | null;
 };
+
 
 export type CreateCourseDto = {
   name: string;
