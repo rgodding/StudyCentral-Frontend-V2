@@ -3,11 +3,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 
 import { EmptyState, ErrorState, LoadingState } from "@/components/feedback";
-import {
-  StudyField,
-  StudyInput,
-  StudyTextarea,
-} from "@/components/forms";
+import { StudyField, StudyInput, StudyTextarea } from "@/components/forms";
 import {
   StudyAvatar,
   StudyBadge,
@@ -19,6 +15,7 @@ import {
   StudyText,
 } from "@/components/ui";
 import { StudyFileInput } from "@/components/forms/StudyFileInput";
+import { useStudyToast } from "@/hooks/useStudyToast";
 
 type PreviewCardProps = {
   title: string;
@@ -35,12 +32,7 @@ function PreviewCard({
 }: PreviewCardProps) {
   return (
     <StudyCard p={0} overflow="hidden">
-      <Box
-        px={6}
-        py={5}
-        borderBottomWidth="1px"
-        borderColor="borderSubtle"
-      >
+      <Box px={6} py={5} borderBottomWidth="1px" borderColor="borderSubtle">
         <HStack justify="space-between" align="start" gap={6}>
           <Stack gap={1}>
             <StudyHeading variant="section">{title}</StudyHeading>
@@ -119,6 +111,7 @@ function ComponentRow({
 
 export function ComponentPreviewPage() {
   const [files, setFiles] = useState<File[]>([]);
+  const toast = useStudyToast();
 
   return (
     <Box minH="100vh" bg="appBg" color="textMain" px={8} py={8}>
@@ -566,6 +559,61 @@ export function ComponentPreviewPage() {
               onRetry={() => undefined}
             />
           </Stack>
+        </PreviewCard>
+        <PreviewCard
+          title="Toast Notifications"
+          description="Reusable app toasts for success, error, warning, and info messages."
+        >
+          <HStack gap={3} wrap="wrap">
+            <StudyButton
+              variant="primary"
+              onClick={() =>
+                toast.success({
+                  title: "Success toast",
+                  description: "The action completed successfully.",
+                })
+              }
+            >
+              Success toast
+            </StudyButton>
+
+            <StudyButton
+              variant="danger"
+              onClick={() =>
+                toast.error({
+                  title: "Error toast",
+                  description:
+                    "Something went wrong while processing the request.",
+                })
+              }
+            >
+              Error toast
+            </StudyButton>
+
+            <StudyButton
+              variant="secondary"
+              onClick={() =>
+                toast.warning({
+                  title: "Warning toast",
+                  description: "This action may need your attention.",
+                })
+              }
+            >
+              Warning toast
+            </StudyButton>
+
+            <StudyButton
+              variant="ghost"
+              onClick={() =>
+                toast.info({
+                  title: "Info toast",
+                  description: "Here is some additional information.",
+                })
+              }
+            >
+              Info toast
+            </StudyButton>
+          </HStack>
         </PreviewCard>
       </Stack>
     </Box>

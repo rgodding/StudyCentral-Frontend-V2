@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { queryClient } from "@/app/providers/queryClient";
 import { system } from "@/theme";
+import { StudyToaster } from "@/components/feedback/StudyToaster";
 
 type Props = {
   children: ReactNode;
@@ -15,6 +16,7 @@ export function AppProviders({ children }: Props) {
       <Theme appearance="dark">
         <QueryClientProvider client={queryClient}>
           {children}
+          <StudyToaster />
         </QueryClientProvider>
       </Theme>
     </ChakraProvider>
