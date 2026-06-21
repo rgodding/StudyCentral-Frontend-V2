@@ -1,17 +1,17 @@
+import type { UserRole } from "@/types/api/enums";
 import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
-type Role = "Student" | "Teacher" | "Admin";
-
 type ProtectedRouteProps = {
   children: ReactNode;
-  allowedRoles?: Role[];
+  allowedRoles?: UserRole[];
 };
 
-export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  // Temporary placeholder.
-  // Later this will come from useCurrentUser().
-  const user: { role: Role } | null = null;
+export function ProtectedRoute({
+  children,
+  allowedRoles,
+}: ProtectedRouteProps) {
+  const user: { role: UserRole } | null = null;
 
   if (!user) {
     return <Navigate to="/login" replace />;

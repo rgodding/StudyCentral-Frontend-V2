@@ -1,7 +1,7 @@
+import { QueryProvider } from "@/app/providers/QueryProvider";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-import { QueryProvider } from "./QueryProvider";
 
 type AppProviderProps = {
   children: ReactNode;
