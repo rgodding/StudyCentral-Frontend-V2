@@ -63,8 +63,6 @@ const variantStyles: Record<
       flexShrink: 0,
       userSelect: "none",
       rounded: "sm",
-      borderWidth: "1px",
-      borderColor: "borderSubtle",
       bg: "surfaceBg",
     },
     image: {

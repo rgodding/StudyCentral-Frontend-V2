@@ -5,6 +5,7 @@ type StudyTextVariant =
   | "body"
   | "muted"
   | "subtle"
+  | "smallSubtle"
   | "label"
   | "error"
   | "success"
@@ -30,6 +31,11 @@ const variantStyles: Record<StudyTextVariant, TextProps> = {
     color: "textSubtle",
     fontSize: "xs",
     lineHeight: "1.5",
+  },
+  smallSubtle: {
+    color: "textSubtle",
+    fontSize: "xx-small",
+    lineHeight: "1",
   },
   label: {
     color: "textMain",

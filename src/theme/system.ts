@@ -240,7 +240,7 @@ const config = defineConfig({
       durations: {
         fast: { value: "250ms" },
         normal: { value: "500ms" },
-        slow: { value: "1000ms" },
+        slow: { value: "10000ms" },
       },
       // Motion easing
       easings: {
@@ -419,6 +419,13 @@ const config = defineConfig({
 
     "*": {
       boxSizing: "border-box",
+    },
+
+    "html.color-mode-transitioning, html.color-mode-transitioning *": {
+      transitionProperty:
+        "background-color, border-color, color, fill, stroke, box-shadow",
+      transitionDuration: "500ms",
+      transitionTimingFunction: "ease",
     },
 
     a: {

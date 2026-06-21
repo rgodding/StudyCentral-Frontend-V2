@@ -1,8 +1,8 @@
 import { Box, Flex, HStack, type BoxProps } from "@chakra-ui/react";
 
-import { ColorModeToggle } from "@/components/ui";
-import { NavbarLogo } from "./NavbarLogo";
-import { NavbarTitle } from "./NavbarTitle";
+import { NavbarInfo } from "./navbarInfo";
+import { NavbarUserMenu } from "./navbarUserMenu";
+import { NavbarNavigation } from "@/components/layout/navbar/navbarMenu";
 
 type NavbarProps = BoxProps & {
   height?: string;
@@ -21,27 +21,14 @@ export function Navbar({ height = "full", ...props }: NavbarProps) {
     >
       <Flex h="full" align="center" justify="space-between" px={3} gap={6}>
         <HStack gap={4} minW={0}>
-          <HStack gap={3} flexShrink={0}>
-            <NavbarLogo opacity={0.8} />
-            <NavbarTitle />
-          </HStack>
+          <NavbarInfo />
 
           <Box h="32px" w="1px" bg="borderStrong" flexShrink={0} />
+          <NavbarNavigation />
         </HStack>
 
-        <HStack gap={2} flexShrink={0}>
-          <ColorModeToggle />
-        </HStack>
+        <NavbarUserMenu />
       </Flex>
     </Box>
   );
 }
-
-/*
- <NavbarNavigation /> : 31
-
- 36-38
- <NavbarNotification /> 
-          <NavbarChat />
-          <NavbarUser />
-*/

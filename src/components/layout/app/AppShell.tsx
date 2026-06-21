@@ -2,7 +2,7 @@ import { Box, Grid, type GridProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 import { appLayoutConfig } from "./appLayoutConfig";
-import { Navbar } from "@/components/layout/app/navbar/Navbar";
+import { Navbar } from "@/components/layout/navbar/Navbar";
 
 type AppShellProps = GridProps & {
   children: ReactNode;

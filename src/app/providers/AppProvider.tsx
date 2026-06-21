@@ -1,6 +1,6 @@
 import { ChakraProvider, Theme } from "@chakra-ui/react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useLayoutEffect, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 import { queryClient } from "@/app/providers/queryClient";
 import { StudyToaster } from "@/components/feedback";
@@ -18,9 +18,28 @@ type Props = {
 
 export function AppProviders({ children }: Props) {
   const [colorMode, setColorModeState] = useState<ColorMode>(getColorMode);
+  
+  const hasMounted = useRef(false);
 
   useLayoutEffect(() => {
+    if (!hasMounted.current) {
+      applyColorMode(colorMode);
+      hasMounted.current = true;
+      return;
+    }
+
+    document.documentElement.classList.add("color-mode-transitioning");
+
     applyColorMode(colorMode);
+
+    const timeoutId = window.setTimeout(() => {
+      document.documentElement.classList.remove("color-mode-transitioning");
+    }, 220);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      document.documentElement.classList.remove("color-mode-transitioning");
+    };
   }, [colorMode]);
 
   useEffect(() => {

@@ -1,15 +1,16 @@
 import { Badge, type BadgeProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-type StudyBadgeVariant =
+export type StudyBadgeVariant =
   | "neutral"
   | "info"
   | "success"
   | "warning"
   | "danger"
-  | "role";
+  | "role"
+  | "accent";
 
-type StudyBadgeProps = Omit<BadgeProps, "variant"> & {
+export type StudyBadgeProps = Omit<BadgeProps, "variant"> & {
   variant?: StudyBadgeVariant;
   children: ReactNode;
 };
@@ -39,6 +40,10 @@ const variantStyles: Record<StudyBadgeVariant, BadgeProps> = {
     bg: "purple.100",
     color: "purple.700",
   },
+  accent: {
+    bg: "activeBg",
+    color: "accent",
+  },
 };
 
 export function StudyBadge({
@@ -54,6 +59,7 @@ export function StudyBadge({
       fontSize="xs"
       fontWeight="semibold"
       textTransform="none"
+      userSelect="none"
       {...variantStyles[variant]}
       {...props}
     >
