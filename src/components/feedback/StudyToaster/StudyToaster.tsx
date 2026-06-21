@@ -8,7 +8,7 @@ import {
   Toaster,
 } from "@chakra-ui/react";
 
-import { studyToaster } from "@/components/feedback/studyToasterInstance";
+import { studyToaster } from "./studyToasterInstance";
 import { StudyText } from "@/components/ui/StudyText";
 import {
   getToastBackgroundColor,

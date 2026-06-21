@@ -1,7 +1,16 @@
 # StudyCentral Frontend V2
 
-## Dependencies
+## Planned Name Changes
 
+This section tracks names that currently work but should be renamed later for better consistency and clarity.
+
+| Current name | Suggested name | Reason | Status |
+| --- | --- | --- | --- |
+| `profilePictureUrl` | `profilePictureBlobName` | Returns the blob name, not a full image URL. The frontend builds the actual image URL with `imageApi.getImageUrl(...)`. | Later |
+
+
+
+## Dependencies
 - React Router : `react-router-dom`
 - Chakra UI : `@chakra-ui/react`
 - Emotion React : `@emotion/react`
@@ -46,3 +55,5 @@
 ```powershell
 npm install react-router-dom @chakra-ui/react @emotion/react @tanstack/react-query axios zustand zod react-hook-form @hookform/resolvers react-icons @microsoft/signalr
 npm install -D @types/node
+
+

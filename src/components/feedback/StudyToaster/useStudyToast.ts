@@ -1,4 +1,4 @@
-import { studyToaster } from "@/components/feedback/studyToasterInstance";
+import { studyToaster } from "./studyToasterInstance";
 
 type StudyToastOptions = {
   title: string;

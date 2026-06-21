@@ -15,7 +15,7 @@ import {
   StudyText,
 } from "@/components/ui";
 import { StudyFileInput } from "@/components/forms/StudyFileInput";
-import { useStudyToast } from "@/hooks/useStudyToast";
+import { useStudyToast } from "@/components/feedback/StudyToaster/useStudyToast";
 
 type PreviewCardProps = {
   title: string;
