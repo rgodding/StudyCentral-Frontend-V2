@@ -3,7 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useLayoutEffect, useState, type ReactNode } from "react";
 
 import { queryClient } from "@/app/providers/queryClient";
-import { StudyToaster } from "@/components/feedback/StudyToaster";
+import { StudyToaster } from "@/components/feedback";
 import { system } from "@/theme";
 import {
   applyColorMode,

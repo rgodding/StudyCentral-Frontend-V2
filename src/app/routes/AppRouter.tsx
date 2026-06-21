@@ -1,42 +1,51 @@
-import { ColorModeToggle } from "@/components/ui/ColorModeToggle";
+import { ContentGrid, PageHeader, PageShell, Section } from "@/components/layout";
 import { ComponentPreviewPage } from "@/pages/ComponentPreviewPage";
 import { ThemePreviewPage } from "@/pages/ThemePreviewPage";
-import {
-  Box,
-  Heading,
-  Link,
-  Text,
-  Stack,
-  Button,
-  HStack,
-} from "@chakra-ui/react";
+import { Button, Link, Stack, Text } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 function HomePage() {
   return (
-    <Box p={8}>
-      <HStack justify="space-between" align="center">
-        <Heading>StudyCentral V2</Heading>
-        <ColorModeToggle />
-      </HStack>
+    <PageShell>
+      <PageHeader
+        eyebrow="Frontend V2"
+        title="StudyCentral V2"
+        description="Base app structure is working."
+      />
 
-      <Text color="textMuted" mt={2}>
-        Base app structure is working.
-      </Text>
+      <ContentGrid>
+        <Section
+          title="Preview pages"
+          description="Use these pages to verify theme tokens and reusable components."
+        >
+          <Stack align="start" gap={3}>
+            <Button asChild colorPalette="blue">
+              <Link href="/theme-preview">View theme preview</Link>
+            </Button>
 
-      <Stack align="start" gap={3} mt={6}>
-        <Button asChild colorPalette="blue">
-          <Link href="/theme-preview">View theme preview</Link>
-        </Button>
+            <Button asChild variant="outline" colorPalette="blue">
+              <Link href="/component-preview">View component preview</Link>
+            </Button>
+          </Stack>
+        </Section>
 
-        <Button asChild variant="outline" colorPalette="blue">
-          <Link href="/component-preview">View component preview</Link>
-        </Button>
-      </Stack>
-    </Box>
+        <Section title="Status" description="Current frontend foundation">
+          <Stack gap={2}>
+            <Text color="textMuted" fontSize="sm">
+              Theme tokens are active.
+            </Text>
+            <Text color="textMuted" fontSize="sm">
+              Light and dark mode are connected.
+            </Text>
+            <Text color="textMuted" fontSize="sm">
+              Layout components are ready.
+            </Text>
+          </Stack>
+        </Section>
+      </ContentGrid>
+    </PageShell>
   );
 }
-
 const router = createBrowserRouter([
   {
     path: "/",
