@@ -37,7 +37,7 @@ export function PageFrame({
         borderRightWidth={isPanel ? "1px" : "0"}
         borderColor="borderSubtle"
         px={isPanel ? { base: 4, md: 6 } : 0}
-        py={isPanel ? { base: 2, md: 0 } : 0}
+        py={isPanel ? { base: 2, md: 6 } : 0}
         overflow="auto"
         {...props}
       >

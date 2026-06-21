@@ -7,6 +7,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { RegisterPage } from "@/pages/auth/RegisterPage";
 import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
+import { CoursesPage } from "@/pages/courses/CoursesPage";
 
 // REQUIREMENT: None
 const publicRoutes: RouteObject[] = [
@@ -55,7 +56,7 @@ const protectedRoutes: RouteObject[] = [
       },
       {
         path: "/courses",
-        element: <div>Courses page</div>,
+        element: <CoursesPage />,
       },
       {
         path: "/account",

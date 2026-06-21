@@ -42,7 +42,7 @@ export function Section({
           </Stack>
 
           {actions && (
-            <HStack gap={2} flexShrink={0}>
+            <HStack flexShrink={0}>
               {actions}
             </HStack>
           )}
