@@ -1,3 +1,5 @@
+import { LoadingState } from "@/components/feedback";
+import { useAuth } from "@/hooks";
 import type { UserRole } from "@/types/api/enums";
 import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
@@ -11,8 +13,10 @@ export function ProtectedRoute({
   children,
   allowedRoles,
 }: ProtectedRouteProps) {
-  const user: { role: UserRole } | null = null;
-
+  const { user, isLoading } = useAuth();
+  if (isLoading) {
+    return <LoadingState title="Checking Session" />;
+  }
   if (!user) {
     return <Navigate to="/login" replace />;
   }
