@@ -238,9 +238,9 @@ const config = defineConfig({
       },
       // Motion duration
       durations: {
-        fast: { value: "120ms" },
-        normal: { value: "180ms" },
-        slow: { value: "240ms" },
+        fast: { value: "180ms" },
+        normal: { value: "320ms" },
+        slow: { value: "520ms" },
       },
       // Motion easing
       easings: {
@@ -249,39 +249,39 @@ const config = defineConfig({
       // Animations
       animations: {
         bounce: {
-          value: "bounce 1s infinite",
+          value: "bounce 1.4s infinite",
         },
 
         ping: {
-          value: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
+          value: "ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite",
         },
 
         fadeIn: {
-          value: "fade-in 180ms cubic-bezier(0.2, 0, 0, 1)",
+          value: "fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
         },
 
         fadeOut: {
-          value: "fade-out 120ms cubic-bezier(0.2, 0, 0, 1)",
+          value: "fade-out 1s cubic-bezier(0.2, 0, 0, 1)",
         },
 
         slideInFromLeft: {
           value:
-            "slide-from-left 220ms cubic-bezier(0.2, 0, 0, 1), fade-in 220ms cubic-bezier(0.2, 0, 0, 1)",
+            "slide-from-left 2s cubic-bezier(0.2, 0, 0, 1), fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
         },
 
         slideInFromRight: {
           value:
-            "slide-from-right 220ms cubic-bezier(0.2, 0, 0, 1), fade-in 220ms cubic-bezier(0.2, 0, 0, 1)",
+            "slide-from-right 2s cubic-bezier(0.2, 0, 0, 1), fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
         },
 
         slideInFromTop: {
           value:
-            "slide-from-top 220ms cubic-bezier(0.2, 0, 0, 1), fade-in 220ms cubic-bezier(0.2, 0, 0, 1)",
+            "slide-from-top 2s cubic-bezier(0.2, 0, 0, 1), fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
         },
 
         slideInFromBottom: {
           value:
-            "slide-from-bottom 220ms cubic-bezier(0.2, 0, 0, 1), fade-in 220ms cubic-bezier(0.2, 0, 0, 1)",
+            "slide-from-bottom 2s cubic-bezier(0.2, 0, 0, 1), fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
         },
       },
     },
