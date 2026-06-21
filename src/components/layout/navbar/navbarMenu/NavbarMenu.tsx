@@ -1,7 +1,6 @@
 import {
   HStack,
   Icon,
-  IconButton,
   Menu,
   Portal,
   Text,
@@ -10,6 +9,7 @@ import {
 import { LuMenu } from "react-icons/lu";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
+import { StudyIconButton } from "@/components/ui";
 import { NavbarNavItem } from "./NavbarNavItem";
 import { studentNavigationItems } from "./navbarNavigationItems";
 
@@ -52,23 +52,14 @@ export function NavbarMenu(props: NavbarMenuProps) {
 
       <Menu.Root positioning={{ placement: "bottom-start" }}>
         <Menu.Trigger asChild>
-          <IconButton
+          <StudyIconButton
             aria-label="Open navigation menu"
             size="sm"
-            rounded="button"
             variant="ghost"
-            color="textMuted"
             display={{ base: "inline-flex", lg: "none" }}
-            _hover={{
-              color: "textMain",
-              bg: "panelBgSubtle",
-            }}
-            _active={{
-              bg: "activeBg",
-            }}
           >
             <LuMenu />
-          </IconButton>
+          </StudyIconButton>
         </Menu.Trigger>
 
         <Portal>

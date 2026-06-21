@@ -1,8 +1,8 @@
 import { IconButton, type IconButtonProps } from "@chakra-ui/react";
 
-type StudyIconButtonVariant = "primary" | "secondary" | "ghost" | "danger";
+export type StudyIconButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 
-type StudyIconButtonProps = Omit<IconButtonProps, "variant"> & {
+export type StudyIconButtonProps = Omit<IconButtonProps, "variant"> & {
   variant?: StudyIconButtonVariant;
 };
 
