@@ -9,9 +9,11 @@ export const da = {
     description: "Grundstrukturen for appen virker.",
     previewPages: {
       title: "Preview-sider",
-      description: "Brug disse sider til at kontrollere theme tokens og genbrugelige komponenter.",
+      description:
+        "Brug disse sider til at kontrollere theme tokens og genbrugelige komponenter.",
       themePreview: "Vis theme preview",
       componentPreview: "Vis component preview",
+      login: "Vis login-side",
     },
     status: {
       title: "Status",
@@ -66,8 +68,49 @@ export const da = {
         submit: "Opret konto",
       },
     },
+    pages: {
+      login: {
+        eyebrow: "Velkommen tilbage",
+        title: "Log ind på StudyCentral",
+        description:
+          "Få adgang til dine kurser, opgaver, studiemapper og beskeder.",
+        registerPrompt: "Har du ikke en konto?",
+        registerLink: "Opret en",
+      },
+      register: {
+        eyebrow: "Opret konto",
+        title: "Kom i gang med StudyCentral",
+        description:
+          "Opret en konto for at få adgang til dine kurser og studiematerialer.",
+        loginPrompt: "Har du allerede en konto?",
+        loginLink: "Log ind",
+      },
+    },
+
+    feedback: {
+      loginSuccess: "Du er logget ind.",
+      loginError: "Kunne ikke logge ind.",
+      registerSuccess: "Kontoen blev oprettet.",
+      registerError: "Kunne ikke oprette konto.",
+      logoutSuccess: "Du er logget ud.",
+      logoutError: "Kunne ikke logge ud.",
+    },
   },
 
+  dashboard: {
+    title: "Dashboard",
+    description:
+      "Dette er den midlertidige landingsside for brugere der er logget ind.",
+    loggedInAs: "Logget ind som {{name}}",
+    role: "Rolle: {{role}}",
+    logout: "Log ud",
+  },
+
+  unauthorized: {
+    title: "Adgang nægtet",
+    description: "Du har ikke tilladelse til at se denne side.",
+    backToHome: "Tilbage til forsiden",
+  },
   validation: {
     common: {
       emailInvalid: "Indtast en gyldig e-mailadresse.",

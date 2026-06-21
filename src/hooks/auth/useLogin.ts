@@ -1,16 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { authApi } from "@/api/authApi";
 import { queryKeys } from "@/config/queryKeys";
-import type { LoginDto } from "@/types/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (dto: LoginDto) => authApi.login(dto),
-    onSuccess: (user) => {
-      queryClient.setQueryData(queryKeys.auth.currentUser, user);
+    mutationFn: authApi.login,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.account.me,
+      });
     },
   });
 }

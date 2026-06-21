@@ -9,9 +9,11 @@ export const en = {
     description: "Base app structure is working.",
     previewPages: {
       title: "Preview pages",
-      description: "Use these pages to verify theme tokens and reusable components.",
+      description:
+        "Use these pages to verify theme tokens and reusable components.",
       themePreview: "View theme preview",
       componentPreview: "View component preview",
+      login: "View login page",
     },
     status: {
       title: "Status",
@@ -66,6 +68,47 @@ export const en = {
         submit: "Create account",
       },
     },
+    pages: {
+      login: {
+        eyebrow: "Welcome back",
+        title: "Sign in to StudyCentral",
+        description:
+          "Access your courses, assignments, study folders and messages.",
+        registerPrompt: "Do not have an account?",
+        registerLink: "Create one",
+      },
+      register: {
+        eyebrow: "Create account",
+        title: "Join StudyCentral",
+        description:
+          "Create an account to access your courses and study material.",
+        loginPrompt: "Already have an account?",
+        loginLink: "Sign in",
+      },
+    },
+
+    feedback: {
+      loginSuccess: "Signed in successfully.",
+      loginError: "Could not sign in.",
+      registerSuccess: "Account created successfully.",
+      registerError: "Could not create account.",
+      logoutSuccess: "Signed out successfully.",
+      logoutError: "Could not sign out.",
+    },
+  },
+
+  dashboard: {
+    title: "Dashboard",
+    description: "This is the temporary authenticated landing page.",
+    loggedInAs: "Signed in as {{name}}",
+    role: "Role: {{role}}",
+    logout: "Log out",
+  },
+
+  unauthorized: {
+    title: "Access denied",
+    description: "You do not have permission to view this page.",
+    backToHome: "Back to home",
   },
 
   validation: {
