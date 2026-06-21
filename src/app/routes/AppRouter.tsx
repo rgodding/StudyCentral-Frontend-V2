@@ -1,12 +1,24 @@
+import { ColorModeToggle } from "@/components/ui/ColorModeToggle";
 import { ComponentPreviewPage } from "@/pages/ComponentPreviewPage";
 import { ThemePreviewPage } from "@/pages/ThemePreviewPage";
-import { Box, Heading, Link, Text, Stack, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Link,
+  Text,
+  Stack,
+  Button,
+  HStack,
+} from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 function HomePage() {
   return (
     <Box p={8}>
-      <Heading>StudyCentral V2</Heading>
+      <HStack justify="space-between" align="center">
+        <Heading>StudyCentral V2</Heading>
+        <ColorModeToggle />
+      </HStack>
 
       <Text color="textMuted" mt={2}>
         Base app structure is working.
