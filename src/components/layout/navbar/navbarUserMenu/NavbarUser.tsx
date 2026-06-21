@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useStudyToast } from "@/components/feedback";
 import {
+  StudyAvatar,
   StudyBadge,
   StudyIconButton,
   type StudyIconButtonProps,
@@ -62,16 +63,20 @@ export function NavbarUser(props: NavbarUserProps) {
   }
 
   return (
-    <Menu.Root positioning={{ placement: "bottom-end" }}>
+    <Menu.Root positioning={{ placement: "bottom-end", offset: { mainAxis: 18 } }}>
       <Menu.Trigger asChild>
         <StudyIconButton
           aria-label="User menu"
-          size="lg"
+          size="sm"
           variant="ghost"
           disabled={isLoggingOut}
           {...props}
         >
-          <LuUserRound />
+          <StudyAvatar
+            src={user?.profilePictureUrl}
+            size="sm"
+            shape="circle"
+          />
         </StudyIconButton>
       </Menu.Trigger>
 

@@ -32,6 +32,11 @@ const variantStyles: Record<StudyIconButtonVariant, IconButtonProps> = {
     color: "textMain",
     _hover: {
       bg: "activeBg",
+      opacity: 0.75,
+    },
+    _active: {
+      bg: "activeBg",
+      opacity: 0.65,
     },
   },
   danger: {
@@ -39,6 +44,11 @@ const variantStyles: Record<StudyIconButtonVariant, IconButtonProps> = {
     color: "dangerText",
     _hover: {
       bg: "red.50",
+      opacity: 0.75,
+    },
+    _active: {
+      bg: "red.50",
+      opacity: 0.65,
     },
   },
 };
@@ -51,7 +61,17 @@ export function StudyIconButton({
     <IconButton
       rounded="button"
       cursor="pointer"
+      transitionProperty="background-color, border-color, color, opacity"
       transitionDuration="fast"
+      _focus={{
+        outline: "none",
+        boxShadow: "none",
+      }}
+      _focusVisible={{
+        outline: "2px solid",
+        outlineColor: "accent",
+        outlineOffset: "2px",
+      }}
       _disabled={{
         cursor: "not-allowed",
         opacity: 0.6,
