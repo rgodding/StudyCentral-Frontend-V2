@@ -8,6 +8,7 @@ import {
 import { Box, HStack, Input, Stack, type BoxProps } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import { useRef } from "react";
+import { commonText } from "@/content";
 
 type StudyFileInputProps = Omit<BoxProps, "onChange"> & {
   label?: string;
@@ -20,7 +21,7 @@ type StudyFileInputProps = Omit<BoxProps, "onChange"> & {
 };
 
 export function StudyFileInput({
-  label = "Select files",
+  label = commonText.files.selectFiles,
   accept,
   disabled = false,
   selectedFiles = [],
@@ -92,7 +93,7 @@ export function StudyFileInput({
           </StudyButton>
 
           <StudyText variant="subtle">
-            {selectedFiles.length}/{maxFiles} selected
+            {commonText.files.selectedCount(selectedFiles.length, maxFiles)}
           </StudyText>
         </Stack>
 
@@ -125,7 +126,7 @@ export function StudyFileInput({
                     key={`${file.name}-${file.size}-${index}`}
                     removable
                     variant="subtle"
-                    removeLabel={`Remove ${file.name}`}
+                    removeLabel={commonText.files.removeFile(file.name)}
                     onRemove={() => handleRemove(index)}
                     w="185px"
                     maxW="185px"
@@ -178,7 +179,9 @@ export function StudyFileInput({
               })}
             </Box>
           ) : (
-            <StudyText variant="subtle">No file selected.</StudyText>
+            <StudyText variant="subtle">
+              {commonText.files.noFileSelected}
+            </StudyText>
           )}
         </Box>
       </HStack>

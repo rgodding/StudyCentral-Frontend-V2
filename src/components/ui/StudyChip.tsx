@@ -2,6 +2,7 @@ import { Box, HStack, type StackProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 import { StudyIconButton } from "@/components/ui/StudyIconButton";
+import { commonText } from "@/content";
 
 type StudyChipVariant = "default" | "subtle" | "accent" | "danger";
 
@@ -52,11 +53,11 @@ export function StudyChip({
   draggable = false,
 
   removable = false,
-  removeLabel = "Remove item",
+  removeLabel = commonText.actions.removeItem,
   onRemove,
 
   addable = false,
-  addLabel = "Add item",
+  addLabel = commonText.actions.addItem,
   onAdd,
 
   ...props

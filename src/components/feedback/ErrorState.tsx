@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { StudyButton } from "@/components/ui/StudyButton";
 import { StudyHeading } from "@/components/ui/StudyHeading";
 import { StudyText } from "@/components/ui/StudyText";
+import { commonText } from "@/content";
 
 type ErrorStateProps = Omit<BoxProps, "title"> & {
   title?: string;
@@ -14,9 +15,9 @@ type ErrorStateProps = Omit<BoxProps, "title"> & {
 };
 
 export function ErrorState({
-  title = "Something went wrong",
-  description = "The requested data could not be loaded.",
-  retryLabel = "Try again",
+  title = commonText.feedback.genericErrorTitle,
+  description = commonText.feedback.genericErrorDescription,
+  retryLabel = commonText.actions.tryAgain,
   onRetry,
   action,
   ...props

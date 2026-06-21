@@ -1,4 +1,5 @@
 import { LoadingState } from "@/components/feedback";
+import { commonText } from "@/content";
 import { useAuth } from "@/hooks";
 import type { UserRole } from "@/types/api/enums";
 import type { ReactNode } from "react";
@@ -14,9 +15,11 @@ export function ProtectedRoute({
   allowedRoles,
 }: ProtectedRouteProps) {
   const { user, isLoading } = useAuth();
+
   if (isLoading) {
-    return <LoadingState title="Checking Session" />;
+    return <LoadingState text={commonText.feedback.checkingSession} />;
   }
+
   if (!user) {
     return <Navigate to="/login" replace />;
   }

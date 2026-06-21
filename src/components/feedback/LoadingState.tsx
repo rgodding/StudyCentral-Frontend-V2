@@ -1,6 +1,7 @@
 import { Box, Spinner, Stack, type BoxProps } from "@chakra-ui/react";
 
 import { StudyText } from "@/components/ui/StudyText";
+import { commonText } from "@/content";
 
 type LoadingStateProps = BoxProps & {
   text?: string;
@@ -8,7 +9,7 @@ type LoadingStateProps = BoxProps & {
 };
 
 export function LoadingState({
-  text = "Loading...",
+  text = commonText.feedback.loading,
   fullHeight = false,
   ...props
 }: LoadingStateProps) {

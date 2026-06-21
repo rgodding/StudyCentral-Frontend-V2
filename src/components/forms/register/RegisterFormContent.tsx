@@ -2,6 +2,7 @@ import { Stack } from "@chakra-ui/react";
 
 import { StudyField, StudyInput } from "@/components/forms";
 import { StudyButton } from "@/components/ui";
+import { authText } from "@/content";
 import type { RegisterFormValues } from "./registerSchema";
 
 type RegisterFormErrors = Partial<Record<keyof RegisterFormValues, string>>;
@@ -24,52 +25,68 @@ export function RegisterFormContent({
 }: RegisterFormContentProps) {
   return (
     <Stack gap={4}>
-      <StudyField label="First name" errorText={errors.firstName} required>
+      <StudyField
+        label={authText.register.fields.firstName.label}
+        errorText={errors.firstName}
+        required
+      >
         <StudyInput
           type="text"
           value={values.firstName}
           autoComplete="given-name"
-          placeholder="Enter your first name"
+          placeholder={authText.register.fields.firstName.placeholder}
           disabled={isSubmitting}
           onChange={(event) => updateField("firstName", event.target.value)}
         />
       </StudyField>
 
-      <StudyField label="Last name" errorText={errors.lastName} required>
+      <StudyField
+        label={authText.register.fields.lastName.label}
+        errorText={errors.lastName}
+        required
+      >
         <StudyInput
           type="text"
           value={values.lastName}
           autoComplete="family-name"
-          placeholder="Enter your last name"
+          placeholder={authText.register.fields.lastName.placeholder}
           disabled={isSubmitting}
           onChange={(event) => updateField("lastName", event.target.value)}
         />
       </StudyField>
 
-      <StudyField label="Email" errorText={errors.email} required>
+      <StudyField
+        label={authText.register.fields.email.label}
+        errorText={errors.email}
+        required
+      >
         <StudyInput
           type="email"
           value={values.email}
           autoComplete="email"
-          placeholder="name@example.com"
+          placeholder={authText.register.fields.email.placeholder}
           disabled={isSubmitting}
           onChange={(event) => updateField("email", event.target.value)}
         />
       </StudyField>
 
-      <StudyField label="Password" errorText={errors.password} required>
+      <StudyField
+        label={authText.register.fields.password.label}
+        errorText={errors.password}
+        required
+      >
         <StudyInput
           type="password"
           value={values.password}
           autoComplete="new-password"
-          placeholder="Create a password"
+          placeholder={authText.register.fields.password.placeholder}
           disabled={isSubmitting}
           onChange={(event) => updateField("password", event.target.value)}
         />
       </StudyField>
 
       <StudyField
-        label="Confirm password"
+        label={authText.register.fields.confirmPassword.label}
         errorText={errors.confirmPassword}
         required
       >
@@ -77,7 +94,7 @@ export function RegisterFormContent({
           type="password"
           value={values.confirmPassword}
           autoComplete="new-password"
-          placeholder="Repeat your password"
+          placeholder={authText.register.fields.confirmPassword.placeholder}
           disabled={isSubmitting}
           onChange={(event) =>
             updateField("confirmPassword", event.target.value)
@@ -86,7 +103,7 @@ export function RegisterFormContent({
       </StudyField>
 
       <StudyButton type="submit" width="full" loading={isSubmitting}>
-        Create account
+        {authText.register.actions.submit}
       </StudyButton>
     </Stack>
   );

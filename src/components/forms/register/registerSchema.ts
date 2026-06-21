@@ -1,32 +1,29 @@
 import { z } from "zod";
 
-export const registerSchema = z.object({
-  firstName: z.string().min(1, "First name is required."),
+import { validationText } from "@/content";
 
-  lastName: z.string().min(1, "Last name is required."),
+export const registerSchema = z.object({
+  firstName: z.string().min(1, validationText.auth.firstNameRequired),
+  lastName: z.string().min(1, validationText.auth.lastNameRequired),
 
   email: z
     .string()
-    .min(1, "Email is required.")
-    .pipe(z.email("Enter a valid email address.")),
+    .min(1, validationText.auth.emailRequired)
+    .pipe(z.email(validationText.common.emailInvalid)),
 
-  password: z.string().min(1, "Password is required."),
+  password: z.string().min(1, validationText.auth.passwordRequired),
 
-  confirmPassword: z.string().min(1, "Confirm password is required."),
+  confirmPassword: z
+    .string()
+    .min(1, validationText.auth.confirmPasswordRequired),
 });
 
 export const registerSubmitSchema = registerSchema
   .refine((values) => values.password === values.confirmPassword, {
     path: ["confirmPassword"],
-    message: "Passwords do not match.",
+    message: validationText.auth.passwordsDoNotMatch,
   })
-  .transform((values) => ({
-    firstName: values.firstName,
-    lastName: values.lastName,
-    email: values.email,
-    password: values.password,
-  }));
+  .omit({ confirmPassword: true });
 
-export type RegisterFormValues = z.input<typeof registerSubmitSchema>;
-
+export type RegisterFormValues = z.input<typeof registerSchema>;
 export type RegisterSubmitValues = z.output<typeof registerSubmitSchema>;

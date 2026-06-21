@@ -1,14 +1,14 @@
 import { z } from "zod";
 
+import { validationText } from "@/content";
+
 export const loginSchema = z.object({
   email: z
     .string()
-    .min(1, "Email is required.")
-    .pipe(z.email("Enter a valid email address.")),
+    .min(1, validationText.auth.emailRequired)
+    .pipe(z.email(validationText.common.emailInvalid)),
 
-  password: z
-    .string()
-    .min(1, "Password is required."),
+  password: z.string().min(1, validationText.auth.passwordRequired),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
