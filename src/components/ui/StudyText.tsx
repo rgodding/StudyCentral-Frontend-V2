@@ -10,7 +10,7 @@ type StudyTextVariant =
   | "success"
   | "warning";
 
-type StudyTextProps = Omit<TextProps, "variant"> & {
+export type StudyTextProps = Omit<TextProps, "variant"> & {
   variant?: StudyTextVariant;
   children: ReactNode;
 };

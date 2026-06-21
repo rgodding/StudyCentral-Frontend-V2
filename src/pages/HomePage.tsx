@@ -49,6 +49,12 @@ export default function HomePage() {
                 <RouterLink to="/login">View login page</RouterLink>
               </Link>
             </StudyButton>
+
+            <StudyButton asChild variant="secondary">
+              <Link asChild>
+                <RouterLink to="/dashboard">Go to dashboard</RouterLink>
+              </Link>
+            </StudyButton>
           </Stack>
         </Section>
 

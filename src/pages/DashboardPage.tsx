@@ -1,9 +1,9 @@
-import { HStack, Stack, Text } from "@chakra-ui/react";
+import { Stack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { useStudyToast } from "@/components/feedback";
-import { PageHeader, PageShell, Section } from "@/components/layout";
-import { ColorModeToggle, StudyButton } from "@/components/ui";
+import { PageHeader, Section } from "@/components/layout";
+import { StudyButton } from "@/components/ui";
 import { useAuth } from "@/hooks";
 
 export function DashboardPage() {
@@ -13,6 +13,7 @@ export function DashboardPage() {
   const { user, logout, logoutStatus } = useAuth();
 
   const isLoggingOut = logoutStatus === "pending";
+  const fullName = user ? `${user.firstName} ${user.lastName}` : "Unknown user";
 
   async function handleLogout() {
     try {
@@ -30,38 +31,30 @@ export function DashboardPage() {
     }
   }
 
-  const fullName = user ? `${user.firstName} ${user.lastName}` : "";
-
   return (
-    <PageShell>
-      <Stack gap={4}>
-        <HStack justify="flex-end" gap={2}>
-          <ColorModeToggle />
-        </HStack>
+    <Stack gap={6} p={6}>
+      <PageHeader
+        title="Dashboard"
+        description="Temporary authenticated landing page."
+        actions={
+          <StudyButton
+            type="button"
+            variant="secondary"
+            loading={isLoggingOut}
+            onClick={handleLogout}
+          >
+            Sign out
+          </StudyButton>
+        }
+      />
 
-        <PageHeader
-          title="Dashboard"
-          description="This is the temporary authenticated landing page."
-          actions={
-            <StudyButton
-              type="button"
-              variant="secondary"
-              loading={isLoggingOut}
-              onClick={handleLogout}
-            >
-              Sign out
-            </StudyButton>
-          }
-        />
+      <Section title="Session">
+        <Stack gap={2}>
+          <Text color="textMuted">Signed in as {fullName}</Text>
 
-        <Section title="Dashboard">
-          <Stack gap={2}>
-            <Text color="textMuted">Signed in as {fullName}</Text>
-
-            {user && <Text color="textMuted">Role: {user.role}</Text>}
-          </Stack>
-        </Section>
-      </Stack>
-    </PageShell>
+          {user && <Text color="textMuted">Role: {user.role}</Text>}
+        </Stack>
+      </Section>
+    </Stack>
   );
 }

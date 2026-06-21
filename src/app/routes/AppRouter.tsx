@@ -1,18 +1,27 @@
-import { GuestRoute, ProtectedRoute } from "@/app/routes/ProtectedRoutes";
+import { createBrowserRouter, RouterProvider, type RouteObject } from "react-router-dom";
+
+import { AppLayoutRoute } from "./AppLayoutRoute";
+import { GuestRoute, ProtectedRoute } from "./ProtectedRoutes";
+import HomePage from "@/pages/HomePage";
+import { DashboardPage } from "@/pages/DashboardPage";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { RegisterPage } from "@/pages/auth/RegisterPage";
-import { ComponentPreviewPage } from "@/pages/ComponentPreviewPage";
-import { DashboardPage } from "@/pages/DashboardPage";
-import HomePage from "@/pages/HomePage";
-import { ThemePreviewPage } from "@/pages/ThemePreviewPage";
 import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const router = createBrowserRouter([
+// REQUIREMENT: None
+const publicRoutes: RouteObject[] = [
   {
     path: "/",
     element: <HomePage />,
   },
+  {
+    path: "/unauthorized",
+    element: <UnauthorizedPage />,
+  },
+];
+
+// REQUIREMENT: User must be unauthenticated
+const guestRoutes: RouteObject[] = [
   {
     path: "/login",
     element: (
@@ -29,27 +38,41 @@ const router = createBrowserRouter([
       </GuestRoute>
     ),
   },
+];
+
+// REQUIREMENT: User must be authenticated
+const protectedRoutes: RouteObject[] = [
   {
-    path: "/dashboard",
     element: (
-      <ProtectedRoute allowedRoles={["Student", "Teacher"]}>
-        <DashboardPage />
+      <ProtectedRoute>
+        <AppLayoutRoute />
       </ProtectedRoute>
     ),
+    children: [
+      {
+        path: "/dashboard",
+        element: <DashboardPage />,
+      },
+      {
+        path: "/courses",
+        element: <div>Courses page</div>,
+      },
+      {
+        path: "/account",
+        element: <div>Account page</div>,
+      },
+    ],
   },
-  {
-    path: "/unauthorized",
-    element: <UnauthorizedPage />,
-  },
-  {
-    path: "/theme-preview",
-    element: <ThemePreviewPage />,
-  },
-  {
-    path: "/component-preview",
-    element: <ComponentPreviewPage />,
-  },
+];
+  
+const router = createBrowserRouter([
+  ...publicRoutes,
+  ...guestRoutes,
+  ...protectedRoutes,
 ]);
+
+
+
 
 export function AppRouter() {
   return <RouterProvider router={router} />;
