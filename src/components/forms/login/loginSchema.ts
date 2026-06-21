@@ -1,14 +1,15 @@
+import type { TFunction } from "i18next";
 import { z } from "zod";
 
-import { validationText } from "@/content";
+export function createLoginSchema(t: TFunction) {
+  return z.object({
+    email: z
+      .string()
+      .min(1, t("validation.auth.emailRequired"))
+      .pipe(z.email(t("validation.common.emailInvalid"))),
 
-export const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, validationText.auth.emailRequired)
-    .pipe(z.email(validationText.common.emailInvalid)),
+    password: z.string().min(1, t("validation.auth.passwordRequired")),
+  });
+}
 
-  password: z.string().min(1, validationText.auth.passwordRequired),
-});
-
-export type LoginFormValues = z.infer<typeof loginSchema>;
+export type LoginFormValues = z.infer<ReturnType<typeof createLoginSchema>>;

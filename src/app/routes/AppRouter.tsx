@@ -1,44 +1,66 @@
 import { ContentGrid, PageHeader, PageShell, Section } from "@/components/layout";
+import {
+  ColorModeToggle,
+  LanguageToggle,
+  StudyButton,
+} from "@/components/ui";
 import { ComponentPreviewPage } from "@/pages/ComponentPreviewPage";
 import { ThemePreviewPage } from "@/pages/ThemePreviewPage";
-import { Button, Link, Stack, Text } from "@chakra-ui/react";
+import { HStack, Link, Stack, Text } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 function HomePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
-      <PageHeader
-        eyebrow="Frontend V2"
-        title="StudyCentral V2"
-        description="Base app structure is working."
-      />
+      <Stack gap={4}>
+        <HStack justify="flex-end" gap={2}>
+          <ColorModeToggle />
+          <LanguageToggle />
+        </HStack>
+
+        <PageHeader
+          eyebrow={t("home.eyebrow")}
+          title={t("home.title")}
+          description={t("home.description")}
+        />
+      </Stack>
 
       <ContentGrid>
         <Section
-          title="Preview pages"
-          description="Use these pages to verify theme tokens and reusable components."
+          title={t("home.previewPages.title")}
+          description={t("home.previewPages.description")}
         >
           <Stack align="start" gap={3}>
-            <Button asChild colorPalette="blue">
-              <Link href="/theme-preview">View theme preview</Link>
-            </Button>
+            <StudyButton asChild>
+              <Link href="/theme-preview">
+                {t("home.previewPages.themePreview")}
+              </Link>
+            </StudyButton>
 
-            <Button asChild variant="outline" colorPalette="blue">
-              <Link href="/component-preview">View component preview</Link>
-            </Button>
+            <StudyButton asChild variant="secondary">
+              <Link href="/component-preview">
+                {t("home.previewPages.componentPreview")}
+              </Link>
+            </StudyButton>
           </Stack>
         </Section>
 
-        <Section title="Status" description="Current frontend foundation">
+        <Section
+          title={t("home.status.title")}
+          description={t("home.status.description")}
+        >
           <Stack gap={2}>
             <Text color="textMuted" fontSize="sm">
-              Theme tokens are active.
+              {t("home.status.themeTokens")}
             </Text>
             <Text color="textMuted" fontSize="sm">
-              Light and dark mode are connected.
+              {t("home.status.colorMode")}
             </Text>
             <Text color="textMuted" fontSize="sm">
-              Layout components are ready.
+              {t("home.status.layout")}
             </Text>
           </Stack>
         </Section>
@@ -46,6 +68,7 @@ function HomePage() {
     </PageShell>
   );
 }
+
 const router = createBrowserRouter([
   {
     path: "/",

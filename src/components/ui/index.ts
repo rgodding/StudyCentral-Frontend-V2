@@ -8,3 +8,4 @@ export * from "./StudyHeading";
 export * from "./StudyIconButton";
 export * from "./StudyText";
 export * from "./ColorModeToggle";
+export * from "./LanguageToggle";

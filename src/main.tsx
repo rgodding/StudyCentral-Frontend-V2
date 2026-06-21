@@ -1,3 +1,5 @@
+import "@/i18n";
+
 import { AppProviders } from "@/app/providers/AppProvider";
 import { AppRouter } from "@/app/routes/AppRouter";
 import "@fontsource/inter/400.css";

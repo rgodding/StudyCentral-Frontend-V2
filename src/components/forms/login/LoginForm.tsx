@@ -1,9 +1,10 @@
 import { useState, type SyntheticEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { getFirstFieldErrors } from "@/utils/forms/getFirstFieldErrors";
 import { LoginFormContent } from "./LoginFormContent";
-import { loginSchema, type LoginFormValues } from "./loginSchema";
+import { createLoginSchema, type LoginFormValues } from "./loginSchema";
 
 type LoginFormErrors = Partial<Record<keyof LoginFormValues, string>>;
 
@@ -13,6 +14,8 @@ type LoginFormProps = {
 };
 
 export function LoginForm({ isSubmitting = false, onSubmit }: LoginFormProps) {
+  const { t } = useTranslation();
+
   const [values, setValues] = useState<LoginFormValues>({
     email: "",
     password: "",
@@ -38,7 +41,7 @@ export function LoginForm({ isSubmitting = false, onSubmit }: LoginFormProps) {
   async function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const result = loginSchema.safeParse(values);
+    const result = createLoginSchema(t).safeParse(values);
 
     if (!result.success) {
       setErrors(

@@ -1,14 +1,15 @@
-import { getFileKind, getFileNameParts } from "@/utils/fileUtils";
+import { Box, HStack, Input, Stack, type BoxProps } from "@chakra-ui/react";
+import type { ChangeEvent } from "react";
+import { useRef } from "react";
+import { useTranslation } from "react-i18next";
+
 import {
   StudyButton,
   StudyChip,
   StudyDivider,
   StudyText,
 } from "@/components/ui";
-import { Box, HStack, Input, Stack, type BoxProps } from "@chakra-ui/react";
-import type { ChangeEvent } from "react";
-import { useRef } from "react";
-import { commonText } from "@/content";
+import { getFileKind, getFileNameParts } from "@/utils/fileUtils";
 
 type StudyFileInputProps = Omit<BoxProps, "onChange"> & {
   label?: string;
@@ -21,7 +22,7 @@ type StudyFileInputProps = Omit<BoxProps, "onChange"> & {
 };
 
 export function StudyFileInput({
-  label = commonText.files.selectFiles,
+  label,
   accept,
   disabled = false,
   selectedFiles = [],
@@ -30,6 +31,7 @@ export function StudyFileInput({
   onChange,
   ...props
 }: StudyFileInputProps) {
+  const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const hasReachedMaxFiles = selectedFiles.length >= maxFiles;
@@ -89,11 +91,14 @@ export function StudyFileInput({
             disabled={isInputDisabled}
             onClick={handleClick}
           >
-            {label}
+            {label ?? t("common.files.selectFiles")}
           </StudyButton>
 
           <StudyText variant="subtle">
-            {commonText.files.selectedCount(selectedFiles.length, maxFiles)}
+            {t("common.files.selectedCount", {
+              selectedCount: selectedFiles.length,
+              maxFiles,
+            })}
           </StudyText>
         </Stack>
 
@@ -126,7 +131,9 @@ export function StudyFileInput({
                     key={`${file.name}-${file.size}-${index}`}
                     removable
                     variant="subtle"
-                    removeLabel={commonText.files.removeFile(file.name)}
+                    removeLabel={t("common.files.removeFile", {
+                      fileName: file.name,
+                    })}
                     onRemove={() => handleRemove(index)}
                     w="185px"
                     maxW="185px"
@@ -180,7 +187,7 @@ export function StudyFileInput({
             </Box>
           ) : (
             <StudyText variant="subtle">
-              {commonText.files.noFileSelected}
+              {t("common.files.noFileSelected")}
             </StudyText>
           )}
         </Box>

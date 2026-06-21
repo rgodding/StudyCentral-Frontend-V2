@@ -1,13 +1,14 @@
 import { IconButton, type IconButtonProps } from "@chakra-ui/react";
-import { LuMoon, LuSun } from "react-icons/lu";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { LuMoon, LuSun } from "react-icons/lu";
 
-import { commonText } from "@/content";
 import { getColorMode, toggleColorMode } from "@/utils/colorMode";
 
 type Props = Omit<IconButtonProps, "aria-label" | "children">;
 
 export function ColorModeToggle(props: Props) {
+  const { t } = useTranslation();
   const [colorMode, setColorMode] = useState(getColorMode);
 
   const isDark = colorMode === "dark";
@@ -21,8 +22,8 @@ export function ColorModeToggle(props: Props) {
     <IconButton
       aria-label={
         isDark
-          ? commonText.colorMode.switchToLight
-          : commonText.colorMode.switchToDark
+          ? t("common.colorMode.switchToLight")
+          : t("common.colorMode.switchToDark")
       }
       size="sm"
       rounded="button"

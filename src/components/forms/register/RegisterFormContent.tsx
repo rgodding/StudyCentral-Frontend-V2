@@ -1,8 +1,8 @@
 import { Stack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import { StudyField, StudyInput } from "@/components/forms";
 import { StudyButton } from "@/components/ui";
-import { authText } from "@/content";
 import type { RegisterFormValues } from "./registerSchema";
 
 type RegisterFormErrors = Partial<Record<keyof RegisterFormValues, string>>;
@@ -23,10 +23,12 @@ export function RegisterFormContent({
   isSubmitting,
   updateField,
 }: RegisterFormContentProps) {
+  const { t } = useTranslation();
+
   return (
     <Stack gap={4}>
       <StudyField
-        label={authText.register.fields.firstName.label}
+        label={t("auth.register.fields.firstName.label")}
         errorText={errors.firstName}
         required
       >
@@ -34,14 +36,14 @@ export function RegisterFormContent({
           type="text"
           value={values.firstName}
           autoComplete="given-name"
-          placeholder={authText.register.fields.firstName.placeholder}
+          placeholder={t("auth.register.fields.firstName.placeholder")}
           disabled={isSubmitting}
           onChange={(event) => updateField("firstName", event.target.value)}
         />
       </StudyField>
 
       <StudyField
-        label={authText.register.fields.lastName.label}
+        label={t("auth.register.fields.lastName.label")}
         errorText={errors.lastName}
         required
       >
@@ -49,14 +51,14 @@ export function RegisterFormContent({
           type="text"
           value={values.lastName}
           autoComplete="family-name"
-          placeholder={authText.register.fields.lastName.placeholder}
+          placeholder={t("auth.register.fields.lastName.placeholder")}
           disabled={isSubmitting}
           onChange={(event) => updateField("lastName", event.target.value)}
         />
       </StudyField>
 
       <StudyField
-        label={authText.register.fields.email.label}
+        label={t("auth.register.fields.email.label")}
         errorText={errors.email}
         required
       >
@@ -64,14 +66,14 @@ export function RegisterFormContent({
           type="email"
           value={values.email}
           autoComplete="email"
-          placeholder={authText.register.fields.email.placeholder}
+          placeholder={t("auth.register.fields.email.placeholder")}
           disabled={isSubmitting}
           onChange={(event) => updateField("email", event.target.value)}
         />
       </StudyField>
 
       <StudyField
-        label={authText.register.fields.password.label}
+        label={t("auth.register.fields.password.label")}
         errorText={errors.password}
         required
       >
@@ -79,14 +81,14 @@ export function RegisterFormContent({
           type="password"
           value={values.password}
           autoComplete="new-password"
-          placeholder={authText.register.fields.password.placeholder}
+          placeholder={t("auth.register.fields.password.placeholder")}
           disabled={isSubmitting}
           onChange={(event) => updateField("password", event.target.value)}
         />
       </StudyField>
 
       <StudyField
-        label={authText.register.fields.confirmPassword.label}
+        label={t("auth.register.fields.confirmPassword.label")}
         errorText={errors.confirmPassword}
         required
       >
@@ -94,7 +96,7 @@ export function RegisterFormContent({
           type="password"
           value={values.confirmPassword}
           autoComplete="new-password"
-          placeholder={authText.register.fields.confirmPassword.placeholder}
+          placeholder={t("auth.register.fields.confirmPassword.placeholder")}
           disabled={isSubmitting}
           onChange={(event) =>
             updateField("confirmPassword", event.target.value)
@@ -103,7 +105,7 @@ export function RegisterFormContent({
       </StudyField>
 
       <StudyButton type="submit" width="full" loading={isSubmitting}>
-        {authText.register.actions.submit}
+        {t("auth.register.actions.submit")}
       </StudyButton>
     </Stack>
   );

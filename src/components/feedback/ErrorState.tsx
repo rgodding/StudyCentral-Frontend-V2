@@ -1,10 +1,10 @@
 import { Box, Stack, type BoxProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import { StudyButton } from "@/components/ui/StudyButton";
 import { StudyHeading } from "@/components/ui/StudyHeading";
 import { StudyText } from "@/components/ui/StudyText";
-import { commonText } from "@/content";
 
 type ErrorStateProps = Omit<BoxProps, "title"> & {
   title?: string;
@@ -15,13 +15,20 @@ type ErrorStateProps = Omit<BoxProps, "title"> & {
 };
 
 export function ErrorState({
-  title = commonText.feedback.genericErrorTitle,
-  description = commonText.feedback.genericErrorDescription,
-  retryLabel = commonText.actions.tryAgain,
+  title,
+  description,
+  retryLabel,
   onRetry,
   action,
   ...props
 }: ErrorStateProps) {
+  const { t } = useTranslation();
+
+  const resolvedTitle = title ?? t("common.feedback.genericErrorTitle");
+  const resolvedDescription =
+    description ?? t("common.feedback.genericErrorDescription");
+  const resolvedRetryLabel = retryLabel ?? t("common.actions.tryAgain");
+
   return (
     <Box
       w="full"
@@ -37,16 +44,18 @@ export function ErrorState({
       <Stack align="center" gap={4}>
         <Stack gap={1} align="center" maxW="460px">
           <StudyHeading variant="card" color="dangerText">
-            {title}
+            {resolvedTitle}
           </StudyHeading>
 
-          {description && <StudyText variant="muted">{description}</StudyText>}
+          {resolvedDescription && (
+            <StudyText variant="muted">{resolvedDescription}</StudyText>
+          )}
         </Stack>
 
         {action ??
           (onRetry ? (
             <StudyButton variant="danger" onClick={onRetry}>
-              {retryLabel}
+              {resolvedRetryLabel}
             </StudyButton>
           ) : null)}
       </Stack>

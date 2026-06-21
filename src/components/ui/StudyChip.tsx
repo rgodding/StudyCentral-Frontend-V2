@@ -1,8 +1,8 @@
 import { Box, HStack, type StackProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import { StudyIconButton } from "@/components/ui/StudyIconButton";
-import { commonText } from "@/content";
 
 type StudyChipVariant = "default" | "subtle" | "accent" | "danger";
 
@@ -53,15 +53,17 @@ export function StudyChip({
   draggable = false,
 
   removable = false,
-  removeLabel = commonText.actions.removeItem,
+  removeLabel,
   onRemove,
 
   addable = false,
-  addLabel = commonText.actions.addItem,
+  addLabel,
   onAdd,
 
   ...props
 }: StudyChipProps) {
+  const { t } = useTranslation();
+
   return (
     <HStack
       justify="space-between"
@@ -84,7 +86,7 @@ export function StudyChip({
 
       {addable && (
         <StudyIconButton
-          aria-label={addLabel}
+          aria-label={addLabel ?? t("common.actions.addItem")}
           variant="ghost"
           size="xs"
           flexShrink={0}
@@ -96,7 +98,7 @@ export function StudyChip({
 
       {removable && (
         <StudyIconButton
-          aria-label={removeLabel}
+          aria-label={removeLabel ?? t("common.actions.removeItem")}
           variant="ghost"
           size="xs"
           flexShrink={0}
