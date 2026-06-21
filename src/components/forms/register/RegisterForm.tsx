@@ -1,11 +1,10 @@
 import { useState, type SyntheticEvent } from "react";
-import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { getFirstFieldErrors } from "@/utils/forms/getFirstFieldErrors";
 import { RegisterFormContent } from "./RegisterFormContent";
 import {
-  createRegisterSubmitSchema,
+  registerSubmitSchema,
   type RegisterFormValues,
   type RegisterSubmitValues,
 } from "./registerSchema";
@@ -21,8 +20,6 @@ export function RegisterForm({
   isSubmitting = false,
   onSubmit,
 }: RegisterFormProps) {
-  const { t } = useTranslation();
-
   const [values, setValues] = useState<RegisterFormValues>({
     firstName: "",
     lastName: "",
@@ -51,7 +48,7 @@ export function RegisterForm({
   async function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const result = createRegisterSubmitSchema(t).safeParse(values);
+    const result = registerSubmitSchema.safeParse(values);
 
     if (!result.success) {
       setErrors(

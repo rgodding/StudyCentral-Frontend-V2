@@ -1,14 +1,12 @@
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { useStudyToast } from "@/components/feedback";
 import { RegisterForm } from "@/components/forms/register";
 import type { RegisterSubmitValues } from "@/components/forms/register/registerSchema";
-import { useAuth } from "@/hooks";
 import { AuthShell } from "@/components/layout/auth";
+import { useAuth } from "@/hooks";
 
 export function RegisterPage() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useStudyToast();
 
@@ -21,24 +19,24 @@ export function RegisterPage() {
       await register(values);
 
       toast.success({
-        title: t("auth.feedback.registerSuccess"),
+        title: "Account created successfully.",
       });
 
       navigate("/dashboard", { replace: true });
     } catch {
       toast.error({
-        title: t("auth.feedback.registerError"),
+        title: "Could not create account.",
       });
     }
   }
 
   return (
     <AuthShell
-      eyebrow={t("auth.pages.register.eyebrow")}
-      title={t("auth.pages.register.title")}
-      description={t("auth.pages.register.description")}
-      footerText={t("auth.pages.register.loginPrompt")}
-      footerLinkText={t("auth.pages.register.loginLink")}
+      eyebrow="Create account"
+      title="Join StudyCentral"
+      description="Create an account to access your courses and study material."
+      footerText="Already have an account?"
+      footerLinkText="Sign in"
       footerLinkTo="/login"
     >
       <RegisterForm isSubmitting={isSubmitting} onSubmit={handleSubmit} />

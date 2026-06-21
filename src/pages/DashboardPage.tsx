@@ -1,14 +1,12 @@
 import { HStack, Stack, Text } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { PageHeader, PageShell, Section } from "@/components/layout";
 import { useStudyToast } from "@/components/feedback";
-import { ColorModeToggle, LanguageToggle, StudyButton } from "@/components/ui";
+import { PageHeader, PageShell, Section } from "@/components/layout";
+import { ColorModeToggle, StudyButton } from "@/components/ui";
 import { useAuth } from "@/hooks";
 
 export function DashboardPage() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useStudyToast();
 
@@ -21,13 +19,13 @@ export function DashboardPage() {
       await logout();
 
       toast.success({
-        title: t("auth.feedback.logoutSuccess"),
+        title: "Signed out successfully.",
       });
 
       navigate("/login", { replace: true });
     } catch {
       toast.error({
-        title: t("auth.feedback.logoutError"),
+        title: "Could not sign out.",
       });
     }
   }
@@ -39,12 +37,11 @@ export function DashboardPage() {
       <Stack gap={4}>
         <HStack justify="flex-end" gap={2}>
           <ColorModeToggle />
-          <LanguageToggle />
         </HStack>
 
         <PageHeader
-          title={t("dashboard.title")}
-          description={t("dashboard.description")}
+          title="Dashboard"
+          description="This is the temporary authenticated landing page."
           actions={
             <StudyButton
               type="button"
@@ -52,22 +49,16 @@ export function DashboardPage() {
               loading={isLoggingOut}
               onClick={handleLogout}
             >
-              {t("dashboard.logout")}
+              Sign out
             </StudyButton>
           }
         />
 
-        <Section title={t("dashboard.title")}>
+        <Section title="Dashboard">
           <Stack gap={2}>
-            <Text color="textMuted">
-              {t("dashboard.loggedInAs", { name: fullName })}
-            </Text>
+            <Text color="textMuted">Signed in as {fullName}</Text>
 
-            {user && (
-              <Text color="textMuted">
-                {t("dashboard.role", { role: user.role })}
-              </Text>
-            )}
+            {user && <Text color="textMuted">Role: {user.role}</Text>}
           </Stack>
         </Section>
       </Stack>

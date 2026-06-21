@@ -1,6 +1,5 @@
 import { Box, HStack, type StackProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
 
 import { StudyIconButton } from "@/components/ui/StudyIconButton";
 
@@ -62,8 +61,6 @@ export function StudyChip({
 
   ...props
 }: StudyChipProps) {
-  const { t } = useTranslation();
-
   return (
     <HStack
       justify="space-between"
@@ -86,7 +83,7 @@ export function StudyChip({
 
       {addable && (
         <StudyIconButton
-          aria-label={addLabel ?? t("common.actions.addItem")}
+          aria-label={addLabel ?? "Add item"}
           variant="ghost"
           size="xs"
           flexShrink={0}
@@ -98,7 +95,7 @@ export function StudyChip({
 
       {removable && (
         <StudyIconButton
-          aria-label={removeLabel ?? t("common.actions.removeItem")}
+          aria-label={removeLabel ?? "Remove item"}
           variant="ghost"
           size="xs"
           flexShrink={0}

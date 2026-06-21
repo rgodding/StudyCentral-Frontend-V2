@@ -1,14 +1,12 @@
-import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useStudyToast } from "@/components/feedback";
-import { useAuth } from "@/hooks";
+import { LoginForm } from "@/components/forms/login/LoginForm";
 import type { LoginFormValues } from "@/components/forms/login/loginSchema";
 import { AuthShell } from "@/components/layout/auth";
-import { LoginForm } from "@/components/forms/login/LoginForm";
+import { useAuth } from "@/hooks";
 
 export function LoginPage() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useStudyToast();
@@ -22,7 +20,7 @@ export function LoginPage() {
       await login(values);
 
       toast.success({
-        title: t("auth.feedback.loginSuccess"),
+        title: "Signed in successfully.",
       });
 
       const from = location.state?.from?.pathname ?? "/dashboard";
@@ -30,18 +28,18 @@ export function LoginPage() {
       navigate(from, { replace: true });
     } catch {
       toast.error({
-        title: t("auth.feedback.loginError"),
+        title: "Could not sign in.",
       });
     }
   }
 
   return (
     <AuthShell
-      eyebrow={t("auth.pages.login.eyebrow")}
-      title={t("auth.pages.login.title")}
-      description={t("auth.pages.login.description")}
-      footerText={t("auth.pages.login.registerPrompt")}
-      footerLinkText={t("auth.pages.login.registerLink")}
+      eyebrow="Welcome back"
+      title="Sign in to StudyCentral"
+      description="Access your courses, assignments, study folders and messages."
+      footerText="Do not have an account?"
+      footerLinkText="Create one"
       footerLinkTo="/register"
     >
       <LoginForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />

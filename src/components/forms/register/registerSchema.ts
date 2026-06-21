@@ -1,41 +1,31 @@
-import type { TFunction } from "i18next";
 import { z } from "zod";
 
-export function createRegisterSchema(t: TFunction) {
-  return z.object({
-    firstName: z.string().min(1, t("validation.auth.firstNameRequired")),
+export const registerSchema = z.object({
+  firstName: z.string().min(1, "First name is required."),
 
-    lastName: z.string().min(1, t("validation.auth.lastNameRequired")),
+  lastName: z.string().min(1, "Last name is required."),
 
-    email: z
-      .string()
-      .min(1, t("validation.auth.emailRequired"))
-      .pipe(z.email(t("validation.common.emailInvalid"))),
+  email: z
+    .string()
+    .min(1, "Email is required.")
+    .pipe(z.email("Enter a valid email address.")),
 
-    password: z.string().min(1, t("validation.auth.passwordRequired")),
+  password: z.string().min(1, "Password is required."),
 
-    confirmPassword: z
-      .string()
-      .min(1, t("validation.auth.confirmPasswordRequired")),
-  });
-}
+  confirmPassword: z.string().min(1, "Confirm password is required."),
+});
 
-export function createRegisterSubmitSchema(t: TFunction) {
-  return createRegisterSchema(t)
-    .refine((values) => values.password === values.confirmPassword, {
-      path: ["confirmPassword"],
-      message: t("validation.auth.passwordsDoNotMatch"),
-    })
-    .transform((values) => ({
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      password: values.password,
-    }));
-}
+export const registerSubmitSchema = registerSchema
+  .refine((values) => values.password === values.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match.",
+  })
+  .transform((values) => ({
+    firstName: values.firstName,
+    lastName: values.lastName,
+    email: values.email,
+    password: values.password,
+  }));
 
-export type RegisterFormValues = z.input<ReturnType<typeof createRegisterSchema>>;
-
-export type RegisterSubmitValues = z.output<
-  ReturnType<typeof createRegisterSubmitSchema>
->;
+export type RegisterFormValues = z.input<typeof registerSchema>;
+export type RegisterSubmitValues = z.output<typeof registerSubmitSchema>;

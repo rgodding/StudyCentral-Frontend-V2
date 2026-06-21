@@ -1,5 +1,4 @@
 import { Box, Spinner, Stack, type BoxProps } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
 
 import { StudyText } from "@/components/ui/StudyText";
 
@@ -9,12 +8,10 @@ type LoadingStateProps = BoxProps & {
 };
 
 export function LoadingState({
-  text,
+  text = "Loading...",
   fullHeight = false,
   ...props
 }: LoadingStateProps) {
-  const { t } = useTranslation();
-
   return (
     <Box
       w="full"
@@ -26,9 +23,7 @@ export function LoadingState({
     >
       <Stack align="center" gap={3}>
         <Spinner size="md" color="accent" />
-        <StudyText variant="muted">
-          {text ?? t("common.feedback.loading")}
-        </StudyText>
+        <StudyText variant="muted">{text}</StudyText>
       </Stack>
     </Box>
   );

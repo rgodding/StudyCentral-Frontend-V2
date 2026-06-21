@@ -1,6 +1,5 @@
 import { IconButton, type IconButtonProps } from "@chakra-ui/react";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { LuMoon, LuSun } from "react-icons/lu";
 
 import { getColorMode, toggleColorMode } from "@/utils/colorMode";
@@ -8,7 +7,6 @@ import { getColorMode, toggleColorMode } from "@/utils/colorMode";
 type Props = Omit<IconButtonProps, "aria-label" | "children">;
 
 export function ColorModeToggle(props: Props) {
-  const { t } = useTranslation();
   const [colorMode, setColorMode] = useState(getColorMode);
 
   const isDark = colorMode === "dark";
@@ -20,11 +18,7 @@ export function ColorModeToggle(props: Props) {
 
   return (
     <IconButton
-      aria-label={
-        isDark
-          ? t("common.colorMode.switchToLight")
-          : t("common.colorMode.switchToDark")
-      }
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       size="sm"
       rounded="button"
       variant="outline"

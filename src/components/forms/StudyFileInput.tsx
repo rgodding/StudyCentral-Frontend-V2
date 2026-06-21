@@ -1,7 +1,6 @@
 import { Box, HStack, Input, Stack, type BoxProps } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import { useRef } from "react";
-import { useTranslation } from "react-i18next";
 
 import {
   StudyButton,
@@ -31,7 +30,6 @@ export function StudyFileInput({
   onChange,
   ...props
 }: StudyFileInputProps) {
-  const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const hasReachedMaxFiles = selectedFiles.length >= maxFiles;
@@ -91,14 +89,11 @@ export function StudyFileInput({
             disabled={isInputDisabled}
             onClick={handleClick}
           >
-            {label ?? t("common.files.selectFiles")}
+            {label ?? "Select files"}
           </StudyButton>
 
           <StudyText variant="subtle">
-            {t("common.files.selectedCount", {
-              selectedCount: selectedFiles.length,
-              maxFiles,
-            })}
+            {selectedFiles.length}/{maxFiles} selected
           </StudyText>
         </Stack>
 
@@ -131,9 +126,7 @@ export function StudyFileInput({
                     key={`${file.name}-${file.size}-${index}`}
                     removable
                     variant="subtle"
-                    removeLabel={t("common.files.removeFile", {
-                      fileName: file.name,
-                    })}
+                    removeLabel={`Remove ${file.name}`}
                     onRemove={() => handleRemove(index)}
                     w="185px"
                     maxW="185px"
@@ -186,9 +179,7 @@ export function StudyFileInput({
               })}
             </Box>
           ) : (
-            <StudyText variant="subtle">
-              {t("common.files.noFileSelected")}
-            </StudyText>
+            <StudyText variant="subtle">No file selected.</StudyText>
           )}
         </Box>
       </HStack>
