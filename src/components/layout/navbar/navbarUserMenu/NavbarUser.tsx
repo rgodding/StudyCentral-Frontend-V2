@@ -23,6 +23,7 @@ import {
   toggleColorMode,
   type ColorMode,
 } from "@/utils/colorMode";
+import { getImageUrl } from "@/utils/getImageUrl";
 
 type NavbarUserProps = Omit<StudyIconButtonProps, "aria-label" | "children">;
 
@@ -36,6 +37,8 @@ export function NavbarUser(props: NavbarUserProps) {
 
   const isLoggingOut = logoutStatus === "pending";
   const isDark = colorMode === "dark";
+  const fullName = user ? `${user.firstName} ${user.lastName}` : undefined;
+  const profilePictureUrl = getImageUrl(user?.profilePictureUrl);
 
   function handleColorModeToggle() {
     const nextMode = toggleColorMode();
@@ -63,7 +66,9 @@ export function NavbarUser(props: NavbarUserProps) {
   }
 
   return (
-    <Menu.Root positioning={{ placement: "bottom-end", offset: { mainAxis: 18 } }}>
+    <Menu.Root
+      positioning={{ placement: "bottom-end", offset: { mainAxis: 18 } }}
+    >
       <Menu.Trigger asChild>
         <StudyIconButton
           aria-label="User menu"
@@ -73,8 +78,9 @@ export function NavbarUser(props: NavbarUserProps) {
           {...props}
         >
           <StudyAvatar
-            src={user?.profilePictureUrl}
-            size="sm"
+            fullName={fullName}
+            src={profilePictureUrl}
+            size="md"
             shape="circle"
           />
         </StudyIconButton>
