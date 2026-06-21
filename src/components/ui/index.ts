@@ -2,6 +2,7 @@ export * from "./StudyAvatar";
 export * from "./StudyBadge";
 export * from "./StudyButton";
 export * from "./StudyCard";
+export * from "./StudyChip";
 export * from "./StudyDivider";
 export * from "./StudyHeading";
 export * from "./StudyIconButton";

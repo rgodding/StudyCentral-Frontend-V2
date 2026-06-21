@@ -238,9 +238,9 @@ const config = defineConfig({
       },
       // Motion duration
       durations: {
-        fast: { value: "180ms" },
-        normal: { value: "320ms" },
-        slow: { value: "520ms" },
+        fast: { value: "250ms" },
+        normal: { value: "500ms" },
+        slow: { value: "1000ms" },
       },
       // Motion easing
       easings: {

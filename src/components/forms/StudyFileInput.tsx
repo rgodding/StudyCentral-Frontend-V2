@@ -1,38 +1,56 @@
-import { Box, Input, Stack, type BoxProps } from "@chakra-ui/react";
+import { getFileKind, getFileNameParts } from "@/utils/fileUtils";
+import {
+  StudyButton,
+  StudyChip,
+  StudyDivider,
+  StudyText,
+} from "@/components/ui";
+import { Box, HStack, Input, Stack, type BoxProps } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import { useRef } from "react";
-
-import { StudyButton } from "@/components/ui/StudyButton";
-import { StudyText } from "@/components/ui/StudyText";
 
 type StudyFileInputProps = Omit<BoxProps, "onChange"> & {
   label?: string;
   accept?: string;
-  multiple?: boolean;
   disabled?: boolean;
   selectedFiles?: File[];
+  maxFiles?: number;
+  helperText?: string;
   onChange: (files: File[]) => void;
 };
 
 export function StudyFileInput({
-  label = "Choose file",
+  label = "Select files",
   accept,
-  multiple = false,
   disabled = false,
   selectedFiles = [],
+  helperText,
+  maxFiles = 1,
   onChange,
   ...props
 }: StudyFileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const hasReachedMaxFiles = selectedFiles.length >= maxFiles;
+  const isInputDisabled = disabled || hasReachedMaxFiles;
+
   function handleClick() {
-    if (disabled) return;
+    if (isInputDisabled) return;
     inputRef.current?.click();
   }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files ?? []);
-    onChange(files);
+    const pickedFiles = Array.from(event.target.files ?? []);
+    const availableSlots = Math.max(maxFiles - selectedFiles.length, 0);
+    const filesToAdd = pickedFiles.slice(0, availableSlots);
+
+    onChange([...selectedFiles, ...filesToAdd]);
+
+    event.target.value = "";
+  }
+
+  function handleRemove(fileIndex: number) {
+    onChange(selectedFiles.filter((_, index) => index !== fileIndex));
   }
 
   return (
@@ -42,43 +60,128 @@ export function StudyFileInput({
       borderWidth="1px"
       borderColor="borderSubtle"
       bg="surfaceBg"
-      p={4}
+      p={2}
       {...props}
     >
-      <Stack gap={3}>
-        <Box>
-          <Input
-            ref={inputRef}
-            type="file"
-            accept={accept}
-            multiple={multiple}
-            disabled={disabled}
-            display="none"
-            onChange={handleChange}
-          />
+      <Input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        multiple={maxFiles > 1}
+        disabled={isInputDisabled}
+        display="none"
+        onChange={handleChange}
+      />
+
+      <HStack align="stretch" gap={3}>
+        <Stack gap={2} flexShrink={0} maxW="180px" justify="center" pr={2}>
+          {helperText && (
+            <StudyText variant="subtle" lineClamp={1}>
+              {helperText}
+            </StudyText>
+          )}
 
           <StudyButton
             type="button"
             variant="secondary"
-            disabled={disabled}
+            size="sm"
+            disabled={isInputDisabled}
             onClick={handleClick}
           >
             {label}
           </StudyButton>
-        </Box>
 
-        {selectedFiles.length > 0 ? (
-          <Stack gap={1}>
-            {selectedFiles.map((file) => (
-              <StudyText key={`${file.name}-${file.size}`} variant="muted">
-                {file.name}
-              </StudyText>
-            ))}
-          </Stack>
-        ) : (
-          <StudyText variant="subtle">No file selected.</StudyText>
-        )}
-      </Stack>
+          <StudyText variant="subtle">
+            {selectedFiles.length}/{maxFiles} selected
+          </StudyText>
+        </Stack>
+
+        <StudyDivider orientation="vertical" />
+
+        <Box
+          flex="1"
+          minW={0}
+          maxH="88px"
+          overflowY="auto"
+          overflowX="hidden"
+          pr={1}
+          display="flex"
+          alignItems="center"
+        >
+          {selectedFiles.length > 0 ? (
+            <Box
+              display="grid"
+              gridTemplateColumns="repeat(auto-fill, minmax(185px, max-content))"
+              gap={1}
+              alignItems="center"
+              w="full"
+            >
+              {selectedFiles.map((file, index) => {
+                const { base, extension } = getFileNameParts(file.name, 14);
+                const fileKind = getFileKind(file);
+
+                return (
+                  <StudyChip
+                    key={`${file.name}-${file.size}-${index}`}
+                    removable
+                    variant="subtle"
+                    removeLabel={`Remove ${file.name}`}
+                    onRemove={() => handleRemove(index)}
+                    w="185px"
+                    maxW="185px"
+                    minW={0}
+                    px={2}
+                    py={1}
+                  >
+                    <HStack gap={2} minW={0} w="full">
+                      <Box
+                        flexShrink={0}
+                        minW="32px"
+                        px={1.5}
+                        py={0.5}
+                        rounded="sm"
+                        bg="panelBgSubtle"
+                        borderWidth="1px"
+                        borderColor="borderSubtle"
+                        color="textSubtle"
+                        fontSize="10px"
+                        fontWeight="semibold"
+                        textAlign="center"
+                        lineHeight="1.2"
+                      >
+                        {fileKind}
+                      </Box>
+
+                      <HStack gap={0} minW={0} flex="1">
+                        <StudyText
+                          variant="muted"
+                          truncate
+                          minW={0}
+                          fontSize="xs"
+                        >
+                          {base}
+                        </StudyText>
+
+                        {extension && (
+                          <StudyText
+                            variant="muted"
+                            flexShrink={0}
+                            fontSize="xs"
+                          >
+                            {extension}
+                          </StudyText>
+                        )}
+                      </HStack>
+                    </HStack>
+                  </StudyChip>
+                );
+              })}
+            </Box>
+          ) : (
+            <StudyText variant="subtle">No file selected.</StudyText>
+          )}
+        </Box>
+      </HStack>
     </Box>
   );
 }
