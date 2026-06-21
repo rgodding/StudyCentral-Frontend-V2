@@ -22,3 +22,7 @@ export type UpdateStudyFolderDto = {
   name: string;
   parentFolderId?: Guid | null;
 };
+
+export type MoveFolderDto = {
+  newParentFolderId?: Guid | null;
+};
