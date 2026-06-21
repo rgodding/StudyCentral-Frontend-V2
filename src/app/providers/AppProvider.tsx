@@ -1,16 +1,18 @@
-import { QueryProvider } from "@/app/providers/QueryProvider";
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 
+import { queryClient } from "@/app/providers/queryClient";
+import { system } from "@/theme";
 
-type AppProviderProps = {
+type Props = {
   children: ReactNode;
 };
 
-export function AppProvider({ children }: AppProviderProps) {
+export function AppProviders({ children }: Props) {
   return (
-    <ChakraProvider value={defaultSystem}>
-      <QueryProvider>{children}</QueryProvider>
+    <ChakraProvider value={system}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ChakraProvider>
   );
 }
