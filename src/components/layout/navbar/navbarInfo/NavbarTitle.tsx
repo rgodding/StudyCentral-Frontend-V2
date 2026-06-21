@@ -6,12 +6,13 @@ export function NavbarTitle(props: NavbarTitleProps) {
   return (
     <StudyText
       variant="label"
-      fontSize="xl"
+      fontSize="lg"
       fontWeight="bold"
       color="textMain"
       whiteSpace="nowrap"
       userSelect="none"
       lineHeight="1"
+      display={{ base: "none", md: "block" }}
       {...props}
     >
       StudyCentral

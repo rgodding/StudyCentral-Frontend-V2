@@ -1,8 +1,8 @@
 import { Box, Grid, type GridProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
+import { Navbar } from "@/components/layout/navbar";
 import { appLayoutConfig } from "./appLayoutConfig";
-import { Navbar } from "@/components/layout/navbar/Navbar";
 
 type AppShellProps = GridProps & {
   children: ReactNode;
@@ -40,6 +40,7 @@ export function AppShell({ children, subNavbar, ...props }: AppShellProps) {
 
       <Box
         as="main"
+        h="full"
         minH={0}
         overflowY="auto"
         overflowX="hidden"

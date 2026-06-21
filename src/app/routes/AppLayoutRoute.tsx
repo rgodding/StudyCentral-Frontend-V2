@@ -1,11 +1,13 @@
-import { AppShell } from "@/components/layout/app";
 import { Outlet } from "react-router-dom";
 
+import { AppShell, PageFrame } from "@/components/layout";
 
 export function AppLayoutRoute() {
   return (
     <AppShell>
-      <Outlet />
+      <PageFrame frameWidth="large" variant="panel">
+        <Outlet />
+      </PageFrame>
     </AppShell>
   );
 }
