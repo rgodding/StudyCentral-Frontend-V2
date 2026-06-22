@@ -6,14 +6,10 @@ import {
   ColorModeToggle,
   LanguageToggle,
   StudyBox,
-  StudyCard,
-  StudyHeading,
+  StudyCard
 } from "@/components/ui";
 
 type AuthShellProps = {
-  eyebrow: string;
-  title: string;
-  description: string;
   children: ReactNode;
   footerText: string;
   footerLinkText: string;
@@ -21,9 +17,6 @@ type AuthShellProps = {
 };
 
 export function AuthShell({
-  eyebrow,
-  title,
-  description,
   children,
   footerText,
   footerLinkText,
@@ -50,22 +43,6 @@ export function AuthShell({
         </HStack>
 
         <Stack gap={6}>
-          <Stack gap={2} textAlign="center">
-            <Text
-              fontSize="xs"
-              fontWeight="semibold"
-              color="textSubtle"
-              textTransform="uppercase"
-              letterSpacing="wide"
-            >
-              {eyebrow}
-            </Text>
-
-            <StudyHeading size="lg">{title}</StudyHeading>
-
-            <Text color="textMuted">{description}</Text>
-          </Stack>
-
           <StudyCard>{children}</StudyCard>
 
           <HStack justify="center" gap={2} fontSize="sm">

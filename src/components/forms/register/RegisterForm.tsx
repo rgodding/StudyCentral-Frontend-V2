@@ -16,17 +16,35 @@ type RegisterFormProps = {
   onSubmit: (values: RegisterSubmitValues) => Promise<void> | void;
 };
 
+const emptyRegisterValues: RegisterFormValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+function getInitialRegisterValues(): RegisterFormValues {
+  if (!import.meta.env.DEV) {
+    return emptyRegisterValues;
+  }
+
+  return {
+    firstName: "Demo",
+    lastName: "Student",
+    email: `demo.student.${Date.now()}@studycentral.dk`,
+    password: "password",
+    confirmPassword: "password",
+  };
+}
+
 export function RegisterForm({
   isSubmitting = false,
   onSubmit,
 }: RegisterFormProps) {
-  const [values, setValues] = useState<RegisterFormValues>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [values, setValues] = useState<RegisterFormValues>(
+    getInitialRegisterValues(),
+  );
 
   const [errors, setErrors] = useState<RegisterFormErrors>({});
 
@@ -64,7 +82,7 @@ export function RegisterForm({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <RegisterFormContent
         values={values}
         errors={errors}

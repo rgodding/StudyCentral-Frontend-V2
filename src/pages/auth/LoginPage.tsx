@@ -35,9 +35,6 @@ export function LoginPage() {
 
   return (
     <AuthShell
-      eyebrow="Welcome back"
-      title="Sign in to StudyCentral"
-      description="Access your courses, assignments, study folders and messages."
       footerText="Do not have an account?"
       footerLinkText="Create one"
       footerLinkTo="/register"

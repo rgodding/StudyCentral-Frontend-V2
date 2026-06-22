@@ -1,21 +1,23 @@
 import { Grid, type GridProps } from "@chakra-ui/react";
-import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { Navbar } from "@/components/layout/navbar";
 import { StudyBox } from "@/components/ui";
 import { appLayoutConfig } from "./appLayoutConfig";
 
-type AppShellProps = GridProps & {
+export type AppShellProps = GridProps & {
   children: ReactNode;
   subNavbar?: ReactNode;
 };
 
 const subNavbarAnimationMs = 250;
 
-// This component renders the main layout of the app: Navbar, SubNavbar, Main Content
+// Renders the main app layout: navbar, optional sub-navbar, and scrollable main content.
 export function AppShell({ children, subNavbar, ...props }: AppShellProps) {
-  const [renderedSubNavbar, setRenderedSubNavbar] = useState(subNavbar);
+  const [renderedSubNavbar, setRenderedSubNavbar] = useState<
+    ReactNode | undefined
+  >(subNavbar);
+
   const [isSubNavbarLeaving, setIsSubNavbarLeaving] = useState(false);
 
   const hasIncomingSubNavbar = Boolean(subNavbar);

@@ -1,13 +1,7 @@
-import {
-  Box,
-  CloseButton,
-  HStack,
-  Portal,
-  Stack,
-  Toast,
-  Toaster,
-} from "@chakra-ui/react";
+import { HStack, Icon, Portal, Stack, Toast, Toaster } from "@chakra-ui/react";
+import { LuX } from "react-icons/lu";
 
+import { StudyIconButton } from "@/components/ui/StudyIconButton";
 import { StudyText } from "@/components/ui/StudyText";
 import { getToastIcon } from "@/utils/toasterUtils";
 import { studyToaster } from "./studyToasterInstance";
@@ -18,7 +12,6 @@ const toastStyles = {
     borderColor: "green.300",
     color: "green.900",
     iconColor: "green.700",
-    closeColor: "green.700",
     closeHoverBg: "green.200",
   },
   error: {
@@ -26,7 +19,6 @@ const toastStyles = {
     borderColor: "red.300",
     color: "red.900",
     iconColor: "red.700",
-    closeColor: "red.700",
     closeHoverBg: "red.200",
   },
   warning: {
@@ -34,7 +26,6 @@ const toastStyles = {
     borderColor: "yellow.300",
     color: "yellow.900",
     iconColor: "yellow.700",
-    closeColor: "yellow.700",
     closeHoverBg: "yellow.200",
   },
   info: {
@@ -42,13 +33,23 @@ const toastStyles = {
     borderColor: "blue.300",
     color: "blue.900",
     iconColor: "blue.700",
-    closeColor: "blue.700",
     closeHoverBg: "blue.200",
   },
 } as const;
 
+type ToastType = keyof typeof toastStyles;
+
+function isToastType(type?: string): type is ToastType {
+  return (
+    type === "success" ||
+    type === "error" ||
+    type === "warning" ||
+    type === "info"
+  );
+}
+
 function getToastStyle(type?: string) {
-  if (type === "success" || type === "error" || type === "warning" || type === "info") {
+  if (isToastType(type)) {
     return toastStyles[type];
   }
 
@@ -64,13 +65,14 @@ export function StudyToaster() {
 
           return (
             <Toast.Root
-              width="360px"
+              w="360px"
+              maxW="calc(100vw - 32px)"
               rounded="card"
               borderWidth="1px"
               borderColor={styles.borderColor}
               bg={styles.bg}
               color={styles.color}
-              shadow="floating"
+              shadow="overlay"
               userSelect="none"
             >
               <HStack align="start" gap={3} p={4}>
@@ -80,7 +82,7 @@ export function StudyToaster() {
                   {toast.title && (
                     <Toast.Title asChild>
                       <StudyText
-                        fontWeight="semibold"
+                        variant="label"
                         color={styles.color}
                         truncate
                       >
@@ -91,7 +93,12 @@ export function StudyToaster() {
 
                   {toast.description && (
                     <Toast.Description asChild>
-                      <StudyText color={styles.color} opacity={0.85} lineClamp={3}>
+                      <StudyText
+                        variant="body"
+                        color={styles.color}
+                        opacity={0.85}
+                        lineClamp={3}
+                      >
                         {toast.description}
                       </StudyText>
                     </Toast.Description>
@@ -100,25 +107,24 @@ export function StudyToaster() {
 
                 {toast.closable && (
                   <Toast.CloseTrigger asChild>
-                    <CloseButton
-                      size="sm"
-                      rounded="button"
-                      color={styles.closeColor}
-                      bg="transparent"
-                      borderWidth="1px"
-                      borderColor="transparent"
-                      transitionProperty="colors, border-color, background-color"
-                      transitionDuration="normal"
+                    <StudyIconButton
+                      aria-label="Close notification"
+                      variant="ghost"
+                      size="xs"
+                      color={styles.iconColor}
+                      flexShrink={0}
                       _hover={{
                         color: styles.color,
                         bg: styles.closeHoverBg,
-                        borderColor: styles.closeColor,
+                        borderColor: styles.iconColor,
                       }}
                       _active={{
                         bg: styles.closeHoverBg,
-                        borderColor: styles.closeColor,
+                        borderColor: styles.iconColor,
                       }}
-                    />
+                    >
+                      <LuX />
+                    </StudyIconButton>
                   </Toast.CloseTrigger>
                 )}
               </HStack>
@@ -136,11 +142,11 @@ type ToastIndicatorProps = {
 
 function ToastIndicator({ type }: ToastIndicatorProps) {
   const styles = getToastStyle(type);
-  const Icon = getToastIcon(type);
+  const ToastIcon = getToastIcon(type);
 
   return (
-    <Box
-      as={Icon}
+    <Icon
+      as={ToastIcon}
       mt={0.5}
       boxSize="18px"
       color={styles.iconColor}

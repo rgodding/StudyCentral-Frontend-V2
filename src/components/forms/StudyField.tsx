@@ -1,13 +1,16 @@
 import { Field, Stack, type StackProps } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { StudyText } from "@/components/ui/StudyText";
 
-type StudyFieldProps = Omit<StackProps, "children"> & {
-  label?: string;
-  helperText?: string;
-  errorText?: string;
+type FieldRootProps = ComponentProps<typeof Field.Root>;
+
+export type StudyFieldProps = Omit<StackProps, "children"> & {
+  label?: ReactNode;
+  helperText?: ReactNode;
+  errorText?: ReactNode;
   required?: boolean;
+  rootProps?: Omit<FieldRootProps, "children" | "invalid" | "required">;
   children: ReactNode;
 };
 
@@ -16,22 +19,26 @@ export function StudyField({
   helperText,
   errorText,
   required = false,
+  rootProps,
   children,
   ...props
 }: StudyFieldProps) {
   const hasError = Boolean(errorText);
 
   return (
-    <Field.Root invalid={hasError} required={required}>
+    <Field.Root invalid={hasError} required={required} {...rootProps}>
       <Stack gap={1.5} w="full" {...props}>
         {label && (
           <Field.Label>
             <StudyText variant="label">
               {label}
+
               {required && (
-                <StudyText as="span" color="dangerText" ml={1}>
-                  *
-                </StudyText>
+                <Field.RequiredIndicator
+                  color="dangerText"
+                  ml={1}
+                  fallback={null}
+                />
               )}
             </StudyText>
           </Field.Label>
@@ -47,7 +54,9 @@ export function StudyField({
 
         {hasError && (
           <Field.ErrorText>
-            <StudyText variant="error">{errorText}</StudyText>
+            <StudyText variant="error" size="xs">
+              {errorText}
+            </StudyText>
           </Field.ErrorText>
         )}
       </Stack>

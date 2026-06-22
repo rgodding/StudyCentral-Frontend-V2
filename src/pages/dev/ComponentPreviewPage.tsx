@@ -46,6 +46,7 @@ import {
   PreviewLayout,
   PreviewSection,
 } from "@/pages/dev/components";
+import { studyToaster } from "@/components/feedback";
 
 const navItems = [
   { id: "buttons", label: "Buttons" },
@@ -62,6 +63,7 @@ const navItems = [
   { id: "list-items", label: "List Items" },
   { id: "menus-popovers", label: "Menus & Popovers" },
   { id: "dialogs", label: "Dialogs" },
+  { id: "toasters", label: "Toasters" },
   { id: "tabs", label: "Tabs" },
   { id: "tables", label: "Tables" },
 ];
@@ -158,6 +160,15 @@ export function ComponentPreviewPage() {
 
   function getStudentRowKey(student: DemoStudent) {
     return student.id;
+  }
+
+  function showPreviewToast(type: "success" | "error" | "warning" | "info") {
+    studyToaster.create({
+      type,
+      title: `${type.charAt(0).toUpperCase()}${type.slice(1)} toast`,
+      description: "This is a preview toast from the component preview page.",
+      closable: true,
+    });
   }
 
   return (
@@ -718,6 +729,51 @@ export function ComponentPreviewPage() {
               Are you sure you want to delete this assignment?
             </StudyText>
           </StudyConfirmDialog>
+        </PreviewCard>
+      </PreviewSection>
+
+      <PreviewSection
+        id="toasters"
+        title="Toasters"
+        description="Toast notifications for success, error, warning, and info feedback."
+      >
+        <PreviewCard title="Toast variants" tokenPath="StudyToaster">
+          <Stack gap={4}>
+            <StudyText variant="muted">
+              Click a button to trigger a toast. The toaster itself should be
+              mounted globally in the app provider.
+            </StudyText>
+
+            <HStack gap={3} wrap="wrap">
+              <StudyButton
+                variant="primary"
+                onClick={() => showPreviewToast("success")}
+              >
+                Success toast
+              </StudyButton>
+
+              <StudyButton
+                variant="danger"
+                onClick={() => showPreviewToast("error")}
+              >
+                Error toast
+              </StudyButton>
+
+              <StudyButton
+                variant="secondary"
+                onClick={() => showPreviewToast("warning")}
+              >
+                Warning toast
+              </StudyButton>
+
+              <StudyButton
+                variant="ghost"
+                onClick={() => showPreviewToast("info")}
+              >
+                Info toast
+              </StudyButton>
+            </HStack>
+          </Stack>
         </PreviewCard>
       </PreviewSection>
 

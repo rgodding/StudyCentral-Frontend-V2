@@ -54,7 +54,7 @@ export function LoginForm({ isSubmitting = false, onSubmit }: LoginFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <LoginFormContent
         values={values}
         errors={errors}

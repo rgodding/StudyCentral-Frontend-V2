@@ -1,8 +1,9 @@
-import { Box, HStack, Input, Stack, type BoxProps } from "@chakra-ui/react";
-import type { ChangeEvent } from "react";
+import { HStack, Input, Stack, type BoxProps } from "@chakra-ui/react";
+import type { ChangeEvent, ReactNode } from "react";
 import { useRef } from "react";
 
 import {
+  StudyBox,
   StudyButton,
   StudyChip,
   StudyDivider,
@@ -10,13 +11,13 @@ import {
 } from "@/components/ui";
 import { getFileKind, getFileNameParts } from "@/utils/fileUtils";
 
-type StudyFileInputProps = Omit<BoxProps, "onChange"> & {
-  label?: string;
+export type StudyFileInputProps = Omit<BoxProps, "onChange"> & {
+  label?: ReactNode;
   accept?: string;
   disabled?: boolean;
   selectedFiles?: File[];
   maxFiles?: number;
-  helperText?: string;
+  helperText?: ReactNode;
   onChange: (files: File[]) => void;
 };
 
@@ -32,20 +33,26 @@ export function StudyFileInput({
 }: StudyFileInputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const hasReachedMaxFiles = selectedFiles.length >= maxFiles;
+  const resolvedMaxFiles = Math.max(maxFiles, 1);
+  const hasReachedMaxFiles = selectedFiles.length >= resolvedMaxFiles;
   const isInputDisabled = disabled || hasReachedMaxFiles;
 
   function handleClick() {
-    if (isInputDisabled) return;
+    if (isInputDisabled) {
+      return;
+    }
+
     inputRef.current?.click();
   }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const pickedFiles = Array.from(event.target.files ?? []);
-    const availableSlots = Math.max(maxFiles - selectedFiles.length, 0);
+    const availableSlots = Math.max(resolvedMaxFiles - selectedFiles.length, 0);
     const filesToAdd = pickedFiles.slice(0, availableSlots);
 
-    onChange([...selectedFiles, ...filesToAdd]);
+    if (filesToAdd.length > 0) {
+      onChange([...selectedFiles, ...filesToAdd]);
+    }
 
     event.target.value = "";
   }
@@ -55,12 +62,12 @@ export function StudyFileInput({
   }
 
   return (
-    <Box
+    <StudyBox
+      variant="surface"
       w="full"
       rounded="card"
       borderWidth="1px"
       borderColor="borderSubtle"
-      bg="surfaceBg"
       p={2}
       {...props}
     >
@@ -68,7 +75,7 @@ export function StudyFileInput({
         ref={inputRef}
         type="file"
         accept={accept}
-        multiple={maxFiles > 1}
+        multiple={resolvedMaxFiles > 1}
         disabled={isInputDisabled}
         display="none"
         onChange={handleChange}
@@ -93,13 +100,14 @@ export function StudyFileInput({
           </StudyButton>
 
           <StudyText variant="subtle">
-            {selectedFiles.length}/{maxFiles} selected
+            {selectedFiles.length}/{resolvedMaxFiles} selected
           </StudyText>
         </Stack>
 
         <StudyDivider orientation="vertical" />
 
-        <Box
+        <StudyBox
+          variant="plain"
           flex="1"
           minW={0}
           maxH="88px"
@@ -110,7 +118,8 @@ export function StudyFileInput({
           alignItems="center"
         >
           {selectedFiles.length > 0 ? (
-            <Box
+            <StudyBox
+              variant="plain"
               display="grid"
               gridTemplateColumns="repeat(auto-fill, minmax(185px, max-content))"
               gap={1}
@@ -126,24 +135,21 @@ export function StudyFileInput({
                     key={`${file.name}-${file.size}-${index}`}
                     removable
                     variant="subtle"
+                    size="sm"
                     removeLabel={`Remove ${file.name}`}
                     onRemove={() => handleRemove(index)}
                     w="185px"
                     maxW="185px"
                     minW={0}
-                    px={2}
-                    py={1}
                   >
                     <HStack gap={2} minW={0} w="full">
-                      <Box
+                      <StudyBox
+                        variant="subtle"
                         flexShrink={0}
                         minW="32px"
                         px={1.5}
                         py={0.5}
                         rounded="sm"
-                        bg="panelBgSubtle"
-                        borderWidth="1px"
-                        borderColor="borderSubtle"
                         color="textSubtle"
                         fontSize="10px"
                         fontWeight="semibold"
@@ -151,7 +157,7 @@ export function StudyFileInput({
                         lineHeight="1.2"
                       >
                         {fileKind}
-                      </Box>
+                      </StudyBox>
 
                       <HStack gap={0} minW={0} flex="1">
                         <StudyText
@@ -177,12 +183,12 @@ export function StudyFileInput({
                   </StudyChip>
                 );
               })}
-            </Box>
+            </StudyBox>
           ) : (
             <StudyText variant="subtle">No file selected.</StudyText>
           )}
-        </Box>
+        </StudyBox>
       </HStack>
-    </Box>
+    </StudyBox>
   );
 }

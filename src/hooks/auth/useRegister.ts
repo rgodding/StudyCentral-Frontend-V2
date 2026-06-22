@@ -9,8 +9,12 @@ export function useRegister() {
 
   return useMutation({
     mutationFn: (dto: RegisterDto) => authApi.register(dto),
-    onSuccess: (user) => {
-      queryClient.setQueryData(queryKeys.auth.currentUser, user);
+    onSuccess: async (user) => {
+      queryClient.setQueryData(queryKeys.account.me, user);
+
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.account.me,
+      });
     },
   });
 }
