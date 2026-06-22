@@ -164,6 +164,7 @@ export function ComponentPreviewPage() {
     <PreviewLayout
       title="Component Preview"
       description="A visual reference for reusable StudyCentral UI components, variants, sizes, and common usage patterns."
+      sidebarTitle="Component Preview"
       navItems={navItems}
     >
       <PreviewSection

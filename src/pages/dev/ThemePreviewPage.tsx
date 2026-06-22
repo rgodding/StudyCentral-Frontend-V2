@@ -67,13 +67,7 @@ const radii = ["button", "card", "panel", "full"];
 
 const shadows = ["card", "panel", "overlay"];
 
-const spacing = [
-  "pageX",
-  "pageY",
-  "sectionGap",
-  "cardGap",
-  "fieldGap",
-];
+const spacing = ["pageX", "pageY", "sectionGap", "cardGap", "fieldGap"];
 
 const sizes = [
   "mainNavbarHeight",
@@ -112,6 +106,7 @@ export function ThemePreviewPage() {
     <PreviewLayout
       title="Theme Preview"
       description="A visual reference for StudyCentral theme tokens, semantic colors, typography, spacing, shadows, radii, and animations."
+      sidebarTitle="Theme Preview"
       navItems={navItems}
     >
       <PreviewSection
@@ -119,7 +114,10 @@ export function ThemePreviewPage() {
         title="Brand Colors"
         description="Raw brand palette tokens. Use semantic tokens first in real components, and raw palette tokens only when the meaning is specific."
       >
-        <PreviewCard title="Brand palette" tokenPath="theme.tokens.colors.brand">
+        <PreviewCard
+          title="Brand palette"
+          tokenPath="theme.tokens.colors.brand"
+        >
           <SimpleGrid columns={{ base: 2, sm: 3, md: 5 }} gap={3}>
             {brandColors.map((color) => (
               <ColorPreview key={color} name={color} bg={color} />
@@ -161,7 +159,9 @@ export function ThemePreviewPage() {
 
         <PreviewCard title="Text variants" tokenPath="StudyText">
           <Stack gap={3}>
-            <StudyText variant="body">Body text for normal readable content.</StudyText>
+            <StudyText variant="body">
+              Body text for normal readable content.
+            </StudyText>
             <StudyText variant="muted">
               Muted text for descriptions and secondary information.
             </StudyText>
@@ -297,7 +297,10 @@ export function ThemePreviewPage() {
         title="Animations"
         description="Reusable animation tokens. These should usually be applied to wrappers, cards, dialogs, menus, popovers, and page sections."
       >
-        <PreviewCard title="Animation tokens" tokenPath="theme.tokens.animations">
+        <PreviewCard
+          title="Animation tokens"
+          tokenPath="theme.tokens.animations"
+        >
           <Stack gap={3}>
             {animations.map((animation) => (
               <AnimationPreview key={animation} name={animation} />
@@ -343,7 +346,10 @@ export function ThemePreviewPage() {
           </SimpleGrid>
         </PreviewCard>
 
-        <PreviewCard title="Status surfaces" tokenPath="StudyBox status variants">
+        <PreviewCard
+          title="Status surfaces"
+          tokenPath="StudyBox status variants"
+        >
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             <StatusSurface variant="success" label="Success" />
             <StatusSurface variant="warning" label="Warning" />
@@ -375,7 +381,8 @@ export function ThemePreviewPage() {
             <StudyCard variant="interactive" size="sm">
               <StudyHeading variant="card">Interactive card</StudyHeading>
               <StudyText variant="muted">
-                Used for clickable cards such as courses, assignments, and files.
+                Used for clickable cards such as courses, assignments, and
+                files.
               </StudyText>
             </StudyCard>
           </Stack>
