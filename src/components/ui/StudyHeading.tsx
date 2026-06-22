@@ -1,11 +1,7 @@
 import { Heading, type HeadingProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-export type StudyHeadingVariant =
-  | "page"
-  | "section"
-  | "card"
-  | "subtle";
+export type StudyHeadingVariant = "page" | "section" | "card" | "subtle";
 
 export type StudyHeadingSize = "sm" | "md" | "lg" | "xl";
 
@@ -18,10 +14,7 @@ export type StudyHeadingColor =
   | "success"
   | "warning";
 
-export type StudyHeadingProps = Omit<
-  HeadingProps,
-  "variant" | "size" | "color"
-> & {
+export type StudyHeadingProps = Omit<HeadingProps, "variant" | "size"> & {
   variant?: StudyHeadingVariant;
   size?: StudyHeadingSize;
   colorScheme?: StudyHeadingColor;

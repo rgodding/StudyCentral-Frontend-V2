@@ -9,6 +9,7 @@ import {
   LuEye,
   LuFile,
   LuGraduationCap,
+  LuInbox,
   LuInfo,
   LuPencil,
   LuPlus,
@@ -46,7 +47,12 @@ import {
   PreviewLayout,
   PreviewSection,
 } from "@/pages/dev/components";
-import { studyToaster } from "@/components/feedback";
+import {
+  EmptyState,
+  ErrorState,
+  LoadingState,
+  studyToaster,
+} from "@/components/feedback";
 
 const navItems = [
   { id: "buttons", label: "Buttons" },
@@ -919,6 +925,29 @@ export function ComponentPreviewPage() {
           </Stack>
         </PreviewCard>
       </PreviewSection>
+
+      {/* ===== FEEDBACK STATES ===== */}
+      <PreviewCard
+        title="Feedback States"
+        description="Reusable empty, error, and loading states."
+      >
+        <Stack gap={4}>
+          <EmptyState
+            title="No assignments found"
+            description="There are no assignments to show yet."
+            icon={<LuInbox />}
+            actionLabel="Create assignment"
+            onAction={() => {}}
+          />
+
+          <ErrorState
+            title="Could not load assignments"
+            description="Something went wrong while loading the assignment list."
+            onRetry={() => {}}
+          />
+          <LoadingState text="Loading assignments..." />
+        </Stack>
+      </PreviewCard>
     </PreviewLayout>
   );
 }
