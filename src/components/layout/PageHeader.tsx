@@ -1,7 +1,7 @@
-import { HStack, Stack, Text, type BoxProps } from "@chakra-ui/react";
+import { HStack, Stack, type BoxProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-import { StudyBox, StudyHeading } from "@/components/ui";
+import { StudyBox, StudyHeading, StudyText } from "@/components/ui";
 
 type PageHeaderProps = BoxProps & {
   title: ReactNode;
@@ -19,10 +19,15 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <StudyBox variant="plain" mb={{ base: 6, md: 8 }} {...props}>
-      <HStack align="start" justify="space-between" gap={4}>
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        align={{ base: "stretch", md: "start" }}
+        justify="space-between"
+        gap={4}
+      >
         <Stack gap={2} minW={0}>
-          {eyebrow && (
-            <Text
+          {eyebrow != null && (
+            <StudyText
               fontSize="xs"
               fontWeight="semibold"
               color="textSubtle"
@@ -30,24 +35,24 @@ export function PageHeader({
               letterSpacing="wide"
             >
               {eyebrow}
-            </Text>
+            </StudyText>
           )}
 
           <StudyHeading size="lg">{title}</StudyHeading>
 
-          {description && (
-            <Text color="textMuted" maxW="3xl">
+          {description != null && (
+            <StudyText color="textMuted" maxW="3xl">
               {description}
-            </Text>
+            </StudyText>
           )}
         </Stack>
 
-        {actions && (
+        {actions != null && (
           <HStack gap={2} flexShrink={0}>
             {actions}
           </HStack>
         )}
-      </HStack>
+      </Stack>
     </StudyBox>
   );
 }

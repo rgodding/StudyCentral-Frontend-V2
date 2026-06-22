@@ -1,7 +1,7 @@
 import { Grid, type GridProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-type ContentGridProps = GridProps & {
+export type ContentGridProps = GridProps & {
   children: ReactNode;
 };
 

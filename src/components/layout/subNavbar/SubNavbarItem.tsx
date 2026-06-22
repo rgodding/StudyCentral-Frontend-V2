@@ -38,7 +38,7 @@ export function SubNavbarItem({ label, to, exact = false }: SubNavbarItemProps) 
         textDecoration: "none",
       }}
     >
-      <RouterLink to={to}>
+      <RouterLink to={to} aria-current={isActive ? "page" : undefined}>
         <StudyText
           as="span"
           variant="label"

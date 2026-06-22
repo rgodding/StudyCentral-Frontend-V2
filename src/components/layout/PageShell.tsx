@@ -16,7 +16,7 @@ export function PageShell({
   return (
     <StudyBox
       variant="plain"
-      minH="100vh"
+      minH="100%"
       bg="appBg"
       color="textMain"
       {...props}

@@ -13,12 +13,19 @@ export type SubNavbarNavigationItem = {
 export type SubNavbarProps = Omit<StackProps, "children"> & {
   items: SubNavbarNavigationItem[];
   title?: ReactNode;
+  "aria-label"?: string;
 };
 
-export function SubNavbar({ items, title, ...props }: SubNavbarProps) {
+export function SubNavbar({
+  items,
+  title,
+  "aria-label": ariaLabel = "Section navigation",
+  ...props
+}: SubNavbarProps) {
   return (
     <HStack
       as="nav"
+      aria-label={ariaLabel}
       h="full"
       px={3}
       gap={3}

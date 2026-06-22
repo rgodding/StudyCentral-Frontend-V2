@@ -1,7 +1,7 @@
-import { HStack, Stack, Text, type BoxProps } from "@chakra-ui/react";
+import { HStack, Stack, type BoxProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-import { StudyBox, StudyHeading } from "@/components/ui";
+import { StudyBox, StudyHeading, StudyText } from "@/components/ui";
 
 type SectionProps = BoxProps & {
   title?: ReactNode;
@@ -17,32 +17,35 @@ export function Section({
   children,
   ...props
 }: SectionProps) {
-  const hasHeader = title || description || actions;
+  const hasHeader =
+    title != null || description != null || actions != null;
 
   return (
-    <StudyBox
-      variant="panel"
-      p={{ base: 4, md: 5 }}
-      {...props}
-    >
+    <StudyBox variant="panel" p={{ base: 4, md: 5 }} {...props}>
       {hasHeader && (
-        <HStack align="start" justify="space-between" gap={4} mb={4}>
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          align={{ base: "stretch", md: "start" }}
+          justify="space-between"
+          gap={4}
+          mb={4}
+        >
           <Stack gap={1} minW={0}>
-            {title && <StudyHeading size="sm">{title}</StudyHeading>}
+            {title != null && <StudyHeading size="sm">{title}</StudyHeading>}
 
-            {description && (
-              <Text color="textMuted" fontSize="sm">
+            {description != null && (
+              <StudyText color="textMuted" fontSize="sm">
                 {description}
-              </Text>
+              </StudyText>
             )}
           </Stack>
 
-          {actions && (
+          {actions != null && (
             <HStack gap={2} flexShrink={0}>
               {actions}
             </HStack>
           )}
-        </HStack>
+        </Stack>
       )}
 
       {children}
