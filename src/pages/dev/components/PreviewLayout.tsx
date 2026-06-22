@@ -2,12 +2,7 @@ import { Grid, Stack, type BoxProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import {
-    StudyBox,
-    StudyCard,
-    StudyLink,
-    StudyText
-} from "@/components/ui";
+import { StudyBox, StudyCard, StudyLink, StudyText } from "@/components/ui";
 
 export type PreviewNavItem = {
   id: string;
@@ -17,6 +12,7 @@ export type PreviewNavItem = {
 export type PreviewLayoutProps = BoxProps & {
   title: string;
   description?: string;
+  sidebarTitle?: string;
   navItems: PreviewNavItem[];
   children: ReactNode;
 };
@@ -27,6 +23,7 @@ const scrollSpyOffset = 140;
 export function PreviewLayout({
   navItems,
   children,
+  sidebarTitle = "Sections",
   ...props
 }: PreviewLayoutProps) {
   const animationFrameRef = useRef<number | null>(null);
@@ -122,8 +119,6 @@ export function PreviewLayout({
       {...props}
     >
       <Stack gap={{ base: 5, md: 6 }}>
-
-
         <Grid
           templateColumns={{ base: "1fr", lg: "240px minmax(0, 1fr)" }}
           gap={{ base: 5, lg: 8 }}
@@ -144,9 +139,8 @@ export function PreviewLayout({
                 color="textSubtle"
                 textTransform="uppercase"
                 letterSpacing="wide"
-                flexShrink={0}
               >
-                Sections
+                {sidebarTitle}
               </StudyText>
 
               <StudyBox variant="plain" position="relative" pr={1}>
