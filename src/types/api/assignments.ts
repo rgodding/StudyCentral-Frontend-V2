@@ -1,3 +1,4 @@
+import type { SubmissionStatus } from "@/types/api";
 import type { ApiDate, Guid } from "@/types/api/common";
 
 export type AssignmentDto = {
@@ -11,6 +12,10 @@ export type AssignmentDto = {
   submissionCount: number;
   createdAt: ApiDate;
   updatedAt: ApiDate | null;
+};
+
+export type StudentAssignmentApiDto = AssignmentDto & {
+  submissionStatus: SubmissionStatus;
 };
 
 export type CreateAssignmentDto = {

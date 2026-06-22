@@ -1,4 +1,4 @@
-import { HStack, Stack, Tabs } from "@chakra-ui/react";
+import { HStack, Stack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { LuClipboardList } from "react-icons/lu";
 
@@ -8,12 +8,15 @@ import {
   StudyBadge,
   StudyCard,
   StudyHeading,
+  StudySegmentedControl,
   StudyText,
 } from "@/components/ui";
-import type { AssignmentDto } from "@/types/api";
+
+import type { StudentAssignmentApiDto, SubmissionStatus } from "@/types/api";
+import { getStudentAssignmentStatusMeta } from "@/utils/assignments/studentAssignmentStatusUtils";
 
 type AssignmentListProps = {
-  assignments: AssignmentDto[];
+  assignments: StudentAssignmentApiDto[];
 };
 
 type AssignmentFilter = "active" | "completed";
@@ -22,14 +25,21 @@ const assignmentListText = {
   title: "Assignments",
   active: "Active",
   completed: "Completed",
-  emptyTitle: "No assignments yet",
-  emptyDescription: "Assignments for this course will appear here.",
+  emptyTitle: "No active assignments",
+  emptyDescription: "Active assignments for this course will appear here.",
   noCompletedTitle: "No completed assignments",
-  noCompletedDescription: "Completed assignments will appear here.",
+  noCompletedDescription: "Submitted assignments will appear here.",
   badge: "Assignment",
   untitled: "Untitled assignment",
   due: "Due",
   noDeadline: "No deadline",
+  statusLabels: {
+    NotSubmitted: "Not submitted",
+    Submitted: "Submitted",
+    SubmittedLate: "Submitted late",
+    Passed: "Passed",
+    Failed: "Failed",
+  } satisfies Record<SubmissionStatus, string>,
 };
 
 function formatAssignmentDeadline(deadline?: string | null) {
@@ -40,9 +50,15 @@ function formatAssignmentDeadline(deadline?: string | null) {
   return `${assignmentListText.due} ${new Date(deadline).toLocaleDateString()}`;
 }
 
-function AssignmentCard({ assignment }: { assignment: AssignmentDto }) {
+function isCompletedAssignment(assignment: StudentAssignmentApiDto) {
+  return assignment.submissionStatus !== "NotSubmitted";
+}
+
+function AssignmentCard({ assignment }: { assignment: StudentAssignmentApiDto }) {
+  const statusMeta = getStudentAssignmentStatusMeta(assignment);
+
   return (
-    <StudyCard key={assignment.id}>
+    <StudyCard>
       <Stack gap={2}>
         <HStack justify="space-between" align="start" gap={3}>
           <StudyHeading variant="card" lineClamp={2}>
@@ -60,9 +76,15 @@ function AssignmentCard({ assignment }: { assignment: AssignmentDto }) {
           </StudyText>
         )}
 
-        <StudyText variant="subtle">
-          {formatAssignmentDeadline(assignment.deadline)}
-        </StudyText>
+        <HStack align="center" justify="space-between" gap={4}>
+          <StudyText variant="subtle">
+            {formatAssignmentDeadline(assignment.deadline)}
+          </StudyText>
+
+          <StudyBadge variant={statusMeta.badgeVariant} flexShrink={0}>
+            {statusMeta.label}
+          </StudyBadge>
+        </HStack>
       </Stack>
     </StudyCard>
   );
@@ -71,13 +93,19 @@ function AssignmentCard({ assignment }: { assignment: AssignmentDto }) {
 export function AssignmentList({ assignments }: AssignmentListProps) {
   const [filter, setFilter] = useState<AssignmentFilter>("active");
 
-  const visibleAssignments = useMemo(() => {
-    if (filter === "completed") {
-      return [];
-    }
+  const activeAssignments = useMemo(
+    () =>
+      assignments.filter((assignment) => !isCompletedAssignment(assignment)),
+    [assignments],
+  );
 
-    return assignments;
-  }, [assignments, filter]);
+  const completedAssignments = useMemo(
+    () => assignments.filter(isCompletedAssignment),
+    [assignments],
+  );
+
+  const visibleAssignments =
+    filter === "completed" ? completedAssignments : activeAssignments;
 
   const isCompletedFilter = filter === "completed";
 
@@ -86,54 +114,18 @@ export function AssignmentList({ assignments }: AssignmentListProps) {
       title={assignmentListText.title}
       headerIcon={<LuClipboardList />}
       actions={
-        <Tabs.Root
+        <StudySegmentedControl
           value={filter}
           onValueChange={(details) =>
             setFilter(details.value as AssignmentFilter)
           }
-        >
-          <Tabs.List
-            bg="panelBgSubtle"
-            borderWidth="1px"
-            borderColor="borderSubtle"
-            rounded="button"
-            p={1}
-          >
-            <Tabs.Trigger
-              value="active"
-              px={3}
-              py={1.5}
-              rounded="button"
-              fontSize="sm"
-              fontWeight="semibold"
-              color={filter === "active" ? "textMain" : "textMuted"}
-              _selected={{
-                bg: "surfaceBg",
-                color: "accent",
-                shadow: "card",
-              }}
-            >
-              {assignmentListText.active}
-            </Tabs.Trigger>
-
-            <Tabs.Trigger
-              value="completed"
-              px={3}
-              py={1.5}
-              rounded="button"
-              fontSize="sm"
-              fontWeight="semibold"
-              color={filter === "completed" ? "textMain" : "textMuted"}
-              _selected={{
-                bg: "surfaceBg",
-                color: "accent",
-                shadow: "card",
-              }}
-            >
-              {assignmentListText.completed}
-            </Tabs.Trigger>
-          </Tabs.List>
-        </Tabs.Root>
+          controlVariant="subtle"
+          controlSize="section"
+          items={[
+            { value: "active", label: assignmentListText.active },
+            { value: "completed", label: assignmentListText.completed },
+          ]}
+        />
       }
     >
       {visibleAssignments.length === 0 ? (
