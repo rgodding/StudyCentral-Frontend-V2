@@ -1,0 +1,94 @@
+import { Stack } from "@chakra-ui/react";
+import { useMemo } from "react";
+import { LuClipboardList } from "react-icons/lu";
+
+import { EmptyState } from "@/components/feedback";
+import { Section } from "@/components/layout";
+import { StudyCollapse } from "@/components/ui";
+import type { AssignmentDto } from "@/types/api";
+import {
+  getTeacherAssignmentGroups,
+  getTeacherAssignmentStatusMeta,
+} from "@/utils/assignments";
+
+import { AssignmentCard } from "./AssignmentCard";
+
+type TeacherAssignmentListProps = {
+  assignments: AssignmentDto[];
+};
+
+const teacherAssignmentListText = {
+  title: "Assignments",
+  emptyTitle: "No assignments yet",
+  emptyDescription: "Assignments for this course will appear here.",
+  groups: {
+    pastDue: "Past due",
+    upcoming: "Upcoming",
+    noDeadline: "No deadline",
+  },
+};
+
+export function TeacherAssignmentList({
+  assignments,
+}: TeacherAssignmentListProps) {
+  const groups = useMemo(
+    () => getTeacherAssignmentGroups(assignments),
+    [assignments],
+  );
+
+  const groupSections = [
+    {
+      label: teacherAssignmentListText.groups.pastDue,
+      assignments: groups.pastDue,
+      defaultOpen: false,
+    },
+    {
+      label: teacherAssignmentListText.groups.upcoming,
+      assignments: groups.upcoming,
+      defaultOpen: true,
+    },
+    {
+      label: teacherAssignmentListText.groups.noDeadline,
+      assignments: groups.noDeadline,
+      defaultOpen: false,
+    },
+  ];
+
+  return (
+    <Section
+      title={teacherAssignmentListText.title}
+      headerIcon={<LuClipboardList />}
+    >
+      {assignments.length === 0 ? (
+        <EmptyState
+          size="sm"
+          flex="1"
+          icon={<LuClipboardList />}
+          title={teacherAssignmentListText.emptyTitle}
+          description={teacherAssignmentListText.emptyDescription}
+        />
+      ) : (
+        <Stack gap={4}>
+          {groupSections.map((group) => (
+            <StudyCollapse
+              key={group.label}
+              label={group.label}
+              count={group.assignments.length}
+              defaultOpen={group.defaultOpen}
+            >
+              <Stack gap={3}>
+                {group.assignments.map((assignment) => (
+                  <AssignmentCard
+                    key={assignment.id}
+                    assignment={assignment}
+                    statusMeta={getTeacherAssignmentStatusMeta(assignment)}
+                  />
+                ))}
+              </Stack>
+            </StudyCollapse>
+          ))}
+        </Stack>
+      )}
+    </Section>
+  );
+}

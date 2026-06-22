@@ -10,7 +10,7 @@ export type StudyBadgeVariant =
   | "role"
   | "accent";
 
-export type StudyBadgeSize = "sm" | "md" | "lg";
+export type StudyBadgeSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 export type StudyBadgeProps = Omit<BadgeProps, "variant" | "size"> & {
   variant?: StudyBadgeVariant;
@@ -63,22 +63,39 @@ const variantStyles: Record<StudyBadgeVariant, BadgeProps> = {
 };
 
 const sizeStyles: Record<StudyBadgeSize, BadgeProps> = {
+  xs: {
+    px: 1,
+    py: 0,
+    fontSize: "2xs",
+    minH: "16px",
+  },
+
   sm: {
     px: 1.5,
     py: 0,
     fontSize: "2xs",
+    minH: "18px",
   },
 
   md: {
     px: 2,
     py: 0.5,
     fontSize: "xs",
+    minH: "22px",
   },
 
   lg: {
     px: 2.5,
     py: 1,
     fontSize: "sm",
+    minH: "26px",
+  },
+
+  xl: {
+    px: 3,
+    py: 1.5,
+    fontSize: "md",
+    minH: "32px",
   },
 };
 

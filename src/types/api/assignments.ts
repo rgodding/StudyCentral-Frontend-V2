@@ -14,7 +14,7 @@ export type AssignmentDto = {
   updatedAt: ApiDate | null;
 };
 
-export type StudentAssignmentApiDto = AssignmentDto & {
+export type StudentAssignmentDto = AssignmentDto & {
   submissionStatus: SubmissionStatus;
 };
 

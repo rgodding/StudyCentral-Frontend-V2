@@ -1,5 +1,5 @@
 import type { StudyBadgeVariant } from "@/components/ui";
-import type { StudentAssignmentApiDto, SubmissionStatus } from "@/types/api";
+import type { StudentAssignmentDto, SubmissionStatus } from "@/types/api";
 
 export type StudentAssignmentDisplayStatus =
   | "NoDeadline"
@@ -51,7 +51,7 @@ export const studentAssignmentStatusMeta: Record<
 };
 
 export function getStudentAssignmentDisplayStatus(
-  assignment: StudentAssignmentApiDto,
+  assignment: StudentAssignmentDto,
 ): StudentAssignmentDisplayStatus {
   if (assignment.submissionStatus !== "NotSubmitted") {
     return assignment.submissionStatus;
@@ -65,13 +65,13 @@ export function getStudentAssignmentDisplayStatus(
 }
 
 export function getStudentAssignmentStatusMeta(
-  assignment: StudentAssignmentApiDto,
+  assignment: StudentAssignmentDto,
 ) {
   return studentAssignmentStatusMeta[
     getStudentAssignmentDisplayStatus(assignment)
   ];
 }
 
-export function isCompletedAssignment(assignment: StudentAssignmentApiDto) {
+export function isCompletedAssignment(assignment: StudentAssignmentDto) {
   return assignment.submissionStatus !== "NotSubmitted";
 }

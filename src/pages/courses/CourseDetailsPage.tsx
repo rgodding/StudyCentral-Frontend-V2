@@ -4,13 +4,15 @@ import { useParams } from "react-router-dom";
 
 import {
   AnnouncementList,
-  AssignmentList,
   CourseOverviewGrid,
   CourseOverviewSummary,
+  StudentAssignmentList,
+  TeacherAssignmentList,
 } from "@/components/courses";
 import { EmptyState, ErrorState, LoadingState } from "@/components/feedback";
+import { useAuth } from "@/hooks";
 import { useCourseOverview } from "@/hooks/courses/useCourseOverview";
-import type { Guid } from "@/types/api";
+import type { AssignmentDto, Guid, StudentAssignmentDto } from "@/types/api";
 
 const courseDetailsPageText = {
   loading: "Loading course...",
@@ -24,6 +26,7 @@ const courseDetailsPageText = {
 
 export function CourseDetailsPage() {
   const { courseId } = useParams<{ courseId: Guid }>();
+  const { user } = useAuth();
 
   const { data, isLoading, isError, refetch } = useCourseOverview(courseId);
 
@@ -56,12 +59,19 @@ export function CourseDetailsPage() {
     );
   }
 
+  const assignmentList =
+    user?.role === "Teacher" ? (
+      <TeacherAssignmentList assignments={assignments as AssignmentDto[]} />
+    ) : (
+      <StudentAssignmentList assignments={assignments as StudentAssignmentDto[]} />
+    );
+
   return (
     <Stack gap={4}>
       <CourseOverviewGrid
         announcements={<AnnouncementList announcements={announcements} />}
         overview={<CourseOverviewSummary course={course} />}
-        assignments={<AssignmentList assignments={assignments} />}
+        assignments={assignmentList}
       />
     </Stack>
   );

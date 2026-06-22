@@ -21,6 +21,7 @@ export * from "./StudySegmentedControl";
 export * from "./StudyText";
 export * from "./StudyTooltip";
 export * from "./StudySectionHeader";
+export * from "./StudyCollapse";
 
 export * from "./ColorModeToggle";
 export * from "./LanguageToggle";
