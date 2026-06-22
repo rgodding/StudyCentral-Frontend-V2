@@ -1,7 +1,7 @@
-import { Box, HStack, type StackProps } from "@chakra-ui/react";
+import { HStack, type StackProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-import { StudyText } from "@/components/ui";
+import { StudyBox, StudyText } from "@/components/ui";
 import { SubNavbarItem } from "./SubNavbarItem";
 
 export type SubNavbarNavigationItem = {
@@ -39,7 +39,13 @@ export function SubNavbar({ items, title, ...props }: SubNavbarProps) {
             {title}
           </StudyText>
 
-          <Box h="24px" w="1px" bg="borderSubtle" flexShrink={0} />
+          <StudyBox
+            variant="plain"
+            h="24px"
+            w="1px"
+            bg="borderStrong"
+            flexShrink={0}
+          />
         </>
       )}
 

@@ -1,10 +1,11 @@
-import { Box, HStack, Link, Stack, Text } from "@chakra-ui/react";
+import { HStack, Link, Stack, Text } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import {
   ColorModeToggle,
   LanguageToggle,
+  StudyBox,
   StudyCard,
   StudyHeading,
 } from "@/components/ui";
@@ -29,8 +30,20 @@ export function AuthShell({
   footerLinkTo,
 }: AuthShellProps) {
   return (
-    <Box minH="100vh" bg="appBg" color="textMain">
-      <Box maxW="480px" mx="auto" px={4} py={{ base: 6, md: 10 }}>
+    <StudyBox
+      variant="plain"
+      minH="100vh"
+      bg="appBg"
+      color="textMain"
+      animationVariant="fadeInFast"
+    >
+      <StudyBox
+        variant="plain"
+        maxW="480px"
+        mx="auto"
+        px={4}
+        py={{ base: 6, md: 10 }}
+      >
         <HStack justify="flex-end" gap={2} mb={8}>
           <ColorModeToggle />
           <LanguageToggle />
@@ -63,7 +76,7 @@ export function AuthShell({
             </Link>
           </HStack>
         </Stack>
-      </Box>
-    </Box>
+      </StudyBox>
+    </StudyBox>
   );
 }

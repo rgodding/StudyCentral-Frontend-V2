@@ -14,6 +14,7 @@ import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
 import { CoursesPage } from "@/pages/courses/CoursesPage";
 import { routes } from "@/app/routes/routes";
 import { CourseDetailsPage } from "@/pages/courses/CourseDetailsPage";
+import { ComponentPreviewPage } from "@/pages/ComponentPreviewPage";
 
 // REQUIREMENT: None
 const publicRoutes: RouteObject[] = [
@@ -25,6 +26,14 @@ const publicRoutes: RouteObject[] = [
     path: routes.unauthorized,
     element: <UnauthorizedPage />,
   },
+  {
+    path: "theme-preview",
+    element: <ComponentPreviewPage />,
+  },
+  {
+    path: "component-preview",
+    element: <ComponentPreviewPage />,
+  }
 ];
 
 // REQUIREMENT: User must be unauthenticated
@@ -86,3 +95,21 @@ const router = createBrowserRouter([
 export function AppRouter() {
   return <RouterProvider router={router} />;
 }
+
+/*
+gonna go through them all now
+
+
+
+where it is relevant do add like
+
+
+
+1. animation options
+
+2. size
+
+3. color
+
+
+*/

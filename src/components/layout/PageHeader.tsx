@@ -1,7 +1,7 @@
-import { Box, HStack, Stack, Text, type BoxProps } from "@chakra-ui/react";
+import { HStack, Stack, Text, type BoxProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-import { StudyHeading } from "@/components/ui/StudyHeading";
+import { StudyBox, StudyHeading } from "@/components/ui";
 
 type PageHeaderProps = BoxProps & {
   title: ReactNode;
@@ -18,7 +18,7 @@ export function PageHeader({
   ...props
 }: PageHeaderProps) {
   return (
-    <Box mb={{ base: 6, md: 8 }} {...props}>
+    <StudyBox variant="plain" mb={{ base: 6, md: 8 }} {...props}>
       <HStack align="start" justify="space-between" gap={4}>
         <Stack gap={2} minW={0}>
           {eyebrow && (
@@ -48,6 +48,6 @@ export function PageHeader({
           </HStack>
         )}
       </HStack>
-    </Box>
+    </StudyBox>
   );
 }

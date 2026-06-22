@@ -1,4 +1,4 @@
-import { Box, Grid, type GridProps } from "@chakra-ui/react";
+import { Grid, type GridProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
@@ -13,6 +13,7 @@ type AppShellProps = GridProps & {
 
 const subNavbarAnimationMs = 250;
 
+// This component renders the main layout of the app: Navbar, SubNavbar, Main Content
 export function AppShell({ children, subNavbar, ...props }: AppShellProps) {
   const [renderedSubNavbar, setRenderedSubNavbar] = useState(subNavbar);
   const [isSubNavbarLeaving, setIsSubNavbarLeaving] = useState(false);
@@ -65,6 +66,7 @@ export function AppShell({ children, subNavbar, ...props }: AppShellProps) {
             isSubNavbarLeaving ? "slideOutToTopFast" : "slideDownFast"
           }
           borderBottomWidth="1px"
+          borderColor="borderStrong"
           minH={0}
           overflow="hidden"
           position="relative"
@@ -74,8 +76,9 @@ export function AppShell({ children, subNavbar, ...props }: AppShellProps) {
         </StudyBox>
       )}
 
-      <Box
+      <StudyBox
         as="main"
+        variant="plain"
         h="full"
         minH={0}
         overflowY="auto"
@@ -86,7 +89,7 @@ export function AppShell({ children, subNavbar, ...props }: AppShellProps) {
         }}
       >
         {children}
-      </Box>
+      </StudyBox>
     </Grid>
   );
 }

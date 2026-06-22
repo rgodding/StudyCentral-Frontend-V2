@@ -1,7 +1,7 @@
-import { Box, HStack, Stack, Text, type BoxProps } from "@chakra-ui/react";
+import { HStack, Stack, Text, type BoxProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-import { StudyHeading } from "@/components/ui/StudyHeading";
+import { StudyBox, StudyHeading } from "@/components/ui";
 
 type SectionProps = BoxProps & {
   title?: ReactNode;
@@ -20,12 +20,8 @@ export function Section({
   const hasHeader = title || description || actions;
 
   return (
-    <Box
-      bg="panelBg"
-      borderWidth="1px"
-      borderColor="borderSubtle"
-      rounded="card"
-      shadow="card"
+    <StudyBox
+      variant="panel"
       p={{ base: 4, md: 5 }}
       {...props}
     >
@@ -42,7 +38,7 @@ export function Section({
           </Stack>
 
           {actions && (
-            <HStack flexShrink={0}>
+            <HStack gap={2} flexShrink={0}>
               {actions}
             </HStack>
           )}
@@ -50,6 +46,6 @@ export function Section({
       )}
 
       {children}
-    </Box>
+    </StudyBox>
   );
 }

@@ -1,5 +1,7 @@
-import { Box, type BoxProps } from "@chakra-ui/react";
+import type { BoxProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+
+import { StudyBox } from "@/components/ui";
 
 type PageFrameWidth = "normal" | "large" | "full";
 type PageFrameVariant = "plain" | "panel";
@@ -16,6 +18,7 @@ const pageFrameWidths: Record<PageFrameWidth, string> = {
   full: "100%",
 };
 
+// Renders the content inside Main Content area of the AppShell
 export function PageFrame({
   children,
   frameWidth = "large",
@@ -26,23 +29,30 @@ export function PageFrame({
   const isPanel = variant === "panel";
 
   return (
-    <Box w="full" h="full" bg="appBg" px={isFull ? 0 : { base: 4, md: 6 }}>
-      <Box
+    <StudyBox
+      variant="plain"
+      w="full"
+      h="full"
+      bg="appBg"
+      px={isFull ? 0 : { base: 4, md: 6 }}
+    >
+      <StudyBox
+        variant={isPanel ? "surface" : "plain"}
         w="full"
         h="full"
         maxW={isFull ? "none" : pageFrameWidths[frameWidth]}
         mx="auto"
-        bg={isPanel ? "surfaceBg" : "transparent"}
         borderLeftWidth={isPanel ? "1px" : "0"}
         borderRightWidth={isPanel ? "1px" : "0"}
-        borderColor="borderSubtle"
+        borderColor={isPanel ? "borderStrong" : "transparent"}
         px={isPanel ? { base: 4, md: 6 } : 0}
         py={isPanel ? { base: 2, md: 6 } : 0}
-        overflow="auto"
+        overflowY="auto"
+        overflowX="hidden"
         {...props}
       >
         {children}
-      </Box>
-    </Box>
+      </StudyBox>
+    </StudyBox>
   );
 }
