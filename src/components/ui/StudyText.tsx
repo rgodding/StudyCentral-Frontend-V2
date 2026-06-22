@@ -1,7 +1,7 @@
 import { Text, type TextProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-type StudyTextVariant =
+export type StudyTextVariant =
   | "body"
   | "muted"
   | "subtle"
@@ -9,64 +9,152 @@ type StudyTextVariant =
   | "label"
   | "error"
   | "success"
-  | "warning";
+  | "warning"
+  | "info"
+  | "accent";
 
-export type StudyTextProps = Omit<TextProps, "variant"> & {
+export type StudyTextSize = "xs" | "sm" | "md" | "lg";
+
+export type StudyTextWeight = "normal" | "medium" | "semibold" | "bold";
+
+export type StudyTextProps = Omit<TextProps, "variant" | "size"> & {
   variant?: StudyTextVariant;
+  size?: StudyTextSize;
+  weight?: StudyTextWeight;
   children: ReactNode;
 };
 
 const variantStyles: Record<StudyTextVariant, TextProps> = {
   body: {
     color: "textMain",
-    fontSize: "sm",
     lineHeight: "1.6",
   },
+
   muted: {
     color: "textMuted",
-    fontSize: "sm",
     lineHeight: "1.6",
   },
+
   subtle: {
     color: "textSubtle",
-    fontSize: "xs",
     lineHeight: "1.5",
   },
+
   smallSubtle: {
     color: "textSubtle",
-    fontSize: "xx-small",
     lineHeight: "1",
   },
+
   label: {
     color: "textMain",
-    fontSize: "sm",
-    fontWeight: "semibold",
     lineHeight: "1.4",
   },
+
   error: {
     color: "dangerText",
-    fontSize: "sm",
     lineHeight: "1.5",
   },
+
   success: {
     color: "successText",
-    fontSize: "sm",
     lineHeight: "1.5",
   },
+
   warning: {
     color: "warningText",
-    fontSize: "sm",
+    lineHeight: "1.5",
+  },
+
+  info: {
+    color: "blue.700",
+    lineHeight: "1.5",
+  },
+
+  accent: {
+    color: "accent",
     lineHeight: "1.5",
   },
 };
 
+const sizeStyles: Record<StudyTextSize, TextProps> = {
+  xs: {
+    fontSize: "xs",
+  },
+
+  sm: {
+    fontSize: "sm",
+  },
+
+  md: {
+    fontSize: "md",
+  },
+
+  lg: {
+    fontSize: "lg",
+  },
+};
+
+const weightStyles: Record<StudyTextWeight, TextProps> = {
+  normal: {
+    fontWeight: "normal",
+  },
+
+  medium: {
+    fontWeight: "medium",
+  },
+
+  semibold: {
+    fontWeight: "semibold",
+  },
+
+  bold: {
+    fontWeight: "bold",
+  },
+};
+
+const defaultSizeByVariant: Record<StudyTextVariant, StudyTextSize> = {
+  body: "sm",
+  muted: "sm",
+  subtle: "xs",
+  smallSubtle: "xs",
+  label: "sm",
+  error: "sm",
+  success: "sm",
+  warning: "sm",
+  info: "sm",
+  accent: "sm",
+};
+
+const defaultWeightByVariant: Record<StudyTextVariant, StudyTextWeight> = {
+  body: "normal",
+  muted: "normal",
+  subtle: "normal",
+  smallSubtle: "normal",
+  label: "semibold",
+  error: "normal",
+  success: "normal",
+  warning: "normal",
+  info: "normal",
+  accent: "semibold",
+};
+
 export function StudyText({
   variant = "body",
+  size,
+  weight,
   children,
   ...props
 }: StudyTextProps) {
+  const resolvedSize = size ?? defaultSizeByVariant[variant];
+  const resolvedWeight = weight ?? defaultWeightByVariant[variant];
+
   return (
-    <Text {...variantStyles[variant]} {...props}>
+    <Text
+      {...variantStyles[variant]}
+      {...sizeStyles[resolvedSize]}
+      {...weightStyles[resolvedWeight]}
+      {...props}
+    >
       {children}
     </Text>
   );

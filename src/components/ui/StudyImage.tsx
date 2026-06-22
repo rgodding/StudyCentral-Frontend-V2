@@ -5,12 +5,22 @@ export type StudyImageVariant =
   | "icon"
   | "logo"
   | "avatar"
-  | "cover";
+  | "cover"
+  | "thumbnail";
 
-export type StudyImageProps = Omit<BoxProps, "children"> & {
+export type StudyImageSize = "sm" | "md" | "lg";
+
+export type StudyImageAnimation =
+  | "none"
+  | "fadeInFast"
+  | "scaleInFast";
+
+export type StudyImageProps = Omit<BoxProps, "children" | "size"> & {
   src: string;
   alt: string;
   variant?: StudyImageVariant;
+  size?: StudyImageSize;
+  animationVariant?: StudyImageAnimation;
   imageProps?: Omit<ImageProps, "src" | "alt">;
 };
 
@@ -26,6 +36,8 @@ const variantStyles: Record<
       overflow: "hidden",
       rounded: "card",
       bg: "panelBgSubtle",
+      borderWidth: "1px",
+      borderColor: "borderSubtle",
     },
     image: {
       w: "full",
@@ -36,7 +48,6 @@ const variantStyles: Record<
 
   icon: {
     box: {
-      boxSize: "36px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -45,7 +56,6 @@ const variantStyles: Record<
       userSelect: "none",
     },
     image: {
-      boxSize: "28px",
       objectFit: "contain",
       draggable: false,
     },
@@ -53,9 +63,6 @@ const variantStyles: Record<
 
   logo: {
     box: {
-      w: "48px",
-      h: "48px",
-      p: 0,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -76,10 +83,11 @@ const variantStyles: Record<
 
   avatar: {
     box: {
-      boxSize: "40px",
       rounded: "full",
       overflow: "hidden",
       bg: "panelBgSubtle",
+      borderWidth: "1px",
+      borderColor: "borderStrong",
       flexShrink: 0,
     },
     image: {
@@ -97,6 +105,8 @@ const variantStyles: Record<
       overflow: "hidden",
       rounded: "card",
       bg: "panelBgSubtle",
+      borderWidth: "1px",
+      borderColor: "borderSubtle",
     },
     image: {
       w: "full",
@@ -104,20 +114,186 @@ const variantStyles: Record<
       objectFit: "cover",
     },
   },
+
+  thumbnail: {
+    box: {
+      overflow: "hidden",
+      rounded: "button",
+      bg: "panelBgSubtle",
+      borderWidth: "1px",
+      borderColor: "borderSubtle",
+      flexShrink: 0,
+    },
+    image: {
+      w: "full",
+      h: "full",
+      objectFit: "cover",
+      draggable: false,
+    },
+  },
+};
+
+const sizeStyles: Record<
+  StudyImageSize,
+  Record<StudyImageVariant, { box: BoxProps; image: ImageProps }>
+> = {
+  sm: {
+    default: {
+      box: {
+        h: "120px",
+      },
+      image: {},
+    },
+    icon: {
+      box: {
+        boxSize: "28px",
+      },
+      image: {
+        boxSize: "20px",
+      },
+    },
+    logo: {
+      box: {
+        boxSize: "36px",
+      },
+      image: {},
+    },
+    avatar: {
+      box: {
+        boxSize: "32px",
+      },
+      image: {},
+    },
+    cover: {
+      box: {},
+      image: {},
+    },
+    thumbnail: {
+      box: {
+        boxSize: "44px",
+      },
+      image: {},
+    },
+  },
+
+  md: {
+    default: {
+      box: {
+        h: "180px",
+      },
+      image: {},
+    },
+    icon: {
+      box: {
+        boxSize: "36px",
+      },
+      image: {
+        boxSize: "28px",
+      },
+    },
+    logo: {
+      box: {
+        boxSize: "48px",
+      },
+      image: {},
+    },
+    avatar: {
+      box: {
+        boxSize: "40px",
+      },
+      image: {},
+    },
+    cover: {
+      box: {},
+      image: {},
+    },
+    thumbnail: {
+      box: {
+        boxSize: "56px",
+      },
+      image: {},
+    },
+  },
+
+  lg: {
+    default: {
+      box: {
+        h: "240px",
+      },
+      image: {},
+    },
+    icon: {
+      box: {
+        boxSize: "44px",
+      },
+      image: {
+        boxSize: "34px",
+      },
+    },
+    logo: {
+      box: {
+        boxSize: "64px",
+      },
+      image: {},
+    },
+    avatar: {
+      box: {
+        boxSize: "56px",
+      },
+      image: {},
+    },
+    cover: {
+      box: {},
+      image: {},
+    },
+    thumbnail: {
+      box: {
+        boxSize: "72px",
+      },
+      image: {},
+    },
+  },
+};
+
+const animationStyles: Record<StudyImageAnimation, BoxProps> = {
+  none: {},
+
+  fadeInFast: {
+    animation: "fadeInFast",
+  },
+
+  scaleInFast: {
+    animation: "scaleInFast",
+    transformOrigin: "center",
+  },
 };
 
 export function StudyImage({
   src,
   alt,
   variant = "default",
+  size = "md",
+  animationVariant = "none",
   imageProps,
   ...props
 }: StudyImageProps) {
-  const styles = variantStyles[variant];
+  const variantStyle = variantStyles[variant];
+  const sizeStyle = sizeStyles[size][variant];
 
   return (
-    <Box {...styles.box} {...props}>
-      <Image src={src} alt={alt} {...styles.image} {...imageProps} />
+    <Box
+      {...variantStyle.box}
+      {...sizeStyle.box}
+      {...animationStyles[animationVariant]}
+      {...props}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        {...variantStyle.image}
+        {...sizeStyle.image}
+        {...imageProps}
+      />
     </Box>
   );
 }

@@ -35,6 +35,16 @@ export const studentNavigationItems: NavbarNavigationItem[] = [
     path: "/announcements",
     icon: LuMegaphone,
   },
+  {
+    label: "Component Preview",
+    path: "/component-preview",
+    icon: LuBookOpen,
+  },
+  {
+    label: "Theme Preview",
+    path: "/theme-preview",
+    icon: LuBookOpen,
+  },
 ];
 
 export const teacherNavigationItems: NavbarNavigationItem[] = [
@@ -58,5 +68,15 @@ export const teacherNavigationItems: NavbarNavigationItem[] = [
     label: "Announcements",
     path: "/announcements",
     icon: LuMegaphone,
+  },
+  {
+    label: "Component Preview",
+    path: "/component-preview",
+    icon: LuBookOpen,
+  },
+  {
+    label: "Theme Preview",
+    path: "/theme-preview",
+    icon: LuBookOpen,
   },
 ];

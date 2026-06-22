@@ -2,10 +2,12 @@ export const routes = {
   home: "/",
   login: "/login",
   register: "/register",
+  unauthorized: "/unauthorized",
+
   dashboard: "/dashboard",
   courses: "/courses",
-  assignments: "/assignments",
-  announcements: "/announcements",
   account: "/account",
-  unauthorized: "/unauthorized",
+
+  themePreview: "/theme-preview",
+  componentPreview: "/component-preview",
 } as const;

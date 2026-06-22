@@ -1,6 +1,6 @@
 import { Box, type BoxProps } from "@chakra-ui/react";
 
-type StudyBoxVariant =
+export type StudyBoxVariant =
   | "plain"
   | "surface"
   | "panel"
@@ -11,7 +11,9 @@ type StudyBoxVariant =
   | "warning"
   | "info";
 
-type StudyBoxAnimation =
+export type StudyBoxSize = "none" | "sm" | "md" | "lg";
+
+export type StudyBoxAnimation =
   | "none"
   | "fadeInFast"
   | "fadeIn"
@@ -25,8 +27,9 @@ type StudyBoxAnimation =
   | "scaleInFast"
   | "scaleIn";
 
-type StudyBoxProps = BoxProps & {
+export type StudyBoxProps = Omit<BoxProps, "size"> & {
   variant?: StudyBoxVariant;
+  size?: StudyBoxSize;
   animationVariant?: StudyBoxAnimation;
 };
 
@@ -42,7 +45,7 @@ const variantStyles: Record<StudyBoxVariant, BoxProps> = {
     bg: "panelBg",
     color: "textMain",
     borderWidth: "1px",
-    borderColor: "borderSubtle",
+    borderColor: "borderStrong",
     rounded: "card",
     shadow: "card",
   },
@@ -58,14 +61,14 @@ const variantStyles: Record<StudyBoxVariant, BoxProps> = {
   nav: {
     bg: "navBg",
     color: "textMain",
-    borderColor: "borderSubtle",
+    borderColor: "borderStrong",
   },
 
   danger: {
     bg: "red.50",
     color: "dangerText",
     borderWidth: "1px",
-    borderColor: "red.100",
+    borderColor: "red.200",
     rounded: "card",
   },
 
@@ -73,7 +76,7 @@ const variantStyles: Record<StudyBoxVariant, BoxProps> = {
     bg: "green.50",
     color: "successText",
     borderWidth: "1px",
-    borderColor: "green.100",
+    borderColor: "green.200",
     rounded: "card",
   },
 
@@ -81,7 +84,7 @@ const variantStyles: Record<StudyBoxVariant, BoxProps> = {
     bg: "yellow.50",
     color: "warningText",
     borderWidth: "1px",
-    borderColor: "yellow.100",
+    borderColor: "yellow.200",
     rounded: "card",
   },
 
@@ -89,8 +92,24 @@ const variantStyles: Record<StudyBoxVariant, BoxProps> = {
     bg: "blue.50",
     color: "blue.700",
     borderWidth: "1px",
-    borderColor: "blue.100",
+    borderColor: "blue.200",
     rounded: "card",
+  },
+};
+
+const sizeStyles: Record<StudyBoxSize, BoxProps> = {
+  none: {},
+
+  sm: {
+    p: 3,
+  },
+
+  md: {
+    p: { base: 4, md: 5 },
+  },
+
+  lg: {
+    p: { base: 5, md: 6 },
   },
 };
 
@@ -113,6 +132,11 @@ const animationStyles: Record<StudyBoxAnimation, BoxProps> = {
   slideUpFast: {
     animation: "slideUpFast",
     transformOrigin: "bottom",
+  },
+
+  slideOutToTopFast: {
+    animation: "slideOutToTopFast",
+    transformOrigin: "top",
   },
 
   slideInFromLeft: {
@@ -142,14 +166,11 @@ const animationStyles: Record<StudyBoxAnimation, BoxProps> = {
     animation: "scaleIn",
     transformOrigin: "center",
   },
-  slideOutToTopFast: {
-    animation: "slideOutToTopFast",
-    transformOrigin: "top",
-  },
 };
 
 export function StudyBox({
   variant = "plain",
+  size = "none",
   animationVariant = "none",
   children,
   ...props
@@ -157,6 +178,7 @@ export function StudyBox({
   return (
     <Box
       {...variantStyles[variant]}
+      {...sizeStyles[size]}
       {...animationStyles[animationVariant]}
       {...props}
     >

@@ -2,17 +2,24 @@ import { Avatar, Icon } from "@chakra-ui/react";
 import type { ComponentProps } from "react";
 import { LuUserRound } from "react-icons/lu";
 
-type StudyAvatarSize = "sm" | "md" | "lg";
-type StudyAvatarShape = "rounded" | "circle";
+export type StudyAvatarSize = "sm" | "md" | "lg";
+export type StudyAvatarShape = "rounded" | "circle";
+export type StudyAvatarVariant =
+  | "accent"
+  | "neutral"
+  | "success"
+  | "warning"
+  | "danger";
 
-type StudyAvatarProps = Omit<
+export type StudyAvatarProps = Omit<
   ComponentProps<typeof Avatar.Root>,
-  "size" | "shape"
+  "size" | "shape" | "color"
 > & {
   fullName?: string;
   src?: string | null;
   size?: StudyAvatarSize;
   shape?: StudyAvatarShape;
+  avatarVariant?: StudyAvatarVariant;
 };
 
 const sizeMap: Record<StudyAvatarSize, string> = {
@@ -32,6 +39,41 @@ const shapeMap: Record<StudyAvatarShape, string> = {
   circle: "full",
 };
 
+const variantStyles: Record<
+  StudyAvatarVariant,
+  Pick<ComponentProps<typeof Avatar.Root>, "bg" | "color" | "borderColor">
+> = {
+  accent: {
+    bg: "accent",
+    color: "white",
+    borderColor: "accent",
+  },
+
+  neutral: {
+    bg: "panelBgSubtle",
+    color: "textMain",
+    borderColor: "borderStrong",
+  },
+
+  success: {
+    bg: "green.100",
+    color: "successText",
+    borderColor: "green.200",
+  },
+
+  warning: {
+    bg: "yellow.100",
+    color: "warningText",
+    borderColor: "yellow.200",
+  },
+
+  danger: {
+    bg: "red.100",
+    color: "dangerText",
+    borderColor: "red.200",
+  },
+};
+
 function hasUsableName(fullName?: string) {
   return Boolean(fullName?.trim());
 }
@@ -41,6 +83,7 @@ export function StudyAvatar({
   src,
   size = "md",
   shape = "circle",
+  avatarVariant = "accent",
   ...props
 }: StudyAvatarProps) {
   const name = fullName?.trim();
@@ -51,9 +94,9 @@ export function StudyAvatar({
       w={sizeMap[size]}
       h={sizeMap[size]}
       rounded={shapeMap[shape]}
-      bg="accent"
-      color="white"
       overflow="hidden"
+      borderWidth="1px"
+      {...variantStyles[avatarVariant]}
       {...props}
     >
       {shouldUseInitials ? (

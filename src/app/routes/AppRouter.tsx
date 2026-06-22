@@ -4,17 +4,18 @@ import {
   type RouteObject,
 } from "react-router-dom";
 
+import { routes } from "@/app/routes/routes";
 import { AppLayoutRoute } from "./appLayoutRoute";
 import { GuestRoute, ProtectedRoute } from "./ProtectedRoutes";
+
 import HomePage from "@/pages/HomePage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { RegisterPage } from "@/pages/auth/RegisterPage";
 import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
 import { CoursesPage } from "@/pages/courses/CoursesPage";
-import { routes } from "@/app/routes/routes";
 import { CourseDetailsPage } from "@/pages/courses/CourseDetailsPage";
-import { ComponentPreviewPage } from "@/pages/ComponentPreviewPage";
+import { ComponentPreviewPage, ThemePreviewPage } from "@/pages/dev";
 
 // REQUIREMENT: None
 const publicRoutes: RouteObject[] = [
@@ -26,14 +27,23 @@ const publicRoutes: RouteObject[] = [
     path: routes.unauthorized,
     element: <UnauthorizedPage />,
   },
+];
+
+// REQUIREMENT: None, but uses normal app navbar/layout
+const publicLayoutRoutes: RouteObject[] = [
   {
-    path: "theme-preview",
-    element: <ComponentPreviewPage />,
+    element: <AppLayoutRoute />,
+    children: [
+      {
+        path: routes.themePreview,
+        element: <ThemePreviewPage />,
+      },
+      {
+        path: routes.componentPreview,
+        element: <ComponentPreviewPage />,
+      },
+    ],
   },
-  {
-    path: "component-preview",
-    element: <ComponentPreviewPage />,
-  }
 ];
 
 // REQUIREMENT: User must be unauthenticated
@@ -73,9 +83,8 @@ const protectedRoutes: RouteObject[] = [
         path: routes.courses,
         element: <CoursesPage />,
       },
-      
       {
-        path: routes.courses + "/:courseId",
+        path: `${routes.courses}/:courseId`,
         element: <CourseDetailsPage />,
       },
       {
@@ -88,6 +97,7 @@ const protectedRoutes: RouteObject[] = [
 
 const router = createBrowserRouter([
   ...publicRoutes,
+  ...publicLayoutRoutes,
   ...guestRoutes,
   ...protectedRoutes,
 ]);
@@ -95,21 +105,3 @@ const router = createBrowserRouter([
 export function AppRouter() {
   return <RouterProvider router={router} />;
 }
-
-/*
-gonna go through them all now
-
-
-
-where it is relevant do add like
-
-
-
-1. animation options
-
-2. size
-
-3. color
-
-
-*/

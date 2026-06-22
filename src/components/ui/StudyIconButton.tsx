@@ -1,9 +1,25 @@
 import { IconButton, type IconButtonProps } from "@chakra-ui/react";
 
-export type StudyIconButtonVariant = "primary" | "secondary" | "ghost" | "danger";
+export type StudyIconButtonVariant =
+  | "primary"
+  | "secondary"
+  | "ghost"
+  | "danger";
 
-export type StudyIconButtonProps = Omit<IconButtonProps, "variant"> & {
+export type StudyIconButtonSize = "xs" | "sm" | "md" | "lg";
+
+export type StudyIconButtonAnimation =
+  | "none"
+  | "fadeInFast"
+  | "scaleInFast";
+
+export type StudyIconButtonProps = Omit<
+  IconButtonProps,
+  "variant" | "size"
+> & {
   variant?: StudyIconButtonVariant;
+  size?: StudyIconButtonSize;
+  animationVariant?: StudyIconButtonAnimation;
 };
 
 const variantStyles: Record<StudyIconButtonVariant, IconButtonProps> = {
@@ -16,52 +32,108 @@ const variantStyles: Record<StudyIconButtonVariant, IconButtonProps> = {
       bg: "brand.700",
       borderColor: "brand.700",
     },
+    _active: {
+      bg: "brand.800",
+      borderColor: "brand.800",
+    },
   },
+
   secondary: {
     bg: "surfaceBg",
     color: "textMain",
     borderWidth: "1px",
-    borderColor: "borderSubtle",
+    borderColor: "borderStrong",
     _hover: {
       bg: "panelBgSubtle",
-      borderColor: "borderStrong",
+      borderColor: "accent",
+    },
+    _active: {
+      bg: "activeBg",
+      borderColor: "accent",
     },
   },
+
   ghost: {
     bg: "transparent",
     color: "textMain",
+    borderWidth: "1px",
+    borderColor: "transparent",
     _hover: {
       bg: "activeBg",
-      opacity: 0.75,
+      borderColor: "borderSubtle",
     },
     _active: {
-      bg: "activeBg",
-      opacity: 0.65,
+      bg: "accentMuted",
+      borderColor: "accent",
     },
   },
+
   danger: {
     bg: "transparent",
     color: "dangerText",
+    borderWidth: "1px",
+    borderColor: "transparent",
     _hover: {
       bg: "red.50",
-      opacity: 0.75,
+      borderColor: "red.200",
     },
     _active: {
-      bg: "red.50",
-      opacity: 0.65,
+      bg: "red.100",
+      borderColor: "red.300",
     },
+  },
+};
+
+const sizeStyles: Record<StudyIconButtonSize, IconButtonProps> = {
+  xs: {
+    minW: "28px",
+    h: "28px",
+    fontSize: "xs",
+  },
+
+  sm: {
+    minW: "32px",
+    h: "32px",
+    fontSize: "sm",
+  },
+
+  md: {
+    minW: "40px",
+    h: "40px",
+    fontSize: "md",
+  },
+
+  lg: {
+    minW: "48px",
+    h: "48px",
+    fontSize: "lg",
+  },
+};
+
+const animationStyles: Record<StudyIconButtonAnimation, IconButtonProps> = {
+  none: {},
+
+  fadeInFast: {
+    animation: "fadeInFast",
+  },
+
+  scaleInFast: {
+    animation: "scaleInFast",
+    transformOrigin: "center",
   },
 };
 
 export function StudyIconButton({
   variant = "ghost",
+  size = "md",
+  animationVariant = "none",
   ...props
 }: StudyIconButtonProps) {
   return (
     <IconButton
       rounded="button"
       cursor="pointer"
-      transitionProperty="background-color, border-color, color, opacity"
+      transitionProperty="background-color, border-color, color, box-shadow, transform"
       transitionDuration="fast"
       _focus={{
         outline: "none",
@@ -75,8 +147,11 @@ export function StudyIconButton({
       _disabled={{
         cursor: "not-allowed",
         opacity: 0.6,
+        transform: "none",
       }}
       {...variantStyles[variant]}
+      {...sizeStyles[size]}
+      {...animationStyles[animationVariant]}
       {...props}
     />
   );
