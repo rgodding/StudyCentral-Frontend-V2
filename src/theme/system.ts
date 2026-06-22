@@ -256,32 +256,139 @@ const config = defineConfig({
           value: "ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite",
         },
 
+        fadeInFast: {
+          value: "fade-in 250ms cubic-bezier(0.2, 0, 0, 1)",
+        },
+
+        fadeOutFast: {
+          value: "fade-out 250ms cubic-bezier(0.2, 0, 0, 1)",
+        },
+
         fadeIn: {
-          value: "fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
+          value: "fade-in 500ms cubic-bezier(0.2, 0, 0, 1)",
         },
 
         fadeOut: {
-          value: "fade-out 1s cubic-bezier(0.2, 0, 0, 1)",
+          value: "fade-out 500ms cubic-bezier(0.2, 0, 0, 1)",
+        },
+
+        slideDownFast: {
+          value:
+            "slide-from-top 250ms cubic-bezier(0.2, 0, 0, 1), fade-in 250ms cubic-bezier(0.2, 0, 0, 1)",
+        },
+
+        slideUpFast: {
+          value:
+            "slide-from-bottom 250ms cubic-bezier(0.2, 0, 0, 1), fade-in 250ms cubic-bezier(0.2, 0, 0, 1)",
         },
 
         slideInFromLeft: {
           value:
-            "slide-from-left 2s cubic-bezier(0.2, 0, 0, 1), fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
+            "slide-from-left 500ms cubic-bezier(0.2, 0, 0, 1), fade-in 500ms cubic-bezier(0.2, 0, 0, 1)",
         },
 
         slideInFromRight: {
           value:
-            "slide-from-right 2s cubic-bezier(0.2, 0, 0, 1), fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
+            "slide-from-right 500ms cubic-bezier(0.2, 0, 0, 1), fade-in 500ms cubic-bezier(0.2, 0, 0, 1)",
         },
 
         slideInFromTop: {
           value:
-            "slide-from-top 2s cubic-bezier(0.2, 0, 0, 1), fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
+            "slide-from-top 500ms cubic-bezier(0.2, 0, 0, 1), fade-in 500ms cubic-bezier(0.2, 0, 0, 1)",
         },
 
         slideInFromBottom: {
           value:
-            "slide-from-bottom 2s cubic-bezier(0.2, 0, 0, 1), fade-in 2.0s cubic-bezier(0.2, 0, 0, 1)",
+            "slide-from-bottom 500ms cubic-bezier(0.2, 0, 0, 1), fade-in 500ms cubic-bezier(0.2, 0, 0, 1)",
+        },
+
+        scaleInFast: {
+          value:
+            "scale-in 250ms cubic-bezier(0.2, 0, 0, 1), fade-in 250ms cubic-bezier(0.2, 0, 0, 1)",
+        },
+
+        scaleIn: {
+          value:
+            "scale-in 500ms cubic-bezier(0.2, 0, 0, 1), fade-in 500ms cubic-bezier(0.2, 0, 0, 1)",
+        },
+        slideOutToTopFast: {
+          value:
+            "slide-to-top 250ms cubic-bezier(0.2, 0, 0, 1), fade-out 250ms cubic-bezier(0.2, 0, 0, 1)",
+        },
+      },
+    },
+    // Key frames for custom animations
+    keyframes: {
+      "fade-in": {
+        from: {
+          opacity: 0,
+        },
+        to: {
+          opacity: 1,
+        },
+      },
+
+      "fade-out": {
+        from: {
+          opacity: 1,
+        },
+        to: {
+          opacity: 0,
+        },
+      },
+
+      "slide-from-top": {
+        from: {
+          transform: "translateY(-8px)",
+        },
+        to: {
+          transform: "translateY(0)",
+        },
+      },
+
+      "slide-from-bottom": {
+        from: {
+          transform: "translateY(8px)",
+        },
+        to: {
+          transform: "translateY(0)",
+        },
+      },
+
+      "slide-from-left": {
+        from: {
+          transform: "translateX(-8px)",
+        },
+        to: {
+          transform: "translateX(0)",
+        },
+      },
+
+      "slide-from-right": {
+        from: {
+          transform: "translateX(8px)",
+        },
+        to: {
+          transform: "translateX(0)",
+        },
+      },
+
+      "scale-in": {
+        from: {
+          opacity: 0,
+          transform: "scale(0.98)",
+        },
+        to: {
+          opacity: 1,
+          transform: "scale(1)",
+        },
+      },
+      "slide-to-top": {
+        from: {
+          transform: "translateY(0)",
+        },
+        to: {
+          transform: "translateY(-8px)",
         },
       },
     },

@@ -10,3 +10,4 @@ export * from "./StudyText";
 export * from "./ColorModeToggle";
 export * from "./LanguageToggle";
 export * from "./StudyImage";
+export * from "./StudyBox";
