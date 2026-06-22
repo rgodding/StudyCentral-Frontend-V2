@@ -22,10 +22,10 @@ export function useCourse(courseId?: Guid) {
 
       switch (user.role) {
         case "Student":
-          return studentApi.courses.getCourse(courseId);
+          return studentApi.courses.getCourseById(courseId);
 
         case "Teacher":
-          return teacherApi.courses.getCourse(courseId);
+          return teacherApi.courses.getCourseById(courseId);
 
         default:
           throw new Error("Role does not have access to courses.");

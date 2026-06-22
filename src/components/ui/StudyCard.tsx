@@ -12,6 +12,8 @@ export type StudyCardVariant =
 
 export type StudyCardSize = "sm" | "md" | "lg";
 
+export type StudyCardShadow = "none" | "sm" | "md" | "lg";
+
 export type StudyCardAnimation =
   | "none"
   | "fadeInFast"
@@ -22,6 +24,7 @@ export type StudyCardAnimation =
 export type StudyCardProps = Omit<BoxProps, "variant" | "size"> & {
   variant?: StudyCardVariant;
   size?: StudyCardSize;
+  shadowSize?: StudyCardShadow;
   animationVariant?: StudyCardAnimation;
   children: ReactNode;
 };
@@ -91,6 +94,24 @@ const variantStyles: Record<StudyCardVariant, BoxProps> = {
   },
 };
 
+const shadowStyles: Record<StudyCardShadow, BoxProps> = {
+  none: {
+    shadow: "none",
+  },
+
+  sm: {
+    shadow: "card",
+  },
+
+  md: {
+    shadow: "panel",
+  },
+
+  lg: {
+    shadow: "modal",
+  },
+};
+
 const sizeStyles: Record<StudyCardSize, BoxProps> = {
   sm: {
     p: 3,
@@ -130,6 +151,7 @@ const animationStyles: Record<StudyCardAnimation, BoxProps> = {
 export function StudyCard({
   variant = "default",
   size = "md",
+  shadowSize = "sm",
   animationVariant = "none",
   children,
   ...props
@@ -141,6 +163,7 @@ export function StudyCard({
       transitionDuration="fast"
       {...variantStyles[variant]}
       {...sizeStyles[size]}
+      {...(shadowSize ? shadowStyles[shadowSize] : {})}
       {...animationStyles[animationVariant]}
       {...props}
     >

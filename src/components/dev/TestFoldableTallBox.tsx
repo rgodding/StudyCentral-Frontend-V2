@@ -11,16 +11,18 @@ import { LuChevronDown, LuChevronRight } from "react-icons/lu";
 type Props = {
   height?: string;
   defaultOpen?: boolean;
+  props?: React.ComponentProps<typeof Box>;
 };
 
 export function TestFoldableTallBox({
   height = "1800px",
   defaultOpen = false,
+  props,
 }: Props) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <Box borderWidth="1px" borderRadius="md" bg="white">
+    <Box borderWidth="1px" borderRadius="md" bg="white" {...props}>
       <Collapsible.Root
         open={open}
         onOpenChange={(details) => setOpen(details.open)}

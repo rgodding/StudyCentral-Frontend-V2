@@ -2,7 +2,7 @@ import type { ApiDate, Guid } from "@/types/api/common";
 
 export type AnnouncementDto = {
   id: Guid;
-  title: string | null;
+  name: string | null;
   content: string | null;
   courseId: Guid;
   courseName: string | null;
@@ -12,18 +12,18 @@ export type AnnouncementDto = {
 };
 
 export type CreateAnnouncementDto = {
-  title: string;
+  name: string;
   content: string;
   courseId: Guid;
 };
 
 export type UpdateAnnouncementDto = {
-  title: string;
+  name: string;
   content: string;
 };
 
 export type AdminUpdateAnnouncementDto = {
-  title: string;
+  name: string;
   content: string;
   courseId: Guid;
 };

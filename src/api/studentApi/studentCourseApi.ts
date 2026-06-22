@@ -11,7 +11,7 @@ export const studentCourseApi = {
     return response.data;
   },
 
-  getCourse: async (courseId: Guid): Promise<CourseDto> => {
+  getCourseById: async (courseId: Guid): Promise<CourseDto> => {
     const response = await apiClient.get<CourseDto>(
       apiRoutes.student.courses.getById(courseId),
     );

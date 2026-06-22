@@ -17,7 +17,7 @@ export const teacherAssignmentApi = {
     return response.data;
   },
 
-  getAssignmentsByCourse: async (courseId: Guid): Promise<AssignmentDto[]> => {
+  getAssignmentsByCourseId: async (courseId: Guid): Promise<AssignmentDto[]> => {
     const response = await apiClient.get<AssignmentDto[]>(
       apiRoutes.teacher.assignments.getByCourse(courseId),
     );

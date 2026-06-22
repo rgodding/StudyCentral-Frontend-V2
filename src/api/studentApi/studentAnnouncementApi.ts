@@ -11,7 +11,7 @@ export const studentAnnouncementApi = {
     return response.data;
   },
 
-  getAnnouncementsByCourse: async (
+  getAnnouncementsByCourseId: async (
     courseId: Guid,
   ): Promise<AnnouncementDto[]> => {
     const response = await apiClient.get<AnnouncementDto[]>(

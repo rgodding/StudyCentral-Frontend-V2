@@ -15,7 +15,7 @@ export function CourseOverviewGrid({
 }: CourseOverviewGridProps) {
   return (
     <Grid
-      gap={4}
+      gap={8}
       templateColumns={{
         base: "1fr",
         lg: "minmax(0, 2fr) minmax(280px, 0.9fr)",

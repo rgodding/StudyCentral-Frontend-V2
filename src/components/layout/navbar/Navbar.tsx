@@ -14,7 +14,7 @@ export function Navbar({ height = "full", ...props }: NavbarProps) {
       as="header"
       h={height}
       bg="navBg"
-      borderBottomWidth="1px"
+      borderBottomWidth="2px"
       borderColor="accentMuted"
       zIndex="sticky"
       {...props}
