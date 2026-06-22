@@ -8,10 +8,24 @@ import "@fontsource/inter/700.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <AppProviders>
-      <AppRouter />
-    </AppProviders>
-  </StrictMode>,
-);
+async function enableMocking() {
+  if (import.meta.env.VITE_USE_MOCK_API !== "true") {
+    return;
+  }
+
+  const { worker } = await import("./mocks/browser");
+
+  return worker.start({
+    onUnhandledRequest: "bypass",
+  });
+}
+
+enableMocking().then(() => {
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <AppProviders>
+        <AppRouter />
+      </AppProviders>
+    </StrictMode>,
+  );
+});
