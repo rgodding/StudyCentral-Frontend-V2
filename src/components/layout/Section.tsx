@@ -1,54 +1,65 @@
-import { HStack, Stack, type BoxProps } from "@chakra-ui/react";
+import { Stack, type StackProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-import { StudyBox, StudyHeading, StudyText } from "@/components/ui";
+import { StudyBox, StudySectionHeader } from "@/components/ui";
 
-type SectionProps = BoxProps & {
+type SectionVariant = "plain" | "card" | "subtle";
+
+type SectionProps = StackProps & {
   title?: ReactNode;
   description?: ReactNode;
+  headerIcon?: ReactNode;
   actions?: ReactNode;
+  variant?: SectionVariant;
   children: ReactNode;
+};
+
+const sectionVariantStyles: Record<
+  Exclude<SectionVariant, "plain">,
+  Parameters<typeof StudyBox>[0]
+> = {
+  card: {
+    variant: "panel",
+  },
+  subtle: {
+    variant: "subtle",
+  },
 };
 
 export function Section({
   title,
   description,
+  headerIcon,
   actions,
+  variant = "plain",
   children,
   ...props
 }: SectionProps) {
   const hasHeader =
-    title != null || description != null || actions != null;
+    title != null || description != null || headerIcon != null || actions != null;
 
-  return (
-    <StudyBox variant="panel" p={{ base: 4, md: 5 }} {...props}>
+  const content = (
+    <Stack gap={4} h="full" minH={0} {...props}>
       {hasHeader && (
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          align={{ base: "stretch", md: "start" }}
-          justify="space-between"
-          gap={4}
-          mb={4}
-        >
-          <Stack gap={1} minW={0}>
-            {title != null && <StudyHeading size="sm">{title}</StudyHeading>}
-
-            {description != null && (
-              <StudyText color="textMuted" fontSize="sm">
-                {description}
-              </StudyText>
-            )}
-          </Stack>
-
-          {actions != null && (
-            <HStack gap={2} flexShrink={0}>
-              {actions}
-            </HStack>
-          )}
-        </Stack>
+        <StudySectionHeader
+          title={title}
+          description={description}
+          icon={headerIcon}
+          actions={actions}
+        />
       )}
 
       {children}
+    </Stack>
+  );
+
+  if (variant === "plain") {
+    return content;
+  }
+
+  return (
+    <StudyBox h="full" {...sectionVariantStyles[variant]}>
+      {content}
     </StudyBox>
   );
 }

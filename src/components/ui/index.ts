@@ -17,8 +17,10 @@ export * from "./StudyPopover";
 export * from "./StudySearchInput";
 export * from "./StudyTable";
 export * from "./StudyTabs";
+export * from "./StudySegmentedControl";
 export * from "./StudyText";
 export * from "./StudyTooltip";
+export * from "./StudySectionHeader";
 
 export * from "./ColorModeToggle";
 export * from "./LanguageToggle";

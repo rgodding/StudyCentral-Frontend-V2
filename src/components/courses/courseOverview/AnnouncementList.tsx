@@ -10,6 +10,7 @@ import {
 } from "@/components/ui";
 import type { AnnouncementDto } from "@/types/api";
 import { TestFoldableTallBox } from "@/components/dev/TestFoldableTallBox";
+import { Section } from "@/components/layout/Section";
 
 type AnnouncementListProps = {
   announcements: AnnouncementDto[];
@@ -37,10 +38,7 @@ export function AnnouncementList({ announcements }: AnnouncementListProps) {
   }
 
   return (
-    <Stack gap={3}>
-          <StudyHeading variant="section">
-        {announcementListText.title}
-      </StudyHeading>
+    <Section title={announcementListText.title} headerIcon={<LuMegaphone />}>
       {announcements.map((announcement) => (
         <StudyCard key={announcement.id} shadowSize="lg">
           <Stack gap={2}>
@@ -57,10 +55,10 @@ export function AnnouncementList({ announcements }: AnnouncementListProps) {
             <StudyText variant="muted" lineClamp={3}>
               {announcement.content}
             </StudyText>
-            <TestFoldableTallBox height="100px"  />
+            <TestFoldableTallBox height="100px" />
           </Stack>
         </StudyCard>
       ))}
-    </Stack>
+    </Section>
   );
 }

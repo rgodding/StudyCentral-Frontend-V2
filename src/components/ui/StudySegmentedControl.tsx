@@ -1,48 +1,41 @@
 import { Tabs } from "@chakra-ui/react";
 import type { ComponentProps, ReactNode } from "react";
 
-export type StudyTabsVariant = "default" | "subtle" | "enclosed";
-export type StudyTabsSize = "sm" | "md" | "lg";
+export type StudySegmentedControlVariant = "subtle" | "underline";
+export type StudySegmentedControlSize = "sm" | "md" | "section";
 
 type TabsRootProps = ComponentProps<typeof Tabs.Root>;
 type TabsListProps = ComponentProps<typeof Tabs.List>;
 type TabsTriggerProps = ComponentProps<typeof Tabs.Trigger>;
-type TabsContentProps = ComponentProps<typeof Tabs.Content>;
 
 type TabsListStyleProps = Partial<TabsListProps>;
 type TabsTriggerStyleProps = Partial<
   Omit<TabsTriggerProps, "value" | "disabled" | "children">
 >;
-type TabsContentStyleProps = Partial<
-  Omit<TabsContentProps, "value" | "children">
->;
 
-export type StudyTabItem = {
+export type StudySegmentedControlItem = {
   value: string;
   label: ReactNode;
-  content: ReactNode;
   icon?: ReactNode;
   disabled?: boolean;
 };
 
-export type StudyTabsProps = Omit<
+export type StudySegmentedControlProps = Omit<
   TabsRootProps,
   "children" | "variant" | "size"
 > & {
-  items: StudyTabItem[];
-  tabsVariant?: StudyTabsVariant;
-  tabsSize?: StudyTabsSize;
+  items: StudySegmentedControlItem[];
+  controlVariant?: StudySegmentedControlVariant;
+  controlSize?: StudySegmentedControlSize;
+  showActiveUnderline?: boolean;
   listProps?: TabsListProps;
   triggerProps?: TabsTriggerStyleProps;
-  contentProps?: TabsContentStyleProps;
 };
 
-const listVariantStyles: Record<StudyTabsVariant, TabsListStyleProps> = {
-  default: {
-    borderBottomWidth: "1px",
-    borderColor: "borderSubtle",
-  },
-
+const listVariantStyles: Record<
+  StudySegmentedControlVariant,
+  TabsListStyleProps
+> = {
   subtle: {
     bg: "panelBgSubtle",
     borderWidth: "1px",
@@ -51,27 +44,17 @@ const listVariantStyles: Record<StudyTabsVariant, TabsListStyleProps> = {
     p: 1,
   },
 
-  enclosed: {
+  underline: {
+    bg: "transparent",
     borderBottomWidth: "1px",
-    borderColor: "borderStrong",
+    borderColor: "borderSubtle",
   },
 };
 
-const triggerVariantStyles: Record<StudyTabsVariant, TabsTriggerStyleProps> = {
-  default: {
-    color: "textMuted",
-    borderBottomWidth: "2px",
-    borderColor: "transparent",
-    rounded: "0",
-    _selected: {
-      color: "accent",
-      borderColor: "accent",
-    },
-    _hover: {
-      color: "textMain",
-    },
-  },
-
+const triggerVariantStyles: Record<
+  StudySegmentedControlVariant,
+  TabsTriggerStyleProps
+> = {
   subtle: {
     color: "textMuted",
     rounded: "button",
@@ -89,25 +72,25 @@ const triggerVariantStyles: Record<StudyTabsVariant, TabsTriggerStyleProps> = {
     },
   },
 
-  enclosed: {
+  underline: {
     color: "textMuted",
-    borderWidth: "1px",
+    rounded: "0",
+    borderBottomWidth: "2px",
     borderColor: "transparent",
-    borderBottomWidth: "0",
-    roundedTop: "button",
     _selected: {
-      color: "textMain",
-      bg: "surfaceBg",
-      borderColor: "borderStrong",
+      color: "accent",
+      borderColor: "accent",
     },
     _hover: {
       color: "textMain",
-      bg: "panelBgSubtle",
     },
   },
 };
 
-const triggerSizeStyles: Record<StudyTabsSize, TabsTriggerStyleProps> = {
+const triggerSizeStyles: Record<
+  StudySegmentedControlSize,
+  TabsTriggerStyleProps
+> = {
   sm: {
     h: "32px",
     px: 3,
@@ -120,43 +103,45 @@ const triggerSizeStyles: Record<StudyTabsSize, TabsTriggerStyleProps> = {
     fontSize: "sm",
   },
 
-  lg: {
-    h: "48px",
-    px: 5,
+  section: {
+    h: "36px",
+    px: 3,
     fontSize: "md",
   },
 };
 
-const contentSizeStyles: Record<StudyTabsSize, TabsContentStyleProps> = {
-  sm: {
-    pt: 3,
-  },
-
-  md: {
-    pt: 4,
-  },
-
-  lg: {
-    pt: 5,
+const activeUnderlineStyles: TabsTriggerStyleProps = {
+  position: "relative",
+  _selected: {
+    _after: {
+      content: '""',
+      position: "absolute",
+      left: 2,
+      right: 2,
+      bottom: "-6px",
+      h: "2px",
+      bg: "accent",
+      rounded: "full",
+    },
   },
 };
 
-export function StudyTabs({
+export function StudySegmentedControl({
   items,
-  tabsVariant = "default",
-  tabsSize = "md",
+  controlVariant = "subtle",
+  controlSize = "md",
+  showActiveUnderline = false,
   listProps,
   triggerProps,
-  contentProps,
   ...rootProps
-}: StudyTabsProps) {
+}: StudySegmentedControlProps) {
   return (
     <Tabs.Root {...rootProps}>
       <Tabs.List
-        gap={tabsVariant === "subtle" ? 1 : 0}
+        gap={controlVariant === "subtle" ? 1 : 0}
         overflowX="auto"
         overflowY="hidden"
-        {...listVariantStyles[tabsVariant]}
+        {...listVariantStyles[controlVariant]}
         {...listProps}
       >
         {items.map((item) => (
@@ -177,8 +162,9 @@ export function StudyTabs({
               opacity: 0.55,
               cursor: "not-allowed",
             }}
-            {...triggerVariantStyles[tabsVariant]}
-            {...triggerSizeStyles[tabsSize]}
+            {...triggerVariantStyles[controlVariant]}
+            {...triggerSizeStyles[controlSize]}
+            {...(showActiveUnderline ? activeUnderlineStyles : {})}
             {...triggerProps}
           >
             {item.icon}
@@ -186,18 +172,6 @@ export function StudyTabs({
           </Tabs.Trigger>
         ))}
       </Tabs.List>
-
-      {items.map((item) => (
-        <Tabs.Content
-          key={item.value}
-          value={item.value}
-          animation="fadeInFast"
-          {...contentSizeStyles[tabsSize]}
-          {...contentProps}
-        >
-          {item.content}
-        </Tabs.Content>
-      ))}
     </Tabs.Root>
   );
 }
