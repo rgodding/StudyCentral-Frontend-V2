@@ -2,22 +2,28 @@ import { Stack } from "@chakra-ui/react";
 import { LuClipboardList } from "react-icons/lu";
 
 import { EmptyState } from "@/components/feedback";
-import { StudyText } from "@/components/ui";
 import { CourseOverviewBox } from "./CourseOverviewBox";
+
+const assignmentListText = {
+  title: "Assignments",
+  emptyTitle: "No assignments yet",
+  emptyDescription: "Course assignments will be shown here.",
+};
 
 export function AssignmentList() {
   return (
-    <CourseOverviewBox title="Assignments">
+    <CourseOverviewBox title={assignmentListText.title}>
       <Stack gap={3} h="full" minH="220px">
         <EmptyState
+          size="sm"
+          flex="1"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
           icon={<LuClipboardList />}
-          title="No assignments yet"
-          description="Course assignments will be shown here."
+          title={assignmentListText.emptyTitle}
+          description={assignmentListText.emptyDescription}
         />
-
-        <StudyText variant="subtle">
-          This section will later use the student/teacher assignment API.
-        </StudyText>
       </Stack>
     </CourseOverviewBox>
   );

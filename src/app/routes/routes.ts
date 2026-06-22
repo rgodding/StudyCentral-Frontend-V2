@@ -1,4 +1,3 @@
-
 export const routes = {
   home: "/",
   login: "/login",
@@ -14,4 +13,8 @@ export const routes = {
 
   themePreview: "/theme-preview",
   componentPreview: "/component-preview",
+} as const;
+
+export const routePaths = {
+  courseDetails: (courseId: string) => `${routes.courses}/${courseId}`,
 } as const;

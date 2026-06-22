@@ -8,10 +8,17 @@ import {
   StudyHeading,
   StudyText,
 } from "@/components/ui";
+import { routePaths } from "@/app/routes/routes";
 import type { CourseDto } from "@/types/api";
 
 type CourseCardProps = {
   course: CourseDto;
+};
+
+const courseCardText = {
+  untitledCourse: "Untitled course",
+  courseBadge: "Course",
+  students: (count: number) => `${count} ${count === 1 ? "student" : "students"}`,
 };
 
 export function CourseCard({ course }: CourseCardProps) {
@@ -26,7 +33,7 @@ export function CourseCard({ course }: CourseCardProps) {
         transform: "translateY(-1px)",
       }}
     >
-      <RouterLink to={`/courses/${course.id}`}>
+      <RouterLink to={routePaths.courseDetails(course.id)}>
         <Stack gap={4}>
           <Stack gap={2} minW={0}>
             <HStack align="center" justify="space-between" gap={3}>
@@ -34,12 +41,12 @@ export function CourseCard({ course }: CourseCardProps) {
                 <LuBookOpen />
 
                 <StudyHeading variant="card" truncate>
-                  {course.name ?? "Untitled course"}
+                  {course.name ?? courseCardText.untitledCourse}
                 </StudyHeading>
               </HStack>
 
               <StudyBadge variant="accent" flexShrink={0}>
-                Course
+                {courseCardText.courseBadge}
               </StudyBadge>
             </HStack>
 
@@ -55,7 +62,7 @@ export function CourseCard({ course }: CourseCardProps) {
               <LuUsers />
 
               <StudyText variant="subtle">
-                {course.studentCount} students
+                {courseCardText.students(course.studentCount)}
               </StudyText>
             </HStack>
           </HStack>

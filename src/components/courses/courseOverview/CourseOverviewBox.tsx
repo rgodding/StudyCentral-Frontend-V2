@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { StudyCard, StudyHeading } from "@/components/ui";
 
 type CourseOverviewBoxProps = StackProps & {
-  title: string;
+  title: ReactNode;
   children: ReactNode;
 };
 

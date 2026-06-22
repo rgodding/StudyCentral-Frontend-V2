@@ -27,20 +27,15 @@ export function CourseOverviewGrid({
       alignItems="stretch"
       {...props}
     >
-      <GridItem
-        minW={0}
-        minH={0}
-        gridColumn={{ base: "1", lg: "1" }}
-        gridRow={{ base: "auto", lg: "1 / span 2" }}
-      >
+      <GridItem minW={0} minH={0} gridRow={{ lg: "1 / span 2" }}>
         {announcements}
       </GridItem>
 
       <GridItem
         minW={0}
         minH={0}
-        gridColumn={{ base: "1", lg: "2" }}
-        gridRow={{ base: "auto", lg: "1" }}
+        gridColumn={{ lg: "2" }}
+        gridRow={{ lg: "1" }}
       >
         {overview}
       </GridItem>
@@ -48,8 +43,8 @@ export function CourseOverviewGrid({
       <GridItem
         minW={0}
         minH={0}
-        gridColumn={{ base: "1", lg: "2" }}
-        gridRow={{ base: "auto", lg: "2" }}
+        gridColumn={{ lg: "2" }}
+        gridRow={{ lg: "2" }}
       >
         {assignments}
       </GridItem>

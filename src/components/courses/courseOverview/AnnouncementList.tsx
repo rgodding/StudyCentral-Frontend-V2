@@ -2,22 +2,28 @@ import { Stack } from "@chakra-ui/react";
 import { LuMegaphone } from "react-icons/lu";
 
 import { EmptyState } from "@/components/feedback";
-import { StudyText } from "@/components/ui";
 import { CourseOverviewBox } from "./CourseOverviewBox";
+
+const announcementListText = {
+  title: "Announcements",
+  emptyTitle: "No announcements yet",
+  emptyDescription: "Course announcements will be shown here.",
+};
 
 export function AnnouncementList() {
   return (
-    <CourseOverviewBox title="Announcements">
+    <CourseOverviewBox title={announcementListText.title}>
       <Stack gap={3} h="full" minH="240px">
         <EmptyState
+          size="sm"
+          flex="1"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
           icon={<LuMegaphone />}
-          title="No announcements yet"
-          description="Course announcements will be shown here."
+          title={announcementListText.emptyTitle}
+          description={announcementListText.emptyDescription}
         />
-
-        <StudyText variant="subtle">
-          This section will later use the student/teacher announcement API.
-        </StudyText>
       </Stack>
     </CourseOverviewBox>
   );
