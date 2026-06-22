@@ -1,33 +1,35 @@
-import {
-  HStack,
-  Icon,
-  Menu,
-  Portal,
-  Text,
-  type StackProps,
-} from "@chakra-ui/react";
+import { HStack, Icon, Menu, Portal, type StackProps } from "@chakra-ui/react";
 import { LuMenu } from "react-icons/lu";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
-import { StudyIconButton } from "@/components/ui";
+import { StudyIconButton, StudyText } from "@/components/ui";
 import { NavbarNavItem } from "./NavbarNavItem";
-import { studentNavigationItems } from "./navbarNavigationItems";
+import {
+  studentNavigationItems,
+  type NavbarNavigationItem,
+} from "./navbarNavigationItems";
 
-type NavbarMenuProps = StackProps;
+const navbarMenuText = {
+  openNavigationMenu: "Open navigation menu",
+  currentPrefix: "Current:",
+};
+
+function isNavigationItemActive(pathname: string, item: NavbarNavigationItem) {
+  if (item.exact) {
+    return pathname === item.path;
+  }
+
+  return pathname === item.path || pathname.startsWith(`${item.path}/`);
+}
+
+export type NavbarMenuProps = StackProps;
 
 export function NavbarMenu(props: NavbarMenuProps) {
   const location = useLocation();
 
-  const activeItem = studentNavigationItems.find((item) => {
-    if (item.exact) {
-      return location.pathname === item.path;
-    }
-
-    return (
-      location.pathname === item.path ||
-      location.pathname.startsWith(`${item.path}/`)
-    );
-  });
+  const activeItem = studentNavigationItems.find((item) =>
+    isNavigationItemActive(location.pathname, item),
+  );
 
   return (
     <>
@@ -53,7 +55,7 @@ export function NavbarMenu(props: NavbarMenuProps) {
       <Menu.Root positioning={{ placement: "bottom-start" }}>
         <Menu.Trigger asChild>
           <StudyIconButton
-            aria-label="Open navigation menu"
+            aria-label={navbarMenuText.openNavigationMenu}
             size="sm"
             variant="ghost"
             display={{ base: "inline-flex", lg: "none" }}
@@ -74,38 +76,49 @@ export function NavbarMenu(props: NavbarMenuProps) {
             >
               {activeItem && (
                 <>
-                  <Text
+                  <StudyText
+                    variant="label"
                     px={3}
                     py={2}
                     fontSize="xs"
                     fontWeight="semibold"
                     color="textSubtle"
                   >
-                    Current: {activeItem.label}
-                  </Text>
+                    {navbarMenuText.currentPrefix} {activeItem.label}
+                  </StudyText>
 
                   <Menu.Separator borderColor="borderSubtle" />
                 </>
               )}
 
-              {studentNavigationItems.map((item) => (
-                <Menu.Item
-                  key={item.path}
-                  value={item.path}
-                  asChild
-                  color="textMain"
-                  rounded="button"
-                  cursor="pointer"
-                  _hover={{
-                    bg: "panelBgSubtle",
-                  }}
-                >
-                  <RouterLink to={item.path}>
-                    <Icon as={item.icon} boxSize={4} />
-                    {item.label}
-                  </RouterLink>
-                </Menu.Item>
-              ))}
+              {studentNavigationItems.map((item) => {
+                const isActive = isNavigationItemActive(
+                  location.pathname,
+                  item,
+                );
+
+                return (
+                  <Menu.Item
+                    key={item.path}
+                    value={item.path}
+                    asChild
+                    color="textMain"
+                    rounded="button"
+                    cursor="pointer"
+                    _hover={{
+                      bg: "panelBgSubtle",
+                    }}
+                  >
+                    <RouterLink
+                      to={item.path}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <Icon as={item.icon} boxSize={4} />
+                      {item.label}
+                    </RouterLink>
+                  </Menu.Item>
+                );
+              })}
             </Menu.Content>
           </Menu.Positioner>
         </Portal>

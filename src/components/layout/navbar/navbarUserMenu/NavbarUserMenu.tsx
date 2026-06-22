@@ -4,7 +4,7 @@ import { NavbarChat } from "./NavbarChat";
 import { NavbarNotification } from "./NavbarNotification";
 import { NavbarUser } from "./NavbarUser";
 
-type NavbarUserMenuProps = StackProps;
+export type NavbarUserMenuProps = StackProps;
 
 export function NavbarUserMenu(props: NavbarUserMenuProps) {
   return (

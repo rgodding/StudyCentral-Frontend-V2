@@ -8,7 +8,7 @@ export type StudyButtonVariant =
   | "danger"
   | "link";
 
-export type StudyButtonSize = "sm" | "md" | "lg";
+export type StudyButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 export type StudyButtonAnimation =
   | "none"
@@ -101,6 +101,12 @@ const variantStyles: Record<StudyButtonVariant, ButtonProps> = {
 };
 
 const sizeStyles: Record<StudyButtonSize, ButtonProps> = {
+  xs: {
+    h: "24px",
+    px: 2,
+    fontSize: "xs",
+  },
+
   sm: {
     h: "32px",
     px: 3,
@@ -116,6 +122,11 @@ const sizeStyles: Record<StudyButtonSize, ButtonProps> = {
   lg: {
     h: "48px",
     px: 5,
+    fontSize: "md",
+  },
+  xl: {
+    h: "56px",
+    px: 6,
     fontSize: "md",
   },
 };

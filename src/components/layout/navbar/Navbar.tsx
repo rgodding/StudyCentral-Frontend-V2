@@ -1,11 +1,11 @@
 import { Box, Flex, HStack, type BoxProps } from "@chakra-ui/react";
 
 import { NavbarInfo } from "./navbarInfo";
+import { NavbarMenu } from "./navbarMenu";
 import { NavbarUserMenu } from "./navbarUserMenu";
-import { NavbarMenu } from "@/components/layout/navbar/navbarMenu";
 
-type NavbarProps = BoxProps & {
-  height?: string;
+export type NavbarProps = BoxProps & {
+  height?: BoxProps["h"];
 };
 
 export function Navbar({ height = "full", ...props }: NavbarProps) {
@@ -23,7 +23,8 @@ export function Navbar({ height = "full", ...props }: NavbarProps) {
         <HStack gap={4} minW={0}>
           <NavbarInfo />
 
-          <Box h="32px" w="1px" bg="borderStrong" flexShrink={0} />
+          <Box aria-hidden h="32px" w="1px" bg="borderStrong" flexShrink={0} />
+
           <NavbarMenu />
         </HStack>
 

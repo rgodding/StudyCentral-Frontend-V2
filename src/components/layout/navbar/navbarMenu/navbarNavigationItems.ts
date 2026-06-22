@@ -1,3 +1,4 @@
+import { routes } from "@/app/routes/routes";
 import type { IconType } from "react-icons";
 import {
   LuBookOpen,
@@ -6,6 +7,7 @@ import {
   LuMegaphone,
 } from "react-icons/lu";
 
+
 export type NavbarNavigationItem = {
   label: string;
   path: string;
@@ -13,70 +15,60 @@ export type NavbarNavigationItem = {
   exact?: boolean;
 };
 
-export const studentNavigationItems: NavbarNavigationItem[] = [
+const navbarNavigationText = {
+  dashboard: "Dashboard",
+  courses: "Courses",
+  assignments: "Assignments",
+  announcements: "Announcements",
+  componentPreview: "Component Preview",
+  themePreview: "Theme Preview",
+};
+
+const mainNavigationItems: NavbarNavigationItem[] = [
   {
-    label: "Dashboard",
-    path: "/dashboard",
+    label: navbarNavigationText.dashboard,
+    path: routes.dashboard,
     icon: LuLayoutDashboard,
     exact: true,
   },
   {
-    label: "Courses",
-    path: "/courses",
+    label: navbarNavigationText.courses,
+    path: routes.courses,
     icon: LuBookOpen,
   },
   {
-    label: "Assignments",
-    path: "/assignments",
+    label: navbarNavigationText.assignments,
+    path: routes.assignments,
     icon: LuClipboardList,
   },
   {
-    label: "Announcements",
-    path: "/announcements",
+    label: navbarNavigationText.announcements,
+    path: routes.announcements,
     icon: LuMegaphone,
-  },
-  {
-    label: "Component Preview",
-    path: "/component-preview",
-    icon: LuBookOpen,
-  },
-  {
-    label: "Theme Preview",
-    path: "/theme-preview",
-    icon: LuBookOpen,
   },
 ];
 
+const previewNavigationItems: NavbarNavigationItem[] = import.meta.env.DEV
+  ? [
+      {
+        label: navbarNavigationText.componentPreview,
+        path: routes.componentPreview,
+        icon: LuBookOpen,
+      },
+      {
+        label: navbarNavigationText.themePreview,
+        path: routes.themePreview,
+        icon: LuBookOpen,
+      },
+    ]
+  : [];
+
+export const studentNavigationItems: NavbarNavigationItem[] = [
+  ...mainNavigationItems,
+  ...previewNavigationItems,
+];
+
 export const teacherNavigationItems: NavbarNavigationItem[] = [
-  {
-    label: "Dashboard",
-    path: "/dashboard",
-    icon: LuLayoutDashboard,
-    exact: true,
-  },
-  {
-    label: "Courses",
-    path: "/courses",
-    icon: LuBookOpen,
-  },
-  {
-    label: "Assignments",
-    path: "/assignments",
-    icon: LuClipboardList,
-  },
-  {
-    label: "Announcements",
-    path: "/announcements",
-    icon: LuMegaphone,
-  },
-  {
-    label: "Component Preview",
-    path: "/component-preview",
-    icon: LuBookOpen,
-  },
-  {
-    label: "Theme Preview",
-    path: "/theme-preview",
-    icon: LuBookOpen,
-  },
+  ...mainNavigationItems,
+  ...previewNavigationItems,
 ];

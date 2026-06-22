@@ -5,7 +5,7 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import { StudyText } from "@/components/ui";
 
-type NavbarNavItemProps = {
+export type NavbarNavItemProps = {
   to: string;
   icon: IconType;
   children: ReactNode;
@@ -45,9 +45,10 @@ export function NavbarNavItem({
         bg: "activeBg",
       }}
     >
-      <RouterLink to={to}>
+      <RouterLink to={to} aria-current={isActive ? "page" : undefined}>
         <HStack gap={2}>
           <Icon as={icon} boxSize={4} />
+
           <StudyText
             as="span"
             variant="label"

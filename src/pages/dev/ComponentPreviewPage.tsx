@@ -178,6 +178,7 @@ export function ComponentPreviewPage() {
       sidebarTitle="Component Preview"
       navItems={navItems}
     >
+      {/* ============ BUTTONS ============ */}
       <PreviewSection
         id="buttons"
         title="Buttons"
@@ -195,9 +196,11 @@ export function ComponentPreviewPage() {
 
         <PreviewCard title="Button sizes" tokenPath="StudyButton.size">
           <HStack gap={3} align="center" wrap="wrap">
+            <StudyButton size="xs">X-Small</StudyButton>
             <StudyButton size="sm">Small</StudyButton>
             <StudyButton size="md">Medium</StudyButton>
             <StudyButton size="lg">Large</StudyButton>
+            <StudyButton size="xl">X-Large</StudyButton>
           </HStack>
         </PreviewCard>
 
@@ -209,6 +212,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== ICON BUTTONS ===== */}
       <PreviewSection
         id="icon-buttons"
         title="Icon Buttons"
@@ -255,6 +259,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== TYPOGRAPHY ===== */}
       <PreviewSection
         id="typography"
         title="Typography"
@@ -287,6 +292,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== BADGES ===== */}
       <PreviewSection
         id="badges"
         title="Badges"
@@ -313,6 +319,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== CHIPS ===== */}
       <PreviewSection
         id="chips"
         title="Chips"
@@ -347,6 +354,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== CARDS ===== */}
       <PreviewSection
         id="cards"
         title="Cards"
@@ -391,6 +399,7 @@ export function ComponentPreviewPage() {
         </SimpleGrid>
       </PreviewSection>
 
+      {/* ===== BOXES ===== */}
       <PreviewSection
         id="boxes"
         title="Boxes"
@@ -423,6 +432,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== AVATARS ===== */}
       <PreviewSection
         id="avatars"
         title="Avatars"
@@ -451,6 +461,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== IMAGES ===== */}
       <PreviewSection
         id="images"
         title="Images"
@@ -495,6 +506,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== LINKS & DIVIDERS ===== */}
       <PreviewSection
         id="links-dividers"
         title="Links & Dividers"
@@ -534,6 +546,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== SEARCH INPUT ===== */}
       <PreviewSection
         id="search"
         title="Search Input"
@@ -560,6 +573,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== LIST ITEMS ===== */}
       <PreviewSection
         id="list-items"
         title="List Items"
@@ -599,6 +613,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== MENUS, POPOVERS & TOOLTIPS ===== */}
       <PreviewSection
         id="menus-popovers"
         title="Menus, Popovers & Tooltips"
@@ -679,6 +694,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== DIALOGS ===== */}
       <PreviewSection
         id="dialogs"
         title="Dialogs"
@@ -732,6 +748,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== TOASTERS ===== */}
       <PreviewSection
         id="toasters"
         title="Toasters"
@@ -777,6 +794,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== TABS ===== */}
       <PreviewSection
         id="tabs"
         title="Tabs"
@@ -843,6 +861,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== TABLES ===== */}
       <PreviewSection
         id="tables"
         title="Tables"
@@ -867,6 +886,7 @@ export function ComponentPreviewPage() {
         </PreviewCard>
       </PreviewSection>
 
+      {/* ===== QUICK REFERENCE ===== */}
       <PreviewSection
         id="quick-reference"
         title="Quick Reference"

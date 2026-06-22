@@ -1,21 +1,35 @@
 import { LuBell } from "react-icons/lu";
 
-import { StudyIconButton, type StudyIconButtonProps } from "@/components/ui";
+import {
+  StudyIconButton,
+  StudyTooltip,
+  type StudyIconButtonProps,
+} from "@/components/ui";
 
-type NavbarNotificationProps = Omit<
+const navbarNotificationText = {
+  ariaLabel: "Notifications",
+  tooltip: "Notifications - To be implemented",
+};
+
+export type NavbarNotificationProps = Omit<
   StudyIconButtonProps,
   "aria-label" | "children"
 >;
 
 export function NavbarNotification(props: NavbarNotificationProps) {
   return (
-    <StudyIconButton
-      aria-label="Notifications"
-      size="lg"
-      variant="ghost"
-      {...props}
+    <StudyTooltip
+      content={navbarNotificationText.tooltip}
+      positioning={{ placement: "bottom" }}
     >
-      <LuBell />
-    </StudyIconButton>
+      <StudyIconButton
+        aria-label={navbarNotificationText.ariaLabel}
+        size="lg"
+        variant="ghost"
+        {...props}
+      >
+        <LuBell />
+      </StudyIconButton>
+    </StudyTooltip>
   );
 }

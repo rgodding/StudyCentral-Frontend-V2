@@ -1,3 +1,4 @@
+
 export const routes = {
   home: "/",
   login: "/login",
@@ -5,8 +6,11 @@ export const routes = {
   unauthorized: "/unauthorized",
 
   dashboard: "/dashboard",
-  courses: "/courses",
   account: "/account",
+  courses: "/courses",
+  settings: "/settings",
+  assignments: "/assignments",
+  announcements: "/announcements",
 
   themePreview: "/theme-preview",
   componentPreview: "/component-preview",

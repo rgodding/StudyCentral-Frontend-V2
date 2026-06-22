@@ -1,5 +1,5 @@
 import { Menu, Portal } from "@chakra-ui/react";
-import type { ComponentProps, ReactNode } from "react";
+import { Fragment, type ComponentProps, type ReactNode } from "react";
 
 export type StudyMenuVariant = "default" | "subtle";
 export type StudyMenuSize = "sm" | "md";
@@ -19,6 +19,7 @@ export type StudyMenuItem = {
   icon?: ReactNode;
   disabled?: boolean;
   danger?: boolean;
+  separatorBefore?: boolean;
   onSelect?: () => void;
 };
 
@@ -28,6 +29,7 @@ export type StudyMenuProps = Omit<
 > & {
   trigger: ReactNode;
   items: StudyMenuItem[];
+  header?: ReactNode;
   menuVariant?: StudyMenuVariant;
   menuSize?: StudyMenuSize;
   animationVariant?: StudyMenuAnimation;
@@ -90,6 +92,7 @@ const animationStyles: Record<StudyMenuAnimation, MenuContentProps> = {
 export function StudyMenu({
   trigger,
   items,
+  header,
   menuVariant = "default",
   menuSize = "md",
   animationVariant = "scaleInFast",
@@ -112,32 +115,43 @@ export function StudyMenu({
             {...animationStyles[animationVariant]}
             {...contentProps}
           >
+            {header && (
+              <>
+                {header}
+                <Menu.Separator borderColor="borderSubtle" />
+              </>
+            )}
             {items.map((item) => (
-              <Menu.Item
-                key={item.value}
-                value={item.value}
-                disabled={item.disabled}
-                rounded="button"
-                cursor={item.disabled ? "not-allowed" : "pointer"}
-                color={item.danger ? "dangerText" : "textMain"}
-                transitionProperty="background-color, color"
-                transitionDuration="fast"
-                _hover={{
-                  bg: item.danger ? "red.50" : "activeBg",
-                }}
-                _highlighted={{
-                  bg: item.danger ? "red.50" : "activeBg",
-                }}
-                _disabled={{
-                  opacity: 0.55,
-                  cursor: "not-allowed",
-                }}
-                onClick={item.onSelect}
-                {...itemSizeStyles[menuSize]}
-              >
-                {item.icon}
-                {item.label}
-              </Menu.Item>
+              <Fragment key={item.value}>
+                {item.separatorBefore && (
+                  <Menu.Separator borderColor="borderSubtle" />
+                )}
+
+                <Menu.Item
+                  value={item.value}
+                  disabled={item.disabled}
+                  rounded="button"
+                  cursor={item.disabled ? "not-allowed" : "pointer"}
+                  color={item.danger ? "dangerText" : "textMain"}
+                  transitionProperty="background-color, color"
+                  transitionDuration="fast"
+                  _hover={{
+                    bg: item.danger ? "red.50" : "activeBg",
+                  }}
+                  _highlighted={{
+                    bg: item.danger ? "red.50" : "activeBg",
+                  }}
+                  _disabled={{
+                    opacity: 0.55,
+                    cursor: "not-allowed",
+                  }}
+                  onClick={item.onSelect}
+                  {...itemSizeStyles[menuSize]}
+                >
+                  {item.icon}
+                  {item.label}
+                </Menu.Item>
+              </Fragment>
             ))}
           </Menu.Content>
         </Menu.Positioner>

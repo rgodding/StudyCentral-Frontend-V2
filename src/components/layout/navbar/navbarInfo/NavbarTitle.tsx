@@ -1,6 +1,6 @@
 import { StudyText, type StudyTextProps } from "@/components/ui";
 
-type NavbarTitleProps = Omit<StudyTextProps, "children">;
+export type NavbarTitleProps = Omit<StudyTextProps, "children">;
 
 export function NavbarTitle(props: NavbarTitleProps) {
   return (

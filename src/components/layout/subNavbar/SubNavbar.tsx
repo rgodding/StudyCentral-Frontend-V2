@@ -5,7 +5,7 @@ import { StudyBox, StudyText } from "@/components/ui";
 import { SubNavbarItem } from "./SubNavbarItem";
 
 export type SubNavbarNavigationItem = {
-  label: string;
+  label: ReactNode;
   to: string;
   exact?: boolean;
 };
@@ -40,6 +40,7 @@ export function SubNavbar({ items, title, ...props }: SubNavbarProps) {
           </StudyText>
 
           <StudyBox
+            aria-hidden
             variant="plain"
             h="24px"
             w="1px"

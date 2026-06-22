@@ -1,4 +1,4 @@
-import { Box, HStack, Menu, Portal, Text } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 import {
   LuLanguages,
@@ -10,11 +10,14 @@ import {
 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
+import { routes } from "@/app/routes/routes";
 import { useStudyToast } from "@/components/feedback";
 import {
   StudyAvatar,
   StudyBadge,
   StudyIconButton,
+  StudyMenu,
+  StudyText,
   type StudyIconButtonProps,
 } from "@/components/ui";
 import { useAuth } from "@/hooks";
@@ -25,7 +28,23 @@ import {
 } from "@/utils/colorMode";
 import { getImageUrl } from "@/utils/getImageUrl";
 
-type NavbarUserProps = Omit<StudyIconButtonProps, "aria-label" | "children">;
+const navbarUserText = {
+  ariaLabel: "User menu",
+  account: "Account",
+  settings: "Settings",
+  lightMode: "Light mode",
+  darkMode: "Dark mode",
+  language: "Language",
+  later: "Later",
+  signOut: "Sign out",
+  signedOutSuccessfully: "Signed out successfully.",
+  couldNotSignOut: "Could not sign out.",
+};
+
+export type NavbarUserProps = Omit<
+  StudyIconButtonProps,
+  "aria-label" | "children"
+>;
 
 export function NavbarUser(props: NavbarUserProps) {
   const navigate = useNavigate();
@@ -50,13 +69,13 @@ export function NavbarUser(props: NavbarUserProps) {
       await logout();
 
       toast.success({
-        title: "Signed out successfully.",
+        title: navbarUserText.signedOutSuccessfully,
       });
 
-      navigate("/login", { replace: true });
+      navigate(routes.login, { replace: true });
     } catch {
       toast.error({
-        title: "Could not sign out.",
+        title: navbarUserText.couldNotSignOut,
       });
     }
   }
@@ -66,12 +85,14 @@ export function NavbarUser(props: NavbarUserProps) {
   }
 
   return (
-    <Menu.Root
+    <StudyMenu
       positioning={{ placement: "bottom-end", offset: { mainAxis: 18 } }}
-    >
-      <Menu.Trigger asChild>
+      contentProps={{
+        minW: "230px",
+      }}
+      trigger={
         <StudyIconButton
-          aria-label="User menu"
+          aria-label={navbarUserText.ariaLabel}
           size="sm"
           variant="ghost"
           disabled={isLoggingOut}
@@ -84,130 +105,78 @@ export function NavbarUser(props: NavbarUserProps) {
             shape="circle"
           />
         </StudyIconButton>
-      </Menu.Trigger>
-
-      <Portal>
-        <Menu.Positioner>
-          <Menu.Content
-            minW="230px"
-            bg="surfaceBg"
-            borderColor="borderSubtle"
-            rounded="card"
-            shadow="card"
-            p={1}
+      }
+      header={
+        <Box px={3} py={2}>
+          <HStack
+            align="center"
+            justify="space-between"
+            gap={2}
+            flexWrap="wrap"
           >
-            <Box px={3} py={2}>
-              <HStack
-                align="center"
-                justify="space-between"
-                gap={2}
-                flexWrap="wrap"
-              >
-                <Text
-                  fontSize="sm"
-                  fontWeight="semibold"
-                  color="textMain"
-                  minW={0}
-                  maxW="150px"
-                  truncate
-                >
-                  {user.firstName}
-                </Text>
-
-                {user && (
-                  <StudyBadge variant="accent" flexShrink={0}>
-                    {user.role}
-                  </StudyBadge>
-                )}
-              </HStack>
-            </Box>
-
-            <Menu.Separator borderColor="borderSubtle" />
-
-            <Menu.Item
-              value="account"
+            <StudyText
+              fontSize="sm"
+              fontWeight="semibold"
               color="textMain"
-              rounded="button"
-              cursor="pointer"
-              onClick={() => navigate("/account")}
-              _hover={{
-                bg: "panelBgSubtle",
-              }}
+              minW={0}
+              maxW="150px"
+              truncate
             >
-              <LuUserRound />
-              Account
-            </Menu.Item>
+              {user.firstName}
+            </StudyText>
 
-            <Menu.Item
-              value="settings"
-              color="textMain"
-              rounded="button"
-              cursor="pointer"
-              onClick={() => navigate("/account")}
-              _hover={{
-                bg: "panelBgSubtle",
-              }}
-            >
-              <LuSettings />
-              Settings
-            </Menu.Item>
+            <StudyBadge variant="accent" flexShrink={0}>
+              {user.role}
+            </StudyBadge>
+          </HStack>
+        </Box>
+      }
+      items={[
+        {
+          value: "account",
+          label: navbarUserText.account,
+          icon: <LuUserRound />,
+          onSelect: () => navigate(routes.account),
+        },
+        {
+          value: "settings",
+          label: navbarUserText.settings,
+          icon: <LuSettings />,
+          onSelect: () => navigate(routes.settings),
+        },
+        {
+          value: "color-mode",
+          label: isDark ? navbarUserText.lightMode : navbarUserText.darkMode,
+          icon: isDark ? <LuSun /> : <LuMoon />,
+          separatorBefore: true,
+          onSelect: handleColorModeToggle,
+        },
+        {
+          value: "language",
+          label: (
+            <HStack justify="space-between" w="full">
+              <StudyText>{navbarUserText.language}</StudyText>
 
-            <Menu.Separator borderColor="borderSubtle" />
-
-            <Menu.Item
-              value="color-mode"
-              color="textMain"
-              rounded="button"
-              cursor="pointer"
-              onClick={handleColorModeToggle}
-              _hover={{
-                bg: "panelBgSubtle",
-              }}
-            >
-              {isDark ? <LuSun /> : <LuMoon />}
-              {isDark ? "Light mode" : "Dark mode"}
-            </Menu.Item>
-
-            <Menu.Item
-              value="language"
-              color="textMain"
-              rounded="button"
-              cursor="pointer"
-              disabled
-              _hover={{
-                bg: "panelBgSubtle",
-              }}
-            >
-              <LuLanguages />
-
-              <HStack justify="space-between" w="full">
-                <Text>Language</Text>
-
-                <Text fontSize="xs" color="textSubtle">
-                  Later
-                </Text>
-              </HStack>
-            </Menu.Item>
-
-            <Menu.Separator borderColor="borderSubtle" />
-
-            <Menu.Item
-              value="logout"
-              color="dangerText"
-              rounded="button"
-              cursor="pointer"
-              disabled={isLoggingOut}
-              onClick={handleLogout}
-              _hover={{
-                bg: "panelBgSubtle",
-              }}
-            >
-              <LuLogOut />
-              Sign out
-            </Menu.Item>
-          </Menu.Content>
-        </Menu.Positioner>
-      </Portal>
-    </Menu.Root>
+              <StudyText fontSize="xs" color="textSubtle">
+                {navbarUserText.later}
+              </StudyText>
+            </HStack>
+          ),
+          icon: <LuLanguages />,
+          disabled: true,
+        },
+        {
+          value: "logout",
+          label: navbarUserText.signOut,
+          icon: <LuLogOut />,
+          danger: true,
+          disabled: isLoggingOut,
+          separatorBefore: true,
+          onSelect: () => {
+            void handleLogout();
+          },
+        },
+      ]}
+    />
   );
 }
