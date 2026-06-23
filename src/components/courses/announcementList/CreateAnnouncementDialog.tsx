@@ -1,11 +1,6 @@
-import { HStack, Stack } from "@chakra-ui/react";
 
-import {
-  StudyButton,
-  StudyDialog,
-  StudyDialogRoot,
-  StudyText,
-} from "@/components/ui";
+import { CreateAnnouncementForm } from "@/components/forms/createAnnouncement";
+import { StudyDialog, StudyDialogRoot } from "@/components/ui";
 import type { Guid } from "@/types/api";
 
 type CreateAnnouncementDialogProps = {
@@ -17,10 +12,7 @@ type CreateAnnouncementDialogProps = {
 const createAnnouncementDialogText = {
   title: "Create announcement",
   description: "Create a new announcement for this course.",
-  placeholder: "Announcement form will go here.",
-  courseIdLabel: "Course ID",
   cancelLabel: "Cancel",
-  createLabel: "Create announcement",
 };
 
 export function CreateAnnouncementDialog({
@@ -38,31 +30,14 @@ export function CreateAnnouncementDialog({
         description={createAnnouncementDialogText.description}
         size="md"
         headerSeparator="belowTitle"
-        footer={
-          <HStack justify="end" w="full" gap={3}>
-            <StudyButton
-              variant="secondary"
-              size="sm"
-              onClick={() => onOpenChange(false)}
-            >
-              {createAnnouncementDialogText.cancelLabel}
-            </StudyButton>
-
-            <StudyButton size="sm">
-              {createAnnouncementDialogText.createLabel}
-            </StudyButton>
-          </HStack>
-        }
       >
-        <Stack gap={3}>
-          <StudyText variant="subtle" fontSize="sm">
-            {createAnnouncementDialogText.courseIdLabel}: {courseId}
-          </StudyText>
-
-          <StudyText variant="muted">
-            {createAnnouncementDialogText.placeholder}
-          </StudyText>
-        </Stack>
+        <CreateAnnouncementForm
+          courseId={courseId}
+          onSubmit={(values) => {
+            console.log(values);
+            onOpenChange(false);
+          }}
+        />
       </StudyDialog>
     </StudyDialogRoot>
   );
