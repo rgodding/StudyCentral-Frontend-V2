@@ -1,5 +1,5 @@
 import type { StudyBadgeVariant } from "@/components/ui";
-import type {  AssignmentDto } from "@/types/api";
+import type { AssignmentDto } from "@/types/api";
 
 export type TeacherAssignmentDisplayStatus =
   | "NoDeadline"
@@ -25,7 +25,7 @@ export const teacherAssignmentStatusMeta: Record<
   },
   PastDue: {
     label: "Past due",
-    badgeVariant: "warning",
+    badgeVariant: "danger",
   },
 };
 
@@ -36,7 +36,7 @@ export function getTeacherAssignmentDisplayStatus(
     return "NoDeadline";
   }
 
-  return new Date(assignment.deadline) < new Date() ? "PastDue" : "Upcoming";
+  return isPastDueAssignment(assignment) ? "PastDue" : "Upcoming";
 }
 
 export function getTeacherAssignmentStatusMeta(assignment: AssignmentDto) {
@@ -45,6 +45,16 @@ export function getTeacherAssignmentStatusMeta(assignment: AssignmentDto) {
   ];
 }
 
-export function isPastDueTeacherAssignment(assignment: AssignmentDto) {
-  return getTeacherAssignmentDisplayStatus(assignment) === "PastDue";
+function isPastDueAssignment(assignment: AssignmentDto) {
+  if (!assignment.deadline) {
+    return false;
+  }
+
+  const deadlineDate = new Date(assignment.deadline);
+  const today = new Date();
+
+  deadlineDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  return deadlineDate < today;
 }

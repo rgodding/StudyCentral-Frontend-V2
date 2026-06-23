@@ -42,12 +42,12 @@ export function TeacherAssignmentList({
     {
       label: teacherAssignmentListText.groups.pastDue,
       assignments: groups.pastDue,
-      defaultOpen: false,
+      defaultOpen: groups.pastDue.length > 0,
     },
     {
       label: teacherAssignmentListText.groups.upcoming,
       assignments: groups.upcoming,
-      defaultOpen: true,
+      defaultOpen: groups.pastDue.length === 0,
     },
     {
       label: teacherAssignmentListText.groups.noDeadline,
