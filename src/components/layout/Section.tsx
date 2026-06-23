@@ -36,10 +36,13 @@ export function Section({
   ...props
 }: SectionProps) {
   const hasHeader =
-    title != null || description != null || headerIcon != null || actions != null;
+    title != null ||
+    description != null ||
+    headerIcon != null ||
+    actions != null;
 
   const content = (
-    <Stack gap={4} h="full" minH={0} {...props}>
+    <Stack gap={4} h="full" minH={0} minW={0} {...props}>
       {hasHeader && (
         <StudySectionHeader
           title={title}

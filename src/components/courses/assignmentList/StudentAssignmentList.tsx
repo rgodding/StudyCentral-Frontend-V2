@@ -4,9 +4,13 @@ import { LuClipboardList } from "react-icons/lu";
 
 import { EmptyState } from "@/components/feedback";
 import { Section } from "@/components/layout";
-import { StudyCollapse, StudySegmentedControl } from "@/components/ui";
+import {
+  StudyCollapse,
+  StudyFilterToggleGroup,
+  StudySegmentedControl,
+} from "@/components/ui";
 
-import type { StudentAssignmentDto } from "@/types/api";
+import type { StudentAssignmentDto, SubmissionStatus } from "@/types/api";
 import {
   getStudentAssignmentGroups,
   getStudentAssignmentStatusMeta,
@@ -21,6 +25,11 @@ type StudentAssignmentListProps = {
 
 type AssignmentFilter = "active" | "completed";
 
+type CompletedAssignmentFilter = Extract<
+  SubmissionStatus,
+  "Submitted" | "SubmittedLate" | "Passed" | "Failed"
+>;
+
 const studentAssignmentListText = {
   title: "Assignments",
   active: "Active",
@@ -29,16 +38,30 @@ const studentAssignmentListText = {
   emptyDescription: "Active assignments for this course will appear here.",
   noCompletedTitle: "No completed assignments",
   noCompletedDescription: "Submitted assignments will appear here.",
+  noFilteredCompletedTitle: "No matching assignments",
+  noFilteredCompletedDescription:
+    "No completed assignments match the selected filters.",
   groups: {
     overdue: "Overdue",
     upcoming: "Upcoming",
     noDeadline: "No deadline",
   },
+  completedFilters: {
+    passed: "Passed",
+    failed: "Failed",
+    submitted: "Submitted",
+    submittedLate: "Late",
+  },
 };
+
 export function StudentAssignmentList({
   assignments,
 }: StudentAssignmentListProps) {
   const [filter, setFilter] = useState<AssignmentFilter>("active");
+  const [completedFilters, setCompletedFilters] = useState<
+    CompletedAssignmentFilter[]
+  >([]);
+
   const [selectedAssignment, setSelectedAssignment] =
     useState<StudentAssignmentDto | null>(null);
 
@@ -47,10 +70,20 @@ export function StudentAssignmentList({
     [assignments],
   );
 
+  const completedAssignments =
+    completedFilters.length === 0
+      ? groups.completed
+      : groups.completed.filter((assignment) =>
+          completedFilters.includes(
+            assignment.submissionStatus as CompletedAssignmentFilter,
+          ),
+        );
+
   const visibleAssignments =
-    filter === "completed" ? groups.completed : groups.active;
+    filter === "completed" ? completedAssignments : groups.active;
 
   const isCompletedFilter = filter === "completed";
+  const hasActiveCompletedFilters = completedFilters.length > 0;
 
   const activeGroupSections = [
     {
@@ -81,7 +114,7 @@ export function StudentAssignmentList({
             setFilter(details.value as AssignmentFilter)
           }
           controlVariant="subtle"
-          controlSize="section"
+          controlSize="xs"
           items={[
             { value: "active", label: studentAssignmentListText.active },
             { value: "completed", label: studentAssignmentListText.completed },
@@ -89,25 +122,56 @@ export function StudentAssignmentList({
         />
       }
     >
+      {isCompletedFilter && groups.completed.length > 0 && (
+        <StudyFilterToggleGroup
+          values={completedFilters}
+          onValuesChange={(values) =>
+            setCompletedFilters(values as CompletedAssignmentFilter[])
+          }
+          items={[
+            {
+              value: "Passed",
+              label: studentAssignmentListText.completedFilters.passed,
+            },
+            {
+              value: "Failed",
+              label: studentAssignmentListText.completedFilters.failed,
+            },
+            {
+              value: "Submitted",
+              label: studentAssignmentListText.completedFilters.submitted,
+            },
+            {
+              value: "SubmittedLate",
+              label: studentAssignmentListText.completedFilters.submittedLate,
+            },
+          ]}
+        />
+      )}
+
       {visibleAssignments.length === 0 ? (
         <EmptyState
           size="sm"
           flex="1"
           icon={<LuClipboardList />}
           title={
-            isCompletedFilter
-              ? studentAssignmentListText.noCompletedTitle
-              : studentAssignmentListText.emptyTitle
+            isCompletedFilter && hasActiveCompletedFilters
+              ? studentAssignmentListText.noFilteredCompletedTitle
+              : isCompletedFilter
+                ? studentAssignmentListText.noCompletedTitle
+                : studentAssignmentListText.emptyTitle
           }
           description={
-            isCompletedFilter
-              ? studentAssignmentListText.noCompletedDescription
-              : studentAssignmentListText.emptyDescription
+            isCompletedFilter && hasActiveCompletedFilters
+              ? studentAssignmentListText.noFilteredCompletedDescription
+              : isCompletedFilter
+                ? studentAssignmentListText.noCompletedDescription
+                : studentAssignmentListText.emptyDescription
           }
         />
       ) : isCompletedFilter ? (
         <Stack gap={3}>
-          {groups.completed.map((assignment) => (
+          {completedAssignments.map((assignment) => (
             <AssignmentCard
               key={assignment.id}
               assignment={assignment}

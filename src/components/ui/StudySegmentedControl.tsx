@@ -2,7 +2,7 @@ import { Tabs } from "@chakra-ui/react";
 import type { ComponentProps, ReactNode } from "react";
 
 export type StudySegmentedControlVariant = "subtle" | "underline";
-export type StudySegmentedControlSize = "sm" | "md" | "section";
+export type StudySegmentedControlSize = "xs" | "sm" | "md" | "section";
 
 type TabsRootProps = ComponentProps<typeof Tabs.Root>;
 type TabsListProps = ComponentProps<typeof Tabs.List>;
@@ -41,13 +41,35 @@ const listVariantStyles: Record<
     borderWidth: "1px",
     borderColor: "borderSubtle",
     rounded: "button",
-    p: 1,
   },
 
   underline: {
     bg: "transparent",
     borderBottomWidth: "1px",
     borderColor: "borderSubtle",
+  },
+};
+
+const listSizeStyles: Record<StudySegmentedControlSize, TabsListStyleProps> = {
+  xs: {
+    h: "22px",
+    minH: "22px",
+    p: "1px",
+  },
+
+  sm: {
+    h: "28px",
+    p: "2px",
+  },
+
+  md: {
+    h: "36px",
+    p: "3px",
+  },
+
+  section: {
+    h: "36px",
+    p: "3px",
   },
 };
 
@@ -64,7 +86,7 @@ const triggerVariantStyles: Record<
       color: "accent",
       bg: "surfaceBg",
       borderColor: "borderStrong",
-      shadow: "card",
+      shadow: "xs",
     },
     _hover: {
       color: "textMain",
@@ -86,27 +108,40 @@ const triggerVariantStyles: Record<
     },
   },
 };
-
 const triggerSizeStyles: Record<
   StudySegmentedControlSize,
   TabsTriggerStyleProps
 > = {
+  xs: {
+    h: "20px",
+    px: 2,
+    py: 0,
+    fontSize: "xs",
+    lineHeight: "1",
+  },
+
   sm: {
-    h: "32px",
+    h: "24px",
     px: 3,
-    fontSize: "sm",
+    py: 0,
+    fontSize: "xs",
+    lineHeight: "1",
   },
 
   md: {
-    h: "40px",
-    px: 4,
+    h: "28px",
+    px: 3,
+    py: 0,
     fontSize: "sm",
+    lineHeight: "1",
   },
 
   section: {
-    h: "36px",
+    h: "28px",
     px: 3,
-    fontSize: "md",
+    py: 0,
+    fontSize: "sm",
+    lineHeight: "1",
   },
 };
 
@@ -139,9 +174,11 @@ export function StudySegmentedControl({
     <Tabs.Root {...rootProps}>
       <Tabs.List
         gap={controlVariant === "subtle" ? 1 : 0}
-        overflowX="auto"
-        overflowY="hidden"
+        w="fit-content"
+        flexShrink={0}
+        overflow="visible"
         {...listVariantStyles[controlVariant]}
+        {...(controlVariant === "subtle" ? listSizeStyles[controlSize] : {})}
         {...listProps}
       >
         {items.map((item) => (
@@ -158,6 +195,10 @@ export function StudySegmentedControl({
             cursor={item.disabled ? "not-allowed" : "pointer"}
             transitionProperty="background-color, border-color, color, box-shadow"
             transitionDuration="fast"
+            _before={{
+              display: "none",
+              content: "none",
+            }}
             _disabled={{
               opacity: 0.55,
               cursor: "not-allowed",

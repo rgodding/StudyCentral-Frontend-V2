@@ -23,6 +23,7 @@ export * from "./StudyTooltip";
 export * from "./StudySectionHeader";
 export * from "./StudyCollapse";
 export * from "./StudyActionCard";
+export * from "./StudyFilterToggleGroup";
 
 
 export * from "./ColorModeToggle";

@@ -20,30 +20,34 @@ export function StudySectionHeader({
   ...props
 }: StudySectionHeaderProps) {
   return (
-    <Flex align="start" justify="space-between" gap={4} minW={0} {...props}>
-      <Flex align="center" gap={2} minW={0}>
+    <Flex align="center" justify="space-between" gap={4} minW={0} {...props}>
+      <Flex align="center" gap={2} minW={0} flex="1">
         {icon != null && (
-          <IconContext.Provider value={{ size: "20px" }}>
+          <IconContext.Provider value={{ size: "18px" }}>
             {icon}
           </IconContext.Provider>
         )}
 
-        <Stack gap={1} minW={0}>
+        <Stack gap={0} minW={0}>
           {title != null && (
-            <StudyHeading variant="section" size="md">
+            <StudyHeading variant="section" size="md" lineHeight="1.15">
               {title}
             </StudyHeading>
           )}
 
           {description != null && (
-            <StudyText variant="muted" fontSize="sm">
+            <StudyText variant="muted" fontSize="sm" lineHeight="1.3">
               {description}
             </StudyText>
           )}
         </Stack>
       </Flex>
 
-      {actions}
+      {actions != null && (
+        <Flex align="center" flexShrink={0}>
+          {actions}
+        </Flex>
+      )}
     </Flex>
   );
 }
