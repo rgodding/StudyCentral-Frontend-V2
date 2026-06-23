@@ -45,7 +45,7 @@ const courseResourceToolbarText = {
   treeView: "Tree view",
   refresh: "Refresh resources",
   createFolder: "Create folder",
-  uploadFile: "Upload file",
+  uploadFile: "Add files",
 };
 
 const viewModeItems: ViewModeItem[] = [
@@ -70,17 +70,11 @@ function getToolbarTitle(
   title: string | undefined,
   viewMode: CourseResourceViewMode,
 ) {
-  if (title) {
-    return title;
-  }
+  if (title) return title;
 
-  if (viewMode === "full") {
-    return courseResourceToolbarText.fullListView;
-  }
+  if (viewMode === "full") return courseResourceToolbarText.fullListView;
 
-  if (viewMode === "tree") {
-    return courseResourceToolbarText.treeView;
-  }
+  if (viewMode === "tree") return courseResourceToolbarText.treeView;
 
   return undefined;
 }
@@ -99,6 +93,7 @@ export function CourseResourceToolbar({
 }: CourseResourceToolbarProps) {
   const toolbarTitle = getToolbarTitle(title, viewMode);
   const isSplitView = viewMode === "split";
+  const showManageActions = canManageResources && viewMode === "full";
 
   return (
     <HStack gap={3} align="center" justify="space-between" w="full" wrap="wrap">
@@ -115,71 +110,79 @@ export function CourseResourceToolbar({
         }}
       />
 
-<HStack gap={3} flexShrink={0} ml="auto">
-  {toolbarTitle && (
-    <StudyText
-      variant="label"
-      size="md"
-      color="textMain"
-      fontWeight="bold"
-      letterSpacing="-0.01em"
-      whiteSpace="nowrap"
-    >
-      {toolbarTitle}
-    </StudyText>
-  )}
-
-  <HStack gap={2} flexShrink={0}>
-        {viewModeItems.map((item) => {
-          const active = item.value === viewMode;
-
-          return (
-            <StudyTooltip key={item.value} content={item.label}>
-              <StudyIconButton
-                aria-label={item.label}
-                variant={active ? "primary" : "secondary"}
+      <HStack gap={3} flexShrink={0} ml="auto" wrap="wrap">
+        {showManageActions && (
+          <HStack gap={2} flexShrink={0}>
+            {onCreateFolder && (
+              <StudyButton
+                variant="secondary"
                 size="sm"
-                onClick={() => onViewModeChange(item.value)}
+                onClick={onCreateFolder}
               >
-                {item.icon}
+                <HStack as="span" gap={2}>
+                  <LuFolderPlus />
+                  <span>{courseResourceToolbarText.createFolder}</span>
+                </HStack>
+              </StudyButton>
+            )}
+
+            {onUploadFile && (
+              <StudyButton variant="primary" size="sm" onClick={onUploadFile}>
+                <HStack as="span" gap={2}>
+                  <LuUpload />
+                  <span>{courseResourceToolbarText.uploadFile}</span>
+                </HStack>
+              </StudyButton>
+            )}
+          </HStack>
+        )}
+
+        {toolbarTitle && (
+          <StudyText
+            variant="label"
+            size="md"
+            color="textMain"
+            fontWeight="bold"
+            letterSpacing="-0.01em"
+            whiteSpace="nowrap"
+          >
+            {toolbarTitle}
+          </StudyText>
+        )}
+
+        <HStack gap={2} flexShrink={0}>
+          {viewModeItems.map((item) => {
+            const active = item.value === viewMode;
+
+            return (
+              <StudyTooltip key={item.value} content={item.label}>
+                <StudyIconButton
+                  aria-label={item.label}
+                  variant={active ? "primary" : "secondary"}
+                  size="sm"
+                  onClick={() => onViewModeChange(item.value)}
+                >
+                  {item.icon}
+                </StudyIconButton>
+              </StudyTooltip>
+            );
+          })}
+
+          {onRefresh && (
+            <StudyTooltip content={courseResourceToolbarText.refresh}>
+              <StudyIconButton
+                aria-label={courseResourceToolbarText.refresh}
+                variant="secondary"
+                size="sm"
+                disabled={isRefreshing}
+                onClick={onRefresh}
+              >
+                <LuRefreshCw />
               </StudyIconButton>
             </StudyTooltip>
-          );
-        })}
-
-        {onRefresh && (
-          <StudyTooltip content={courseResourceToolbarText.refresh}>
-            <StudyIconButton
-              aria-label={courseResourceToolbarText.refresh}
-              variant="secondary"
-              size="sm"
-              disabled={isRefreshing}
-              onClick={onRefresh}
-            >
-              <LuRefreshCw />
-            </StudyIconButton>
-          </StudyTooltip>
-        )}
-
-        {canManageResources && onCreateFolder && (
-          <StudyButton variant="secondary" size="sm" onClick={onCreateFolder}>
-            <HStack as="span" gap={2}>
-              <LuFolderPlus />
-              <span>{courseResourceToolbarText.createFolder}</span>
-            </HStack>
-          </StudyButton>
-        )}
-
-        {canManageResources && onUploadFile && (
-          <StudyButton size="sm" onClick={onUploadFile}>
-            <HStack as="span" gap={2}>
-              <LuUpload />
-              <span>{courseResourceToolbarText.uploadFile}</span>
-            </HStack>
-          </StudyButton>
-        )}
+          )}
+        </HStack>
       </HStack>
     </HStack>
-  </HStack>
   );
 }

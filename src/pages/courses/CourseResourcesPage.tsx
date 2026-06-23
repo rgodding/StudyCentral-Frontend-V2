@@ -7,7 +7,6 @@ import type { Guid } from "@/types/api";
 import type { CourseResourceRow } from "@/utils/resources/buildCourseResourceRows";
 
 const courseResourcesPageText = {
-  title: "Resources",
   loading: "Loading resources...",
   errorTitle: "Could not load resources.",
 };
@@ -33,6 +32,10 @@ export function CourseResourcesPage() {
     void downloadFile(row.file.id, row.file.fileName ?? undefined);
   }
 
+  async function handleRefresh() {
+    await refetch();
+  }
+
   if (isLoading) {
     return <LoadingState text={courseResourcesPageText.loading} />;
   }
@@ -44,11 +47,12 @@ export function CourseResourcesPage() {
   return (
     <Stack gap={6}>
       <CourseResourceBrowser
+        courseId={courseId}
         folders={content.folders}
         files={content.files}
         canManageResources={canManageResources}
         isRefreshing={isFetching}
-        onRefresh={() => void refetch()}
+        onRefresh={handleRefresh}
         onDownloadFile={handleDownloadFile}
       />
     </Stack>

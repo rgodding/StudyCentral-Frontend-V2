@@ -99,4 +99,30 @@ export const teacherStudyFolderApi = {
 
     return response.data;
   },
+
+  uploadFile: async (
+    folderId: Guid,
+    file: File,
+    altText?: string,
+  ): Promise<StudyFileDto> => {
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    if (altText?.trim()) {
+      formData.append("altText", altText.trim());
+    }
+
+    const response = await apiClient.post<StudyFileDto>(
+      apiRoutes.teacher.studyFolders.uploadFile(folderId),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+    return response.data;
+  },
 };
