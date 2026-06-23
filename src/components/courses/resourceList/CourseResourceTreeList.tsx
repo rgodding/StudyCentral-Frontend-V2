@@ -20,11 +20,15 @@ import {
 } from "@/components/ui";
 import type { FileType, Guid } from "@/types/api";
 import type { CourseResourceRow } from "@/utils/resources";
-import { getCourseResourceFileSizeLabel } from "@/utils/resources";
+import {
+  getCourseResourceFilePreviewType,
+  getCourseResourceFileSizeLabel,
+} from "@/utils/resources";
 
 type CourseResourceTreeListProps = {
   rows: CourseResourceRow[];
   onToggleFolder: (folderId: Guid) => void;
+  onPreviewFile?: (row: CourseResourceRow) => void;
   onDownloadFile?: (row: CourseResourceRow) => void;
 };
 
@@ -38,6 +42,7 @@ const courseResourceTreeListText = {
   file: "File",
   expandFolder: "Expand folder",
   collapseFolder: "Collapse folder",
+  open: "Open",
   download: "Download",
   unknownValue: "-",
 };
@@ -59,9 +64,18 @@ function getFileIcon(fileType?: FileType) {
   }
 }
 
+function canPreviewRow(row: CourseResourceRow) {
+  if (row.kind !== "file" || !row.file) {
+    return false;
+  }
+
+  return getCourseResourceFilePreviewType(row.file) !== "download";
+}
+
 export function CourseResourceTreeList({
   rows,
   onToggleFolder,
+  onPreviewFile,
   onDownloadFile,
 }: CourseResourceTreeListProps) {
   function handleToggleFolder(
@@ -70,6 +84,27 @@ export function CourseResourceTreeList({
   ) {
     event.stopPropagation();
     onToggleFolder(folderId);
+  }
+
+  function handleRowClick(row: CourseResourceRow) {
+    if (row.kind === "folder") {
+      if (row.hasChildren) {
+        onToggleFolder(row.id);
+      }
+
+      return;
+    }
+
+    if (canPreviewRow(row)) {
+      onPreviewFile?.(row);
+      return;
+    }
+
+    onDownloadFile?.(row);
+  }
+
+  function handleActionClick(event: MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
   }
 
   return (
@@ -107,6 +142,7 @@ export function CourseResourceTreeList({
       {rows.map((row) => {
         const isFolder = row.kind === "folder";
         const canToggleFolder = isFolder && row.hasChildren;
+        const isPreviewable = canPreviewRow(row);
 
         return (
           <Grid
@@ -119,9 +155,19 @@ export function CourseResourceTreeList({
             gap={4}
             borderBottomWidth="1px"
             borderColor="borderSubtle"
+            cursor={
+              isFolder
+                ? canToggleFolder
+                  ? "pointer"
+                  : "default"
+                : isPreviewable || onDownloadFile
+                  ? "pointer"
+                  : "default"
+            }
             _hover={{
               bg: "panelBgSubtle",
             }}
+            onClick={() => handleRowClick(row)}
           >
             <HStack gap={2} minW={0} pl={`${row.depth * 22}px`}>
               {isFolder ? (
@@ -165,11 +211,18 @@ export function CourseResourceTreeList({
               </StudyText>
             </HStack>
 
-            <StudyBadge variant={isFolder ? "accent" : "neutral"} size="sm">
-              {isFolder
-                ? courseResourceTreeListText.folder
-                : row.file?.fileType ?? courseResourceTreeListText.file}
-            </StudyBadge>
+            <Box justifySelf="start" maxW="full">
+              <StudyBadge
+                variant={isFolder ? "accent" : "neutral"}
+                size="sm"
+                w="fit-content"
+                maxW="full"
+              >
+                {isFolder
+                  ? courseResourceTreeListText.folder
+                  : row.file?.fileType ?? courseResourceTreeListText.file}
+              </StudyBadge>
+            </Box>
 
             <StudyText variant="muted" size="sm" truncate>
               {isFolder
@@ -190,12 +243,27 @@ export function CourseResourceTreeList({
                   row.fileCount ?? 0
                 } files`}
               </StudyText>
+            ) : isPreviewable ? (
+              <StudyButton
+                variant="secondary"
+                size="sm"
+                disabled={!onPreviewFile}
+                onClick={(event) => {
+                  handleActionClick(event);
+                  onPreviewFile?.(row);
+                }}
+              >
+                {courseResourceTreeListText.open}
+              </StudyButton>
             ) : (
               <StudyButton
                 variant="secondary"
                 size="sm"
                 disabled={!onDownloadFile}
-                onClick={() => onDownloadFile?.(row)}
+                onClick={(event) => {
+                  handleActionClick(event);
+                  onDownloadFile?.(row);
+                }}
               >
                 <HStack as="span" gap={2}>
                   <LuDownload />

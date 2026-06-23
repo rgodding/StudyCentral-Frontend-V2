@@ -1,9 +1,10 @@
-import { Box, Grid, Stack } from "@chakra-ui/react";
+import { Box, Grid, HStack, Stack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { LuFolderOpen } from "react-icons/lu";
+import { LuFile, LuFolderOpen, LuMoveLeft } from "react-icons/lu";
 
 import { EmptyState } from "@/components/feedback";
-import { StudyCard, StudyText } from "@/components/ui";
+import { PageFrame } from "@/components/layout";
+import { StudyButton, StudyCard, StudyText } from "@/components/ui";
 import type { Guid, StudyFileDto, StudyFolderDto } from "@/types/api";
 import {
   buildCourseFolderContentRows,
@@ -13,6 +14,7 @@ import {
   type CourseResourceViewMode,
 } from "@/utils/resources";
 
+import { CourseResourceFilePreviewCard } from "./CourseResourceFilePreviewCard";
 import { CourseResourceFullList } from "./CourseResourceFullList";
 import { CourseResourcePreviewPanel } from "./CourseResourcePreviewPanel";
 import { CourseResourceRow } from "./CourseResourceRow";
@@ -35,21 +37,23 @@ const courseResourceBrowserText = {
   emptyDescription: "Folders and files for this course will appear here.",
   noSearchResultsTitle: "No matching resources",
   noSearchResultsDescription: "Try searching for another folder or file.",
+  back: "Back",
   resultCount: (count: number) =>
     count === 1 ? "1 resource" : `${count} resources`,
 };
 
+type FolderExpansionOverrides = Record<Guid, boolean>;
+
 function getExpandedFolderIds(
   folders: StudyFolderDto[],
-  collapsedFolderIds: Set<Guid>,
+  folderExpansionOverrides: FolderExpansionOverrides,
 ) {
   return new Set<Guid>(
     folders
-      .filter((folder) => !collapsedFolderIds.has(folder.id))
+      .filter((folder) => folderExpansionOverrides[folder.id] === true)
       .map((folder) => folder.id),
   );
 }
-
 function flattenSearchRows(rows: CourseResourceRowType[]) {
   return rows.map((row) => ({
     ...row,
@@ -71,13 +75,12 @@ export function CourseResourceBrowser({
   const [viewMode, setViewMode] = useState<CourseResourceViewMode>("split");
   const [selectedRowId, setSelectedRowId] = useState<Guid | null>(null);
   const [currentFolderId, setCurrentFolderId] = useState<Guid | null>(null);
-  const [collapsedFolderIds, setCollapsedFolderIds] = useState<Set<Guid>>(
-    () => new Set<Guid>(),
-  );
+  const [folderExpansionOverrides, setFolderExpansionOverrides] =
+    useState<FolderExpansionOverrides>({});
 
   const expandedFolderIds = useMemo(
-    () => getExpandedFolderIds(folders, collapsedFolderIds),
-    [folders, collapsedFolderIds],
+    () => getExpandedFolderIds(folders, folderExpansionOverrides),
+    [folders, folderExpansionOverrides],
   );
 
   const visibleRows = useMemo(
@@ -95,7 +98,7 @@ export function CourseResourceBrowser({
       buildCourseResourceRows({
         folders,
         files,
-        expandedFolderIds: getExpandedFolderIds(folders, new Set<Guid>()),
+        expandedFolderIds: new Set(folders.map((folder) => folder.id)),
       }),
     [folders, files],
   );
@@ -110,12 +113,12 @@ export function CourseResourceBrowser({
     [folders, files, currentFolderId],
   );
 
-const isSearching = searchValue.trim().length > 0;
+  const isSearching = searchValue.trim().length > 0;
 
-const searchAllRows = isSearching ? flattenSearchRows(allRows) : visibleRows;
-const searchFullListRows = isSearching
-  ? flattenSearchRows(allRows)
-  : fullListRows;
+  const searchAllRows = isSearching ? flattenSearchRows(allRows) : visibleRows;
+  const searchFullListRows = isSearching
+    ? flattenSearchRows(allRows)
+    : fullListRows;
 
   const filteredVisibleRows = useMemo(
     () =>
@@ -145,18 +148,16 @@ const searchFullListRows = isSearching
 
   const isFullView = viewMode === "full";
   const isTreeView = viewMode === "tree";
+  const isFullPagePreview = viewMode !== "split" && Boolean(selectedRow?.file);
 
   function handleToggleFolder(folderId: Guid) {
-    setCollapsedFolderIds((currentFolderIds) => {
-      const nextFolderIds = new Set(currentFolderIds);
+    setFolderExpansionOverrides((currentOverrides) => {
+      const isCurrentlyExpanded = currentOverrides[folderId] === true;
 
-      if (nextFolderIds.has(folderId)) {
-        nextFolderIds.delete(folderId);
-      } else {
-        nextFolderIds.add(folderId);
-      }
-
-      return nextFolderIds;
+      return {
+        ...currentOverrides,
+        [folderId]: !isCurrentlyExpanded,
+      };
     });
   }
 
@@ -166,6 +167,18 @@ const searchFullListRows = isSearching
     }
 
     setSelectedRowId(row.id);
+  }
+
+  function handlePreviewFile(row: CourseResourceRowType) {
+    if (row.kind !== "file") {
+      return;
+    }
+
+    setSelectedRowId(row.id);
+  }
+
+  function handleCloseFullPagePreview() {
+    setSelectedRowId(null);
   }
 
   function handleOpenFullListFolder(folderId: Guid) {
@@ -216,65 +229,142 @@ const searchFullListRows = isSearching
     />
   );
 
+  if (isFullPagePreview && selectedRow?.file) {
+    return (
+      <Box px={{ base: 4, md: 6 }} py={{ base: 4, md: 5 }}>
+        <PageFrame frameWidth="large" variant="plain">
+          <StudyCard h="full" p={0} overflow="hidden">
+            <Stack gap={0}>
+              <HStack
+                gap={4}
+                px={4}
+                py={3}
+                borderBottomWidth="1px"
+                borderColor="borderSubtle"
+              >
+                <StudyButton
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCloseFullPagePreview}
+                >
+                  <HStack as="span" gap={2}>
+                    <LuMoveLeft />
+                    <span>{courseResourceBrowserText.back}</span>
+                  </HStack>
+                </StudyButton>
+
+                <Box h="24px" w="1px" bg="borderSubtle" flexShrink={0} />
+
+                <HStack gap={3} minW={0}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    w="34px"
+                    h="34px"
+                    rounded="button"
+                    borderWidth="1px"
+                    borderColor="borderSubtle"
+                    color="textMain"
+                    flexShrink={0}
+                  >
+                    <LuFile />
+                  </Box>
+
+                  <Stack gap={0} minW={0}>
+                    <StudyText fontWeight="semibold" truncate>
+                      {selectedRow.file.fileName}
+                    </StudyText>
+
+                    <StudyText variant="muted" size="sm" truncate>
+                      {selectedRow.file.contentType}
+                    </StudyText>
+                  </Stack>
+                </HStack>
+              </HStack>
+
+              <CourseResourceFilePreviewCard
+                file={selectedRow.file}
+                showHeader={false}
+                isFullPagePreview
+                onDownloadFile={() => onDownloadFile?.(selectedRow)}
+              />
+            </Stack>
+          </StudyCard>
+        </PageFrame>
+      </Box>
+    );
+  }
+
   if (isFullView) {
     return (
-      <StudyCard h="full" p={0} overflow="hidden">
-        <Stack gap={0}>
-          <Stack
-            gap={0}
-            px={4}
-            py={3}
-            borderBottomWidth="1px"
-            borderColor="borderSubtle"
-          >
-            {toolbar}
-          </Stack>
+      <Box px={{ base: 4, md: 6 }} py={{ base: 4, md: 5 }}>
+        <PageFrame frameWidth="large" variant="plain">
+          <StudyCard h="full" p={0} overflow="hidden">
+            <Stack gap={0}>
+              <Stack
+                gap={0}
+                px={4}
+                py={3}
+                borderBottomWidth="1px"
+                borderColor="borderSubtle"
+              >
+                {toolbar}
+              </Stack>
 
-          {!hasResources ? (
-            <Stack p={4}>{emptyState}</Stack>
-          ) : !hasFullListSearchResults ? (
-            <Stack p={4}>{noSearchResultsState}</Stack>
-          ) : (
-            <CourseResourceFullList
-              rows={filteredFullListRows}
-              currentFolderId={currentFolderId}
-              onOpenFolder={handleOpenFullListFolder}
-              onBack={handleBackFullListFolder}
-              onDownloadFile={onDownloadFile}
-            />
-          )}
-        </Stack>
-      </StudyCard>
+              {!hasResources ? (
+                <Stack p={4}>{emptyState}</Stack>
+              ) : !hasFullListSearchResults ? (
+                <Stack p={4}>{noSearchResultsState}</Stack>
+              ) : (
+                <CourseResourceFullList
+                  rows={filteredFullListRows}
+                  currentFolderId={currentFolderId}
+                  onOpenFolder={handleOpenFullListFolder}
+                  onBack={handleBackFullListFolder}
+                  onPreviewFile={handlePreviewFile}
+                  onDownloadFile={onDownloadFile}
+                />
+              )}
+            </Stack>
+          </StudyCard>
+        </PageFrame>
+      </Box>
     );
   }
 
   if (isTreeView) {
     return (
-      <StudyCard h="full" p={0} overflow="hidden">
-        <Stack gap={0}>
-          <Stack
-            gap={0}
-            px={4}
-            py={3}
-            borderBottomWidth="1px"
-            borderColor="borderSubtle"
-          >
-            {toolbar}
-          </Stack>
+      <Box px={{ base: 4, md: 6 }} py={{ base: 4, md: 5 }}>
+        <PageFrame frameWidth="large" variant="plain">
+          <StudyCard h="full" p={0} overflow="hidden">
+            <Stack gap={0}>
+              <Stack
+                gap={0}
+                px={4}
+                py={3}
+                borderBottomWidth="1px"
+                borderColor="borderSubtle"
+              >
+                {toolbar}
+              </Stack>
 
-          {!hasResources ? (
-            <Stack p={4}>{emptyState}</Stack>
-          ) : !hasVisibleSearchResults ? (
-            <Stack p={4}>{noSearchResultsState}</Stack>
-          ) : (
-            <CourseResourceTreeList
-              rows={filteredVisibleRows}
-              onToggleFolder={handleToggleFolder}
-              onDownloadFile={onDownloadFile}
-            />
-          )}
-        </Stack>
-      </StudyCard>
+              {!hasResources ? (
+                <Stack p={4}>{emptyState}</Stack>
+              ) : !hasVisibleSearchResults ? (
+                <Stack p={4}>{noSearchResultsState}</Stack>
+              ) : (
+                <CourseResourceTreeList
+                  rows={filteredVisibleRows}
+                  onToggleFolder={handleToggleFolder}
+                  onPreviewFile={handlePreviewFile}
+                  onDownloadFile={onDownloadFile}
+                />
+              )}
+            </Stack>
+          </StudyCard>
+        </PageFrame>
+      </Box>
     );
   }
 
@@ -307,59 +397,50 @@ const searchFullListRows = isSearching
     </>
   );
 
-return (
-  <Box
-    w={{
-      base: "full",
-      xl: "calc(100vw - 64px)",
-    }}
-    maxW="none"
-    position="relative"
-    left={{
-      base: "auto",
-      xl: "50%",
-    }}
-    transform={{
-      base: "none",
-      xl: "translateX(-50%)",
-    }}
-  >
-    <Grid
+  return (
+    <Box
       w="full"
       maxW="none"
-      h={{
-        base: "auto",
-        xl: "calc(100vh - 190px)",
-      }}
-      minH={{
-        base: "auto",
-        xl: "0",
-      }}
-      templateColumns={{
-        base: "1fr",
-        xl: "minmax(520px, 0.85fr) minmax(0, 1.35fr)",
-      }}
-      gap={4}
-      alignItems="stretch"
-      overflow="hidden"
+      bg="panelBg"
+      px={{ base: 4, md: 6 }}
+      py={{ base: 4, md: 4 }}
     >
-      <StudyCard h="full" minH={0} overflow="hidden">
-        <Stack h="full" minH={0} gap={4}>
-          {toolbar}
+      <Grid
+        w="full"
+        maxW="none"
+        h={{
+          base: "auto",
+          xl: "calc(100vh - 145px)",
+        }}
+        minH={{
+          base: "auto",
+          xl: "0",
+        }}
+        templateColumns={{
+          base: "1fr",
+          xl: "minmax(420px, 460px) minmax(0, 1fr)",
+        }}
+        gap={4}
+        alignItems="stretch"
+        overflow="hidden"
+      >
+        <StudyCard h="full" minH={0} overflow="hidden">
+          <Stack h="full" minH={0} gap={4}>
+            {toolbar}
 
-          <Box flex="1" minH={0} overflowY="auto" pr={1}>
-            {splitRows}
-          </Box>
-        </Stack>
-      </StudyCard>
+            <Box flex="1" minH={0} overflowY="auto" pr={1}>
+              {splitRows}
+            </Box>
+          </Stack>
+        </StudyCard>
 
-      <Box h="full" minH={0} overflow="hidden">
-        <CourseResourcePreviewPanel
-          selectedRow={selectedRow}
-          onDownloadFile={onDownloadFile}
-        />
-      </Box>
-    </Grid>
-  </Box>
-);
+        <Box h="full" minH={0} overflow="hidden">
+          <CourseResourcePreviewPanel
+            selectedRow={selectedRow}
+            onDownloadFile={onDownloadFile}
+          />
+        </Box>
+      </Grid>
+    </Box>
+  );
 }

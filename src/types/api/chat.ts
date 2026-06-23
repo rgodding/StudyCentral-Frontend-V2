@@ -1,31 +1,31 @@
-import type { ApiDate, Guid } from "@/types/api/common";
+import type { Guid } from "@/types/api/common";
 import type { ChatRoomType } from "@/types/api/enums";
 
 export type ChatRoomDto = {
   id: Guid;
   name: string | null;
   type: ChatRoomType;
-  courseId: Guid | null;
-  courseName: string | null;
-  lastMessageAt: ApiDate | null;
-  lastMessagePreview: string | null;
+  courseId?: Guid | null;
+  courseName?: string | null;
   memberCount: number;
-  createdAt: ApiDate;
-  updatedAt: ApiDate | null;
+  unreadCount: number;
+  lastMessagePreview?: string | null;
+  lastMessageAt?: string | null;
+  createdAt: string;
 };
 
 export type ChatMessageDto = {
   id: Guid;
   chatRoomId: Guid;
   senderId: Guid;
-  senderName: string | null;
-  content: string | null;
-  createdAt: ApiDate;
-  updatedAt: ApiDate | null;
+  senderName: string;
+  content: string;
+  createdAt: string;
+  editedAt?: string | null;
+  deletedAt?: string | null;
 };
 
 export type SendChatMessageDto = {
-  chatRoomId: Guid;
   content: string;
 };
 
@@ -52,7 +52,7 @@ export type ChatCurrentUserDto = {
 };
 
 export type ChatOnlineUserDto = {
-  id: Guid;
-  displayName: string | null;
-  connectedAt: ApiDate;
+  userId: Guid;
+  name: string;
+  profilePictureUrl?: string;
 };

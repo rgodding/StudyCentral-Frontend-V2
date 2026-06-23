@@ -28,6 +28,7 @@ import {
 type CourseResourceFilePreviewCardProps = {
   file: StudyFileDto | null;
   showHeader?: boolean;
+  isFullPagePreview?: boolean;
   onDownloadFile?: (file: StudyFileDto) => void;
 };
 
@@ -103,6 +104,7 @@ function NoFileSelected() {
 export function CourseResourceFilePreviewCard({
   file,
   showHeader = true,
+  isFullPagePreview = false,
   onDownloadFile,
 }: CourseResourceFilePreviewCardProps) {
   if (!file) {
@@ -112,11 +114,19 @@ export function CourseResourceFilePreviewCard({
   const fileName = getCourseResourceFileName(file);
   const previewType = getCourseResourceFilePreviewType(file);
   const previewUrl = getCourseResourcePreviewUrl(file);
+  const cardHeight = isFullPagePreview
+    ? {
+        base: "calc(100vh - 235px)",
+        xl: "calc(100vh - 235px)",
+      }
+    : "full";
+
+  const contentMinHeight = isFullPagePreview ? "0" : "360px";
 
   return (
     <StudyCard
-      h="full"
-      minH="520px"
+      h={cardHeight}
+      minH={isFullPagePreview ? "0" : "520px"}
       p={0}
       overflow="hidden"
       display="flex"
@@ -172,16 +182,17 @@ export function CourseResourceFilePreviewCard({
         </HStack>
       )}
 
-      <Box flex="1" minH={0} overflow="hidden">
+      <Box flex="1" minH={0} overflow="hidden" bg="panelBgSubtle">
         {previewType === "image" && (
           <Box
             h="full"
-            minH="360px"
+            minH={contentMinHeight}
             p={4}
             display="flex"
             alignItems="center"
             justifyContent="center"
             bg="panelBgSubtle"
+            overflow="hidden"
           >
             <StudyImage
               src={previewUrl}
@@ -204,7 +215,12 @@ export function CourseResourceFilePreviewCard({
         )}
 
         {previewType === "pdf" && (
-          <Box h="full" minH="520px" bg="panelBgSubtle">
+          <Box
+            h="full"
+            minH={contentMinHeight}
+            bg="panelBgSubtle"
+            overflow="hidden"
+          >
             <iframe
               src={previewUrl}
               title={fileName}
@@ -218,12 +234,13 @@ export function CourseResourceFilePreviewCard({
         {previewType === "video" && (
           <Box
             h="full"
-            minH="360px"
+            minH={contentMinHeight}
             p={4}
             display="flex"
             alignItems="center"
             justifyContent="center"
             bg="panelBgSubtle"
+            overflow="hidden"
           >
             <video
               controls
@@ -244,12 +261,13 @@ export function CourseResourceFilePreviewCard({
         {previewType === "audio" && (
           <Box
             h="full"
-            minH="260px"
+            minH={contentMinHeight}
             p={6}
             display="flex"
             alignItems="center"
             justifyContent="center"
             bg="panelBgSubtle"
+            overflow="hidden"
           >
             <Box w="full" maxW="640px">
               <audio controls style={{ width: "100%" }}>
@@ -261,10 +279,16 @@ export function CourseResourceFilePreviewCard({
         )}
 
         {previewType === "text" && (
-          <Box h="full" minH="520px" bg="panelBgSubtle" overflow="hidden" p={3}>
+          <Box
+            h="full"
+            minH={contentMinHeight}
+            bg="panelBgSubtle"
+            overflow="hidden"
+            p={3}
+          >
             <Box
               h="full"
-              minH="500px"
+              minH={0}
               bg="surfaceBg"
               borderWidth="1px"
               borderColor="borderSubtle"
@@ -291,10 +315,11 @@ export function CourseResourceFilePreviewCard({
             align="center"
             justify="center"
             h="full"
-            minH="360px"
+            minH={contentMinHeight}
             px={6}
             py={12}
             textAlign="center"
+            overflow="hidden"
           >
             <StudyIconButton
               aria-label={courseResourceFilePreviewCardText.previewNotAvailable}

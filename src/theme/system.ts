@@ -515,6 +515,10 @@ const config = defineConfig({
       minHeight: "100%",
     },
 
+    html: {
+      scrollbarGutter: "stable",
+    },
+
     body: {
       margin: 0,
       bg: "appBg",

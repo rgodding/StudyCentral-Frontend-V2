@@ -38,7 +38,7 @@ export function AppLayoutRoute() {
     <AppShell subNavbar={isCourseRoute ? <CourseLayoutSubNavbar /> : undefined}>
       <PageFrame
         frameWidth={isResourcesPage ? "full" : "large"}
-        variant="panel"
+        variant={isResourcesPage ? "plain" : "panel"}
       >
         <Outlet />
       </PageFrame>

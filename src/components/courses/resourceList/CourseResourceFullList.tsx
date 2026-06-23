@@ -4,12 +4,14 @@ import { LuDownload, LuFile, LuFolder, LuMoveLeft } from "react-icons/lu";
 import { StudyButton, StudyIconButton, StudyText } from "@/components/ui";
 import type { Guid } from "@/types/api";
 import type { CourseResourceRow } from "@/utils/resources";
+import { getCourseResourceFilePreviewType } from "@/utils/resources";
 
 type CourseResourceFullListProps = {
   rows: CourseResourceRow[];
   currentFolderId: Guid | null;
   onOpenFolder: (folderId: Guid) => void;
   onBack: () => void;
+  onPreviewFile?: (row: CourseResourceRow) => void;
   onDownloadFile?: (row: CourseResourceRow) => void;
 };
 
@@ -33,11 +35,20 @@ function getPublishedLabel(row: CourseResourceRow) {
   return String(createdAt);
 }
 
+function canPreviewRow(row: CourseResourceRow) {
+  if (row.kind !== "file" || !row.file) {
+    return false;
+  }
+
+  return getCourseResourceFilePreviewType(row.file) !== "download";
+}
+
 export function CourseResourceFullList({
   rows,
   currentFolderId,
   onOpenFolder,
   onBack,
+  onPreviewFile,
   onDownloadFile,
 }: CourseResourceFullListProps) {
   return (
@@ -76,6 +87,7 @@ export function CourseResourceFullList({
 
       {rows.map((row) => {
         const isFolder = row.kind === "folder";
+        const isPreviewable = canPreviewRow(row);
 
         return (
           <Grid
@@ -117,6 +129,15 @@ export function CourseResourceFullList({
                 variant="secondary"
                 size="sm"
                 onClick={() => onOpenFolder(row.id)}
+              >
+                {courseResourceFullListText.open}
+              </StudyButton>
+            ) : isPreviewable ? (
+              <StudyButton
+                variant="secondary"
+                size="sm"
+                disabled={!onPreviewFile}
+                onClick={() => onPreviewFile?.(row)}
               >
                 {courseResourceFullListText.open}
               </StudyButton>

@@ -4,6 +4,10 @@ const authRoute = `${API_ROOT}/Auth`;
 const accountRoute = `${API_ROOT}/Account`;
 const fileRoute = `${API_ROOT}/File`;
 const imageRoute = `${API_ROOT}/Image`;
+const chatRoute = `${API_ROOT}/chat`;
+
+const HUB_ROOT = "/hubs";
+const chatHubRoute = `${HUB_ROOT}/chat`;
 
 const teacherRoute = `${API_ROOT}/teacher`;
 const teacherCoursesRoute = `${teacherRoute}/courses`;
@@ -24,6 +28,11 @@ export const apiBaseRoutes = {
   account: accountRoute,
   file: fileRoute,
   image: imageRoute,
+  chat: chatRoute,
+
+  hubs: {
+    chat: chatHubRoute,
+  },
 
   teacher: {
     root: teacherRoute,

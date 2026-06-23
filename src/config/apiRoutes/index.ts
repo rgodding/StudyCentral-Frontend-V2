@@ -1,3 +1,4 @@
+import { chatApiRoutes } from "@/config/apiRoutes/chatApiRoutes";
 import { accountApiRoutes } from "./accountApiRoutes";
 import { authApiRoutes } from "./authApiRoutes";
 import { fileApiRoutes } from "./fileApiRoutes";
@@ -12,4 +13,5 @@ export const apiRoutes = {
   images: imageApiRoutes,
   teacher: teacherApiRoutes,
   student: studentApiRoutes,
+  chat: chatApiRoutes,
 } as const;

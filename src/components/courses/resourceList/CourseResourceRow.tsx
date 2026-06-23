@@ -11,11 +11,7 @@ import {
   LuFolder,
 } from "react-icons/lu";
 
-import {
-  StudyBadge,
-  StudyIconButton,
-  StudyListItem
-} from "@/components/ui";
+import { StudyBadge, StudyIconButton, StudyListItem } from "@/components/ui";
 import type { FileType, Guid } from "@/types/api";
 import type { CourseResourceRow as CourseResourceRowType } from "@/utils/resources";
 
@@ -148,7 +144,7 @@ export function CourseResourceRow({
         onClick={handleRowClick}
         leading={
           <HStack gap={1.5}>
-            {showExpandToggle ? (
+            {isFolder && showExpandToggle ? (
               canToggleFolder ? (
                 <StudyIconButton
                   aria-label={

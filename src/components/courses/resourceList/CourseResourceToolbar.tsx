@@ -1,4 +1,4 @@
-import { Box, HStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import {
   LuFolderPlus,
@@ -66,6 +66,25 @@ const viewModeItems: ViewModeItem[] = [
   },
 ];
 
+function getToolbarTitle(
+  title: string | undefined,
+  viewMode: CourseResourceViewMode,
+) {
+  if (title) {
+    return title;
+  }
+
+  if (viewMode === "full") {
+    return courseResourceToolbarText.fullListView;
+  }
+
+  if (viewMode === "tree") {
+    return courseResourceToolbarText.treeView;
+  }
+
+  return undefined;
+}
+
 export function CourseResourceToolbar({
   title,
   searchValue,
@@ -78,6 +97,9 @@ export function CourseResourceToolbar({
   onCreateFolder,
   onUploadFile,
 }: CourseResourceToolbarProps) {
+  const toolbarTitle = getToolbarTitle(title, viewMode);
+  const isSplitView = viewMode === "split";
+
   return (
     <HStack gap={3} align="center" justify="space-between" w="full" wrap="wrap">
       <StudySearchInput
@@ -87,26 +109,27 @@ export function CourseResourceToolbar({
         onClear={() => onSearchChange("")}
         onChange={(event) => onSearchChange(event.target.value)}
         wrapperProps={{
-          flex: title ? "0 1 360px" : "1 1 240px",
-          minW: "220px",
-          maxW: title ? "360px" : "full",
+          flex: isSplitView ? "1 1 240px" : "0 0 360px",
+          minW: isSplitView ? "220px" : "320px",
+          maxW: isSplitView ? "full" : "360px",
         }}
       />
 
-      {title && (
-        <Box flex="1" minW="180px" textAlign="center">
-          <StudyText
-            variant="label"
-            size="sm"
-            color="textMain"
-            fontWeight="semibold"
-          >
-            {title}
-          </StudyText>
-        </Box>
-      )}
+<HStack gap={3} flexShrink={0} ml="auto">
+  {toolbarTitle && (
+    <StudyText
+      variant="label"
+      size="md"
+      color="textMain"
+      fontWeight="bold"
+      letterSpacing="-0.01em"
+      whiteSpace="nowrap"
+    >
+      {toolbarTitle}
+    </StudyText>
+  )}
 
-      <HStack gap={2} flexShrink={0}>
+  <HStack gap={2} flexShrink={0}>
         {viewModeItems.map((item) => {
           const active = item.value === viewMode;
 
@@ -157,5 +180,6 @@ export function CourseResourceToolbar({
         )}
       </HStack>
     </HStack>
+  </HStack>
   );
 }
