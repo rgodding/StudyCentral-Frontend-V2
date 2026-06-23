@@ -1,5 +1,8 @@
 import { Box, HStack } from "@chakra-ui/react";
+import type { MouseEvent } from "react";
 import {
+  LuChevronDown,
+  LuChevronRight,
   LuFile,
   LuFileAudio,
   LuFileImage,
@@ -11,16 +14,17 @@ import {
 import {
   StudyBadge,
   StudyIconButton,
-  StudyListItem,
-  StudyText,
+  StudyListItem
 } from "@/components/ui";
-import type { FileType } from "@/types/api";
-import type { CourseResourceRow as CourseResourceRowType } from "@/utils/resources/buildCourseResourceRows";
+import type { FileType, Guid } from "@/types/api";
+import type { CourseResourceRow as CourseResourceRowType } from "@/utils/resources";
 
 type CourseResourceRowProps = {
   row: CourseResourceRowType;
   selected?: boolean;
+  showExpandToggle?: boolean;
   onClick: (row: CourseResourceRowType) => void;
+  onToggleFolder?: (folderId: Guid) => void;
 };
 
 const courseResourceRowText = {
@@ -28,6 +32,8 @@ const courseResourceRowText = {
   file: "File",
   files: "files",
   folders: "folders",
+  expandFolder: "Expand folder",
+  collapseFolder: "Collapse folder",
   unknownFileType: "Other",
   uploadedBy: "Uploaded by",
 };
@@ -66,17 +72,10 @@ function getFileSizeLabel(fileSize?: number) {
 }
 
 function getFolderMeta(row: CourseResourceRowType) {
-  const parts: string[] = [];
+  const folderCount = row.childFolderCount ?? 0;
+  const fileCount = row.fileCount ?? 0;
 
-  if (row.childFolderCount != null && row.childFolderCount > 0) {
-    parts.push(`${row.childFolderCount} ${courseResourceRowText.folders}`);
-  }
-
-  if (row.fileCount != null && row.fileCount > 0) {
-    parts.push(`${row.fileCount} ${courseResourceRowText.files}`);
-  }
-
-  return parts.join(" · ");
+  return `${folderCount} ${courseResourceRowText.folders} · ${fileCount} ${courseResourceRowText.files}`;
 }
 
 function getFileMeta(row: CourseResourceRowType) {
@@ -100,11 +99,42 @@ function getFileMeta(row: CourseResourceRowType) {
 export function CourseResourceRow({
   row,
   selected = false,
+  showExpandToggle = false,
   onClick,
+  onToggleFolder,
 }: CourseResourceRowProps) {
   const isFolder = row.kind === "folder";
+
+  const canToggleFolder = Boolean(
+    isFolder && showExpandToggle && row.hasChildren && onToggleFolder,
+  );
+
   const meta = isFolder ? getFolderMeta(row) : getFileMeta(row);
   const icon = isFolder ? <LuFolder /> : getFileIcon(row.file?.fileType);
+
+  function handleToggleFolder(event: MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+
+    if (!isFolder || !onToggleFolder) {
+      return;
+    }
+
+    onToggleFolder(row.id);
+    onClick(row);
+  }
+
+  function handleRowClick() {
+    if (isFolder) {
+      if (row.hasChildren && onToggleFolder) {
+        onToggleFolder(row.id);
+      }
+
+      onClick(row);
+      return;
+    }
+
+    onClick(row);
+  }
 
   return (
     <Box pl={`${row.depth * 18}px`}>
@@ -113,33 +143,50 @@ export function CourseResourceRow({
         description={meta}
         variant="interactive"
         size="sm"
-        borderColor={selected ? "accent" : undefined}
-        bg={selected ? "activeBg" : undefined}
-        onClick={() => onClick(row)}
+        borderColor={!isFolder && selected ? "accent" : undefined}
+        bg={!isFolder && selected ? "activeBg" : undefined}
+        onClick={handleRowClick}
         leading={
-          <StudyIconButton
-            aria-label={
-              isFolder ? courseResourceRowText.folder : courseResourceRowText.file
-            }
-            size="sm"
-            variant="ghost"
-            tabIndex={-1}
-            pointerEvents="none"
-          >
-            {icon}
-          </StudyIconButton>
+          <HStack gap={1.5}>
+            {showExpandToggle ? (
+              canToggleFolder ? (
+                <StudyIconButton
+                  aria-label={
+                    row.isExpanded
+                      ? courseResourceRowText.collapseFolder
+                      : courseResourceRowText.expandFolder
+                  }
+                  size="xs"
+                  variant="ghost"
+                  onClick={handleToggleFolder}
+                >
+                  {row.isExpanded ? <LuChevronDown /> : <LuChevronRight />}
+                </StudyIconButton>
+              ) : (
+                <Box w="28px" h="28px" flexShrink={0} />
+              )
+            ) : null}
+
+            <StudyIconButton
+              aria-label={
+                isFolder
+                  ? courseResourceRowText.folder
+                  : courseResourceRowText.file
+              }
+              size="sm"
+              variant="ghost"
+              tabIndex={-1}
+              pointerEvents="none"
+            >
+              {icon}
+            </StudyIconButton>
+          </HStack>
         }
         trailing={
           <HStack gap={2}>
             <StudyBadge variant={isFolder ? "accent" : "neutral"} size="sm">
               {isFolder ? courseResourceRowText.folder : row.file?.fileType}
             </StudyBadge>
-
-            {!isFolder && row.file?.contentType && (
-              <StudyText variant="subtle" size="xs" whiteSpace="nowrap">
-                {row.file.contentType}
-              </StudyText>
-            )}
           </HStack>
         }
       />

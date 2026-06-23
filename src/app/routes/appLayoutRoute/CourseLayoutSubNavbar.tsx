@@ -1,8 +1,7 @@
-import { routes } from "@/app/routes/routes";
+import { routePaths, routes } from "@/app/routes/routes";
 import { SubNavbar } from "@/components/layout/subNavbar/SubNavbar";
 import { useCourse } from "@/hooks/courses/useCourse";
 import { matchPath, useLocation } from "react-router-dom";
-
 
 export function CourseLayoutSubNavbar() {
   const location = useLocation();
@@ -29,20 +28,20 @@ export function CourseLayoutSubNavbar() {
       items={[
         {
           label: "Overview",
-          to: `${routes.courses}/${courseId}`,
+          to: routePaths.courseDetails(courseId),
           exact: true,
         },
         {
           label: "Announcements",
-          to: `${routes.courses}/${courseId}/announcements`,
+          to: routePaths.courseAnnouncements(courseId),
         },
         {
           label: "Assignments",
-          to: `${routes.courses}/${courseId}/assignments`,
+          to: routePaths.courseAssignments(courseId),
         },
         {
           label: "Resources",
-          to: `${routes.courses}/${courseId}/resources`,
+          to: routePaths.courseResources(courseId),
         },
       ]}
     />

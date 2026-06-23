@@ -1,5 +1,6 @@
 export * from "./assignments";
 export * from "./forms";
+export * from "./resources";
 
 export * from "./colorMode";
 export * from "./fileUtils";

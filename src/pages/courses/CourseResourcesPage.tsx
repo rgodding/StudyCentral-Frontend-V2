@@ -1,9 +1,7 @@
 import { Stack } from "@chakra-ui/react";
-import { LuFolderOpen } from "react-icons/lu";
 
 import { CourseResourceBrowser } from "@/components/courses";
 import { ErrorState, LoadingState } from "@/components/feedback";
-import { StudySectionHeader } from "@/components/ui";
 import { useCourseResources, useFileDownload, useRequiredParam } from "@/hooks";
 import type { Guid } from "@/types/api";
 import type { CourseResourceRow } from "@/utils/resources/buildCourseResourceRows";
@@ -45,12 +43,6 @@ export function CourseResourcesPage() {
 
   return (
     <Stack gap={6}>
-      <StudySectionHeader
-        title={courseResourcesPageText.title}
-        titleSize="header"
-        icon={<LuFolderOpen />}
-      />
-
       <CourseResourceBrowser
         folders={content.folders}
         files={content.files}
