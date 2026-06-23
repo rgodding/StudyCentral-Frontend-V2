@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { LuClipboardList } from "react-icons/lu";
 
 import { EmptyState } from "@/components/feedback";
-import { Section } from "@/components/layout";
 import { StudyCollapse } from "@/components/ui";
 import type { AssignmentDto } from "@/types/api";
 import {
@@ -12,14 +11,13 @@ import {
 } from "@/utils/assignments";
 
 import { AssignmentCard } from "./AssignmentCard";
-import { AssignmentQuickReviewDialog } from "@/components/courses/assignmentList/AssignmentQuickReviewDialog";
+import { AssignmentQuickReviewDialog } from "./AssignmentQuickReviewDialog";
 
 type TeacherAssignmentListProps = {
   assignments: AssignmentDto[];
 };
 
 const teacherAssignmentListText = {
-  title: "Assignments",
   emptyTitle: "No assignments yet",
   emptyDescription: "Assignments for this course will appear here.",
   groups: {
@@ -58,42 +56,42 @@ export function TeacherAssignmentList({
     },
   ];
 
+  if (assignments.length === 0) {
+    return (
+      <EmptyState
+        size="sm"
+        flex="1"
+        icon={<LuClipboardList />}
+        title={teacherAssignmentListText.emptyTitle}
+        description={teacherAssignmentListText.emptyDescription}
+      />
+    );
+  }
+
   return (
-    <Section
-      title={teacherAssignmentListText.title}
-      headerIcon={<LuClipboardList />}
-    >
-      {assignments.length === 0 ? (
-        <EmptyState
-          size="sm"
-          flex="1"
-          icon={<LuClipboardList />}
-          title={teacherAssignmentListText.emptyTitle}
-          description={teacherAssignmentListText.emptyDescription}
-        />
-      ) : (
-        <Stack gap={4}>
-          {groupSections.map((group) => (
-            <StudyCollapse
-              key={group.label}
-              label={group.label}
-              count={group.assignments.length}
-              defaultOpen={group.defaultOpen}
-            >
-              <Stack gap={3}>
-                {group.assignments.map((assignment) => (
-                  <AssignmentCard
-                    key={assignment.id}
-                    assignment={assignment}
-                    statusMeta={getTeacherAssignmentStatusMeta(assignment)}
-                    onClick={() => setSelectedAssignment(assignment)}
-                  />
-                ))}
-              </Stack>
-            </StudyCollapse>
-          ))}
-        </Stack>
-      )}
+    <>
+      <Stack gap={4}>
+        {groupSections.map((group) => (
+          <StudyCollapse
+            key={group.label}
+            label={group.label}
+            count={group.assignments.length}
+            defaultOpen={group.defaultOpen}
+          >
+            <Stack gap={3}>
+              {group.assignments.map((assignment) => (
+                <AssignmentCard
+                  key={assignment.id}
+                  assignment={assignment}
+                  statusMeta={getTeacherAssignmentStatusMeta(assignment)}
+                  onClick={() => setSelectedAssignment(assignment)}
+                />
+              ))}
+            </Stack>
+          </StudyCollapse>
+        ))}
+      </Stack>
+
       <AssignmentQuickReviewDialog
         assignment={selectedAssignment}
         open={selectedAssignment != null}
@@ -103,6 +101,6 @@ export function TeacherAssignmentList({
           }
         }}
       />
-    </Section>
+    </>
   );
 }

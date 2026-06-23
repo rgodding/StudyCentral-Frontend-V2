@@ -1,7 +1,11 @@
 import { Stack, type StackProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
-import { StudyBox, StudySectionHeader } from "@/components/ui";
+import {
+  StudyBox,
+  StudySectionHeader,
+  type StudySectionHeaderTitleSize,
+} from "@/components/ui";
 
 type SectionVariant = "plain" | "card" | "subtle";
 
@@ -11,6 +15,7 @@ type SectionProps = StackProps & {
   headerIcon?: ReactNode;
   actions?: ReactNode;
   variant?: SectionVariant;
+  titleSize?: StudySectionHeaderTitleSize;
   children: ReactNode;
 };
 
@@ -21,6 +26,7 @@ const sectionVariantStyles: Record<
   card: {
     variant: "panel",
   },
+
   subtle: {
     variant: "subtle",
   },
@@ -32,6 +38,7 @@ export function Section({
   headerIcon,
   actions,
   variant = "plain",
+  titleSize = "md",
   children,
   ...props
 }: SectionProps) {
@@ -49,6 +56,7 @@ export function Section({
           description={description}
           icon={headerIcon}
           actions={actions}
+          titleSize={titleSize}
         />
       )}
 

@@ -15,7 +15,7 @@ export type StudyAvatarProps = Omit<
   ComponentProps<typeof Avatar.Root>,
   "size" | "shape" | "color"
 > & {
-  fullName?: string;
+  name?: string;
   src?: string | null;
   size?: StudyAvatarSize;
   shape?: StudyAvatarShape;
@@ -74,20 +74,20 @@ const variantStyles: Record<
   },
 };
 
-function hasUsableName(fullName?: string) {
-  return Boolean(fullName?.trim());
+function hasUsableName(name?: string) {
+  return Boolean(name?.trim());
 }
 
 export function StudyAvatar({
-  fullName,
+  name,
   src,
   size = "md",
   shape = "circle",
   avatarVariant = "accent",
   ...props
 }: StudyAvatarProps) {
-  const name = fullName?.trim();
-  const shouldUseInitials = hasUsableName(name);
+  const trimmedName = name?.trim();
+  const shouldUseInitials = hasUsableName(trimmedName);
 
   return (
     <Avatar.Root
