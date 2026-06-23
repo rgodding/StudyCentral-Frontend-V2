@@ -1,6 +1,7 @@
 import { HStack, Link, Stack, Text } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
+import { routes } from "@/app/routes/routes";
 import {
   ContentGrid,
   PageHeader,
@@ -9,7 +10,7 @@ import {
 } from "@/components/layout";
 import { ColorModeToggle, StudyButton } from "@/components/ui";
 
-export default function HomePage() {
+export function HomePage() {
   return (
     <PageShell>
       <Stack gap={4}>
@@ -32,27 +33,25 @@ export default function HomePage() {
           <Stack align="start" gap={3}>
             <StudyButton asChild>
               <Link asChild>
-                <RouterLink to="/theme-preview">View theme preview</RouterLink>
+                <RouterLink to={routes.themePreview}>View theme preview</RouterLink>
               </Link>
             </StudyButton>
 
             <StudyButton asChild variant="secondary">
               <Link asChild>
-                <RouterLink to="/component-preview">
-                  View component preview
-                </RouterLink>
+                <RouterLink to={routes.componentPreview}>View component preview</RouterLink>
               </Link>
             </StudyButton>
 
             <StudyButton asChild variant="secondary">
               <Link asChild>
-                <RouterLink to="/login">View login page</RouterLink>
+                <RouterLink to={routes.login}>View login page</RouterLink>
               </Link>
             </StudyButton>
 
             <StudyButton asChild variant="secondary">
               <Link asChild>
-                <RouterLink to="/dashboard">Go to dashboard</RouterLink>
+                <RouterLink to={routes.dashboard}>Go to dashboard</RouterLink>
               </Link>
             </StudyButton>
           </Stack>

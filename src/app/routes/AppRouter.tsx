@@ -7,15 +7,21 @@ import {
 import { routes } from "@/app/routes/routes";
 import { AppLayoutRoute } from "./appLayoutRoute";
 import { GuestRoute, ProtectedRoute } from "./ProtectedRoutes";
-
-import HomePage from "@/pages/HomePage";
-import { DashboardPage } from "@/pages/DashboardPage";
-import { LoginPage } from "@/pages/auth/LoginPage";
-import { RegisterPage } from "@/pages/auth/RegisterPage";
-import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
-import { CoursesPage } from "@/pages/courses/CoursesPage";
-import { CourseDetailsPage } from "@/pages/courses/CourseDetailsPage";
-import { ComponentPreviewPage, ThemePreviewPage } from "@/pages/dev";
+import {
+  HomePage,
+  UnauthorizedPage,
+  ThemePreviewPage,
+  ComponentPreviewPage,
+  LoginPage,
+  RegisterPage,
+  DashboardPage,
+  CoursesPage,
+  CourseDetailsPage,
+  CourseAnnouncementsPage,
+  CourseAssignmentsPage,
+  CourseResourcesPage,
+  AccountPage,
+} from "@/pages";
 
 // REQUIREMENT: None
 const publicRoutes: RouteObject[] = [
@@ -88,8 +94,20 @@ const protectedRoutes: RouteObject[] = [
         element: <CourseDetailsPage />,
       },
       {
+        path: `${routes.courses}/:courseId/announcements`,
+        element: <CourseAnnouncementsPage />,
+      },
+      {
+        path: `${routes.courses}/:courseId/assignments`,
+        element: <CourseAssignmentsPage />,
+      },
+      {
+        path: `${routes.courses}/:courseId/resources`,
+        element: <CourseResourcesPage />,
+      },
+      {
         path: routes.account,
-        element: <div>Account page</div>,
+        element: <AccountPage />,
       },
     ],
   },

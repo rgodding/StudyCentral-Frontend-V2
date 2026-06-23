@@ -18,6 +18,15 @@ export const routes = {
 export const routePaths = {
   courseDetails: (courseId: string) => `${routes.courses}/${courseId}`,
 
+  courseAnnouncements: (courseId: string) =>
+    `${routes.courses}/${courseId}/announcements`,
+
+  courseAssignments: (courseId: string) =>
+    `${routes.courses}/${courseId}/assignments`,
+
+  courseResources: (courseId: string) =>
+    `${routes.courses}/${courseId}/resources`,
+
   assignmentDetails: (courseId: string, assignmentId: string) =>
     `${routes.courses}/${courseId}/assignments/${assignmentId}`,
 } as const;

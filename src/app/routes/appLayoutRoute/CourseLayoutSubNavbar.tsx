@@ -41,12 +41,8 @@ export function CourseLayoutSubNavbar() {
           to: `${routes.courses}/${courseId}/assignments`,
         },
         {
-          label: "Study Folders",
-          to: `${routes.courses}/${courseId}/study-folders`,
-        },
-        {
-          label: "Chat",
-          to: `${routes.courses}/${courseId}/chat`,
+          label: "Resources",
+          to: `${routes.courses}/${courseId}/resources`,
         },
       ]}
     />
