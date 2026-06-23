@@ -1,26 +1,32 @@
 import { apiClient } from "@/api/axiosClient";
 import { apiRoutes } from "@/config/apiRoutes";
-import type { AssignmentDto, Guid, StudyFileDto } from "@/types/api";
+import type {
+  Guid,
+  StudentAssignmentDto,
+  StudyFileDto,
+} from "@/types/api";
 
 export const studentAssignmentApi = {
-  getAssignments: async (): Promise<AssignmentDto[]> => {
-    const response = await apiClient.get<AssignmentDto[]>(
+  getAssignments: async (): Promise<StudentAssignmentDto[]> => {
+    const response = await apiClient.get<StudentAssignmentDto[]>(
       apiRoutes.student.assignments.getAll,
     );
 
     return response.data;
   },
 
-  getAssignmentsByCourseId: async (courseId: Guid): Promise<AssignmentDto[]> => {
-    const response = await apiClient.get<AssignmentDto[]>(
+  getAssignmentsByCourseId: async (
+    courseId: Guid,
+  ): Promise<StudentAssignmentDto[]> => {
+    const response = await apiClient.get<StudentAssignmentDto[]>(
       apiRoutes.student.assignments.getByCourse(courseId),
     );
 
     return response.data;
   },
 
-  getAssignment: async (assignmentId: Guid): Promise<AssignmentDto> => {
-    const response = await apiClient.get<AssignmentDto>(
+  getAssignment: async (assignmentId: Guid): Promise<StudentAssignmentDto> => {
+    const response = await apiClient.get<StudentAssignmentDto>(
       apiRoutes.student.assignments.getById(assignmentId),
     );
 

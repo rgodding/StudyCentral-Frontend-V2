@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { LuMegaphone } from "react-icons/lu";
@@ -6,86 +6,94 @@ import { useParams } from "react-router-dom";
 
 import { studentApi } from "@/api/studentApi";
 import { teacherApi } from "@/api/teacherApi";
-import {
-  AnnouncementList,
-  CreateAnnouncementAction,
-  CreateAnnouncementDialog,
-} from "@/components/courses";
-import { ErrorState } from "@/components/feedback/ErrorState";
-import { LoadingState } from "@/components/feedback/LoadingState";
-import { StudySectionHeader } from "@/components/ui";
-import { useAuth } from "@/hooks/auth/useAuth";
-import type { Guid } from "@/types/api";
-
-const courseAnnouncementsPageText = {
-  title: "Announcements",
-  loading: "Loading announcements...",
-  errorTitle: "Could not load announcements.",
-  notLoggedIn: "User is not logged in.",
-  missingCourseId: "Course id is missing.",
-  unsupportedRole: "Unsupported role.",
-};
+import { AnnouncementList } from "@/components/courses/announcementList/AnnouncementList";
+import { CreateAnnouncementAction } from "@/components/courses/announcementList/CreateAnnouncementAction";
+import { CreateAnnouncementDialog } from "@/components/courses/announcementList/CreateAnnouncementDialog";
+import { EmptyState, ErrorState, LoadingState } from "@/components/feedback";
+import { Section } from "@/components/layout";
+import { useAuth } from "@/hooks";
 
 export function CourseAnnouncementsPage() {
-  const { courseId } = useParams<{ courseId: Guid }>();
+  const { courseId } = useParams();
   const { user } = useAuth();
-
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const canCreateAnnouncement = user?.role === "Teacher";
+  const isTeacher = user?.role === "Teacher";
 
   const {
     data: announcements = [],
     isLoading,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ["course-announcements", user?.role, courseId],
     enabled: Boolean(user && courseId),
     queryFn: () => {
-      if (!user) throw new Error(courseAnnouncementsPageText.notLoggedIn);
-      if (!courseId)
-        throw new Error(courseAnnouncementsPageText.missingCourseId);
-
-      switch (user.role) {
-        case "Teacher":
-          return teacherApi.announcements.getAnnouncementsByCourseId(courseId);
-        case "Student":
-          return studentApi.announcements.getAnnouncementsByCourseId(courseId);
-        default:
-          throw new Error(courseAnnouncementsPageText.unsupportedRole);
+      if (!courseId) {
+        throw new Error("Course id is missing.");
       }
+
+      return isTeacher
+        ? teacherApi.announcements.getAnnouncementsByCourseId(courseId)
+        : studentApi.announcements.getAnnouncementsByCourseId(courseId);
     },
   });
 
+  const handleCreateOpenChange = async (open: boolean) => {
+    setIsCreateOpen(open);
+
+    if (!open) {
+      await refetch();
+    }
+  };
+
+  if (!courseId) {
+    return <ErrorState title="Course id is missing." />;
+  }
+
   if (isLoading) {
-    return <LoadingState text={courseAnnouncementsPageText.loading} />;
+    return <LoadingState text="Loading announcements..." />;
   }
 
   if (isError) {
-    return <ErrorState title={courseAnnouncementsPageText.errorTitle} />;
+    return <ErrorState title="Could not load announcements." />;
   }
+
   return (
-    <Stack gap={6}>
-      <StudySectionHeader
-        title={courseAnnouncementsPageText.title}
-        titleSize="header"
-        icon={<LuMegaphone />}
-        actions={
-          canCreateAnnouncement ? (
-            <CreateAnnouncementAction onClick={() => setIsCreateOpen(true)} />
-          ) : undefined
-        }
-      />
+    <>
+      <Stack gap={6}>
+        <Section
+          title="Announcements"
+          headerIcon={<LuMegaphone />}
+          actions={
+            isTeacher ? (
+              <CreateAnnouncementAction
+                onClick={() => setIsCreateOpen(true)}
+              />
+            ) : undefined
+          }
+        >
+          {announcements.length > 0 ? (
+            <AnnouncementList announcements={announcements} />
+          ) : (
+            <Box>
+              <EmptyState
+                icon={<LuMegaphone />}
+                title="No announcements yet"
+                description="Announcements for this course will appear here."
+              />
+            </Box>
+          )}
+        </Section>
+      </Stack>
 
-      <AnnouncementList announcements={announcements} />
-
-      {courseId && (
+      {isTeacher && (
         <CreateAnnouncementDialog
           courseId={courseId}
           open={isCreateOpen}
-          onOpenChange={setIsCreateOpen}
+          onOpenChange={handleCreateOpenChange}
         />
       )}
-    </Stack>
+    </>
   );
 }

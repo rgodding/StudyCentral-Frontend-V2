@@ -1,6 +1,5 @@
-
 import { CreateAnnouncementForm } from "@/components/forms/createAnnouncement";
-import { StudyDialog, StudyDialogRoot } from "@/components/ui";
+import { StudyDialog } from "@/components/ui";
 import type { Guid } from "@/types/api";
 
 type CreateAnnouncementDialogProps = {
@@ -12,7 +11,6 @@ type CreateAnnouncementDialogProps = {
 const createAnnouncementDialogText = {
   title: "Create announcement",
   description: "Create a new announcement for this course.",
-  cancelLabel: "Cancel",
 };
 
 export function CreateAnnouncementDialog({
@@ -21,24 +19,21 @@ export function CreateAnnouncementDialog({
   onOpenChange,
 }: CreateAnnouncementDialogProps) {
   return (
-    <StudyDialogRoot
+    <StudyDialog
       open={open}
       onOpenChange={(details) => onOpenChange(details.open)}
+      title={createAnnouncementDialogText.title}
+      description={createAnnouncementDialogText.description}
+      size="md"
+      headerSeparator="belowTitle"
     >
-      <StudyDialog
-        title={createAnnouncementDialogText.title}
-        description={createAnnouncementDialogText.description}
-        size="md"
-        headerSeparator="belowTitle"
-      >
-        <CreateAnnouncementForm
-          courseId={courseId}
-          onSubmit={(values) => {
-            console.log(values);
-            onOpenChange(false);
-          }}
-        />
-      </StudyDialog>
-    </StudyDialogRoot>
+      <CreateAnnouncementForm
+        courseId={courseId}
+        onSubmit={(values) => {
+          console.log(values);
+          onOpenChange(false);
+        }}
+      />
+    </StudyDialog>
   );
 }

@@ -18,7 +18,6 @@ export function RegisterPage() {
   async function handleSubmit(values: RegisterSubmitValues) {
     try {
       await register(values);
-      console.log("values", values);
       toast.success({
         title: "Account created successfully.",
       });

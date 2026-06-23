@@ -99,7 +99,7 @@ export function NavbarUser(props: NavbarUserProps) {
           {...props}
         >
           <StudyAvatar
-            fullName={fullName}
+            name={fullName}
             src={profilePictureUrl}
             size="md"
             shape="circle"

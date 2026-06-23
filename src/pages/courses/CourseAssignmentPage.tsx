@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { LuClipboardList } from "react-icons/lu";
@@ -6,96 +6,113 @@ import { useParams } from "react-router-dom";
 
 import { studentApi } from "@/api/studentApi";
 import { teacherApi } from "@/api/teacherApi";
-import {
-  CreateAssignmentAction,
-  CreateAssignmentDialog,
-  StudentAssignmentList,
-  TeacherAssignmentList,
-} from "@/components/courses";
-import { ErrorState } from "@/components/feedback/ErrorState";
-import { LoadingState } from "@/components/feedback/LoadingState";
-import { StudySectionHeader } from "@/components/ui";
-import { useAuth } from "@/hooks/auth/useAuth";
-import type { AssignmentDto, Guid, StudentAssignmentDto } from "@/types/api";
-
-const courseAssignmentsPageText = {
-  title: "Assignments",
-  loading: "Loading assignments...",
-  errorTitle: "Could not load assignments.",
-  notLoggedIn: "User is not logged in.",
-  missingCourseId: "Course id is missing.",
-  unsupportedRole: "Unsupported role.",
-};
+import { CreateAssignmentAction } from "@/components/courses/assignmentList/CreateAssignmentAction";
+import { CreateAssignmentDialog } from "@/components/courses/assignmentList/CreateAssignmentDialog";
+import { StudentAssignmentList } from "@/components/courses/assignmentList/StudentAssignmentList";
+import { TeacherAssignmentList } from "@/components/courses/assignmentList/TeacherAssignmentList";
+import { EmptyState, ErrorState, LoadingState } from "@/components/feedback";
+import { Section } from "@/components/layout";
+import { useAuth } from "@/hooks";
 
 export function CourseAssignmentsPage() {
-  const { courseId } = useParams<{ courseId: Guid }>();
+  const { courseId } = useParams();
   const { user } = useAuth();
-
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const canCreateAssignment = user?.role === "Teacher";
+  const isTeacher = user?.role === "Teacher";
 
-  const {
-    data: assignments = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["course-assignments", user?.role, courseId],
-    enabled: Boolean(user && courseId),
+  const teacherAssignmentsQuery = useQuery({
+    queryKey: ["teacher-course-assignments", courseId],
+    enabled: Boolean(user && isTeacher && courseId),
     queryFn: () => {
-      if (!user) throw new Error(courseAssignmentsPageText.notLoggedIn);
-      if (!courseId) throw new Error(courseAssignmentsPageText.missingCourseId);
-
-      switch (user.role) {
-        case "Teacher":
-          return teacherApi.assignments.getAssignmentsByCourseId(courseId);
-        case "Student":
-          return studentApi.assignments.getAssignmentsByCourseId(courseId);
-        default:
-          throw new Error(courseAssignmentsPageText.unsupportedRole);
+      if (!courseId) {
+        throw new Error("Course id is missing.");
       }
+
+      return teacherApi.assignments.getAssignmentsByCourseId(courseId);
     },
   });
 
-  if (isLoading) {
-    return <LoadingState text={courseAssignmentsPageText.loading} />;
+  const studentAssignmentsQuery = useQuery({
+    queryKey: ["student-course-assignments", courseId],
+    enabled: Boolean(user && !isTeacher && courseId),
+    queryFn: () => {
+      if (!courseId) {
+        throw new Error("Course id is missing.");
+      }
+
+      return studentApi.assignments.getAssignmentsByCourseId(courseId);
+    },
+  });
+
+  const handleCreateOpenChange = async (open: boolean) => {
+    setIsCreateOpen(open);
+
+    if (!open) {
+      await teacherAssignmentsQuery.refetch();
+    }
+  };
+
+  if (!courseId) {
+    return <ErrorState title="Course id is missing." />;
   }
 
-  if (isError) {
-    return <ErrorState title={courseAssignmentsPageText.errorTitle} />;
+  if (teacherAssignmentsQuery.isLoading || studentAssignmentsQuery.isLoading) {
+    return <LoadingState text="Loading assignments..." />;
   }
 
-  const assignmentList =
-    user?.role === "Teacher" ? (
-      <TeacherAssignmentList assignments={assignments as AssignmentDto[]} />
-    ) : (
-      <StudentAssignmentList
-        assignments={assignments as StudentAssignmentDto[]}
-      />
-    );
+  if (teacherAssignmentsQuery.isError || studentAssignmentsQuery.isError) {
+    return <ErrorState title="Could not load assignments." />;
+  }
+
+  const teacherAssignments = teacherAssignmentsQuery.data ?? [];
+  const studentAssignments = studentAssignmentsQuery.data ?? [];
 
   return (
-    <Stack gap={6}>
-      <StudySectionHeader
-        title={courseAssignmentsPageText.title}
-        titleSize="header"
-        icon={<LuClipboardList />}
-        actions={
-          canCreateAssignment ? (
-            <CreateAssignmentAction onClick={() => setIsCreateOpen(true)} />
-          ) : undefined
-        }
-      />
+    <>
+      <Stack gap={6}>
+        <Section
+          title="Assignments"
+          headerIcon={<LuClipboardList />}
+          actions={
+            isTeacher ? (
+              <CreateAssignmentAction onClick={() => setIsCreateOpen(true)} />
+            ) : undefined
+          }
+        >
+          {isTeacher ? (
+            teacherAssignments.length > 0 ? (
+              <TeacherAssignmentList assignments={teacherAssignments} />
+            ) : (
+              <AssignmentsEmptyState />
+            )
+          ) : studentAssignments.length > 0 ? (
+            <StudentAssignmentList assignments={studentAssignments} />
+          ) : (
+            <AssignmentsEmptyState />
+          )}
+        </Section>
+      </Stack>
 
-      {assignmentList}
-
-      {courseId && (
+      {isTeacher && (
         <CreateAssignmentDialog
           courseId={courseId}
           open={isCreateOpen}
-          onOpenChange={setIsCreateOpen}
+          onOpenChange={handleCreateOpenChange}
         />
       )}
-    </Stack>
+    </>
+  );
+}
+
+function AssignmentsEmptyState() {
+  return (
+    <Box>
+      <EmptyState
+        icon={<LuClipboardList />}
+        title="No assignments yet"
+        description="Assignments for this course will appear here."
+      />
+    </Box>
   );
 }

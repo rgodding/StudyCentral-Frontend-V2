@@ -7,6 +7,8 @@ import {
 import { routePaths, routes } from "@/app/routes/routes";
 import {
   AccountPage,
+  AnnouncementsPage,
+  AssignmentsPage,
   ComponentPreviewPage,
   CourseAnnouncementsPage,
   CourseAssignmentsPage,
@@ -91,6 +93,18 @@ const protectedRoutes: RouteObject[] = [
         element: <CoursesPage />,
       },
       {
+        path: routes.announcements,
+        element: <AnnouncementsPage />,
+      },
+      {
+        path: routes.assignments,
+        element: <AssignmentsPage />,
+      },
+      {
+        path: routes.account,
+        element: <AccountPage />,
+      },
+      {
         path: routePaths.courseDetails(":courseId"),
         element: <CourseDetailsPage />,
       },
@@ -105,18 +119,6 @@ const protectedRoutes: RouteObject[] = [
       {
         path: routePaths.courseResources(":courseId"),
         element: <CourseResourcesPage />,
-      },
-      {
-        path: routes.announcements,
-        element: <CourseAnnouncementsPage />,
-      },
-      {
-        path: routes.assignments,
-        element: <CourseAssignmentsPage />,
-      },
-      {
-        path: routes.account,
-        element: <AccountPage />,
       },
     ],
   },
