@@ -37,7 +37,6 @@ export function AnnouncementList({ announcements }: AnnouncementListProps) {
       />
     );
   }
-console.log(announcements)
   return (
     <Section title={announcementListText.title} headerIcon={<LuMegaphone />}>
       <Stack gap={4}>
