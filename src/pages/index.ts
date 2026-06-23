@@ -7,6 +7,7 @@ export * from "./auth";
 export * from "./account";
 export * from "./assignments";
 export * from "./announcements";
+export * from "./settings";
 
 
 export * from "./dev";

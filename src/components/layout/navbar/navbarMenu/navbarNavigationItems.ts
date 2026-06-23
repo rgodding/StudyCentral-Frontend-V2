@@ -7,7 +7,6 @@ import {
   LuMegaphone,
 } from "react-icons/lu";
 
-
 export type NavbarNavigationItem = {
   label: string;
   path: string;
@@ -48,27 +47,10 @@ const mainNavigationItems: NavbarNavigationItem[] = [
   },
 ];
 
-const previewNavigationItems: NavbarNavigationItem[] = import.meta.env.DEV
-  ? [
-      {
-        label: navbarNavigationText.componentPreview,
-        path: routes.componentPreview,
-        icon: LuBookOpen,
-      },
-      {
-        label: navbarNavigationText.themePreview,
-        path: routes.themePreview,
-        icon: LuBookOpen,
-      },
-    ]
-  : [];
-
 export const studentNavigationItems: NavbarNavigationItem[] = [
   ...mainNavigationItems,
-  ...previewNavigationItems,
 ];
 
 export const teacherNavigationItems: NavbarNavigationItem[] = [
   ...mainNavigationItems,
-  ...previewNavigationItems,
 ];

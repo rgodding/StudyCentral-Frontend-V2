@@ -19,6 +19,7 @@ import {
   HomePage,
   LoginPage,
   RegisterPage,
+  SettingsPage,
   ThemePreviewPage,
   UnauthorizedPage,
 } from "@/pages";
@@ -103,6 +104,10 @@ const protectedRoutes: RouteObject[] = [
       {
         path: routes.account,
         element: <AccountPage />,
+      },
+      {
+        path: routes.settings,
+        element: <SettingsPage />,
       },
       {
         path: routePaths.courseDetails(":courseId"),

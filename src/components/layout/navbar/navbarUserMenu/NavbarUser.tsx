@@ -1,6 +1,7 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 import {
+  LuBookOpen,
   LuLanguages,
   LuLogOut,
   LuMoon,
@@ -35,12 +36,13 @@ const navbarUserText = {
   lightMode: "Light mode",
   darkMode: "Dark mode",
   language: "Language",
+  componentPreview: "Component Preview",
+  themePreview: "Theme Preview",
   later: "Later",
   signOut: "Sign out",
   signedOutSuccessfully: "Signed out successfully.",
   couldNotSignOut: "Could not sign out.",
 };
-
 export type NavbarUserProps = Omit<
   StudyIconButtonProps,
   "aria-label" | "children"
@@ -164,6 +166,19 @@ export function NavbarUser(props: NavbarUserProps) {
           ),
           icon: <LuLanguages />,
           disabled: true,
+        },
+        {
+          value: "component-preview",
+          label: navbarUserText.componentPreview,
+          icon: <LuBookOpen />,
+          separatorBefore: true,
+          onSelect: () => navigate(routes.componentPreview),
+        },
+        {
+          value: "theme-preview",
+          label: navbarUserText.themePreview,
+          icon: <LuBookOpen />,
+          onSelect: () => navigate(routes.themePreview),
         },
         {
           value: "logout",
