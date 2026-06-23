@@ -1,6 +1,10 @@
 import { ChatListView } from "@/components/chat/ChatListView";
 import { OpenChatView } from "@/components/chat/OpenChatView";
-import { StudyIconButton, StudyTooltip, type StudyIconButtonProps } from "@/components/ui";
+import {
+  StudyIconButton,
+  StudyTooltip,
+  type StudyIconButtonProps,
+} from "@/components/ui";
 import { useChatConnection } from "@/hooks/chat/useChatConnection";
 import { useChatRoomsConnection } from "@/hooks/chat/useChatRoomsConnection";
 import type { ChatRoomDto } from "@/types/api";
@@ -30,6 +34,7 @@ export type ChatDrawerProps = Omit<
 >;
 
 export function ChatDrawer(props: ChatDrawerProps) {
+  const [open, setOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState<ChatRoomDto | null>(null);
   const [message, setMessage] = useState("");
 
@@ -42,9 +47,13 @@ export function ChatDrawer(props: ChatDrawerProps) {
 
   const hasUnreadMessages = totalUnreadCount > 0;
 
-  const { messages, onlineUsers, sendMessage, status } = useChatConnection(
-    selectedChat?.courseId,
-  );
+  const {
+    messages,
+    onlineUsers,
+    sendMessage,
+    leaveRoom,
+    status,
+  } = useChatConnection(selectedChat?.courseId);
 
   const handleSendMessage = async () => {
     const trimmed = message.trim();
@@ -69,12 +78,38 @@ export function ChatDrawer(props: ChatDrawerProps) {
   };
 
   const handleBackToChats = async () => {
+    if (selectedChat) {
+      await leaveRoom(selectedChat.id);
+    }
+
     setSelectedChat(null);
+    setMessage("");
+    await reloadCourseChats();
+  };
+
+  const handleDrawerOpenChange = async (details: { open: boolean }) => {
+    setOpen(details.open);
+
+    if (details.open) {
+      return;
+    }
+
+    if (selectedChat) {
+      await leaveRoom(selectedChat.id);
+    }
+
+    setSelectedChat(null);
+    setMessage("");
     await reloadCourseChats();
   };
 
   return (
-    <Drawer.Root placement="end" size="md">
+    <Drawer.Root
+      placement="end"
+      size="md"
+      open={open}
+      onOpenChange={handleDrawerOpenChange}
+    >
       <StudyTooltip
         content={chatDrawerText.tooltip}
         positioning={{ placement: "bottom" }}

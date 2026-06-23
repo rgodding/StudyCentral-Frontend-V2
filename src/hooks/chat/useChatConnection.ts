@@ -1,7 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as signalR from "@microsoft/signalr";
-import type { Guid, ChatMessageDto, ChatRoomDto, ChatOnlineUserDto, SendChatMessageDto } from "@/types/api";
 
+import type {
+  ChatMessageDto,
+  ChatOnlineUserDto,
+  ChatRoomDto,
+  Guid,
+  SendChatMessageDto,
+} from "@/types/api";
 
 const HUB_URL = `${import.meta.env.VITE_API_BASE_URL}/hubs/chat`;
 
@@ -28,12 +34,16 @@ export function useChatConnection(courseId?: Guid | null) {
   const [status, setStatus] = useState<ChatStatus>("Disconnected");
   const [onlineUsers, setOnlineUsers] = useState<ChatOnlineUserDto[]>([]);
 
+  const chatRoomIdRef = useRef<Guid | null>(null);
+  const connectionRef = useRef<signalR.HubConnection | null>(null);
+
   useEffect(() => {
     if (!courseId) {
       return;
     }
 
     let isMounted = true;
+    let hasLeftRoom = false;
 
     const hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(HUB_URL, {
@@ -42,23 +52,31 @@ export function useChatConnection(courseId?: Guid | null) {
       .withAutomaticReconnect()
       .build();
 
+    connectionRef.current = hubConnection;
+
     hubConnection.on("JoinedRoom", (room: ChatRoomDto) => {
+      chatRoomIdRef.current = room.id;
+
       if (!isMounted) return;
 
       setChatRoom(room);
     });
 
-    hubConnection.on("ChatMessagesLoaded", (messages: ChatMessageDto[]) => {
-      if (!isMounted) return;
+    hubConnection.on(
+      "ChatMessagesLoaded",
+      (loadedMessages: ChatMessageDto[]) => {
+        if (!isMounted) return;
 
-      setMessages(messages);
-    });
+        setMessages(loadedMessages);
+      },
+    );
 
     hubConnection.on("ReceiveMessage", (message: ChatMessageDto) => {
       if (!isMounted) return;
 
       setMessages((previousMessages) => [...previousMessages, message]);
     });
+
     hubConnection.on("RoomUsersChanged", (users: ChatOnlineUserDto[]) => {
       if (!isMounted) return;
 
@@ -102,6 +120,8 @@ export function useChatConnection(courseId?: Guid | null) {
     });
 
     hubConnection.onclose(() => {
+      connectionRef.current = null;
+
       if (!isMounted) return;
 
       setConnection(null);
@@ -137,17 +157,40 @@ export function useChatConnection(courseId?: Guid | null) {
       hubConnection.off("JoinedRoom");
       hubConnection.off("ChatMessagesLoaded");
       hubConnection.off("ReceiveMessage");
-      hubConnection.off("UserDisconnected");
-      hubConnection.off("CourseChatRoomsChanged");
       hubConnection.off("RoomUsersChanged");
+      hubConnection.off("UserDisconnected");
 
-      setConnection(null);
-      setChatRoom(null);
-      setMessages([]);
+      const roomId = chatRoomIdRef.current;
 
-      if (hubConnection.state !== signalR.HubConnectionState.Disconnected) {
-        hubConnection.stop().catch(() => {});
+      async function leaveAndStop() {
+        if (
+          roomId &&
+          !hasLeftRoom &&
+          hubConnection.state === signalR.HubConnectionState.Connected
+        ) {
+          hasLeftRoom = true;
+
+          try {
+            await hubConnection.invoke("LeaveRoom", roomId);
+          } catch (error) {
+            console.error("Failed to leave chat room:", error);
+          }
+        }
+
+        if (hubConnection.state !== signalR.HubConnectionState.Disconnected) {
+          await hubConnection.stop().catch(() => {});
+        }
+
+        if (connectionRef.current === hubConnection) {
+          connectionRef.current = null;
+        }
+
+        if (chatRoomIdRef.current === roomId) {
+          chatRoomIdRef.current = null;
+        }
       }
+
+      leaveAndStop();
     };
   }, [courseId]);
 
@@ -162,12 +205,39 @@ export function useChatConnection(courseId?: Guid | null) {
     [connection, chatRoom],
   );
 
+  const leaveRoom = useCallback(
+    async (chatRoomId?: Guid) => {
+      const activeConnection = connectionRef.current;
+      const roomId = chatRoomId ?? chatRoomIdRef.current ?? chatRoom?.id;
+
+      if (!activeConnection || !roomId) {
+        return;
+      }
+
+      if (activeConnection.state !== signalR.HubConnectionState.Connected) {
+        return;
+      }
+
+      await activeConnection.invoke("LeaveRoom", roomId);
+
+      if (chatRoomIdRef.current === roomId) {
+        chatRoomIdRef.current = null;
+      }
+
+      setChatRoom(null);
+      setMessages([]);
+      setOnlineUsers([]);
+    },
+    [chatRoom],
+  );
+
   return {
     messages,
     chatRoom,
     connection,
     status,
     sendMessage,
+    leaveRoom,
     onlineUsers,
   };
 }

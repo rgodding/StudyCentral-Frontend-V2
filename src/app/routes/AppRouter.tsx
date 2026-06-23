@@ -107,6 +107,14 @@ const protectedRoutes: RouteObject[] = [
         element: <CourseResourcesPage />,
       },
       {
+        path: routes.announcements,
+        element: <CourseAnnouncementsPage />,
+      },
+      {
+        path: routes.assignments,
+        element: <CourseAssignmentsPage />,
+      },
+      {
         path: routes.account,
         element: <AccountPage />,
       },

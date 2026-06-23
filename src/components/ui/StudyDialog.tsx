@@ -22,10 +22,14 @@ export type StudyDialogTriggerProps = {
   children: ReactNode;
 };
 
-export type StudyDialogProps = {
+export type StudyDialogProps = Omit<
+  ComponentProps<typeof Dialog.Root>,
+  "children" | "size"
+> & {
   title: ReactNode;
   description?: ReactNode;
   children: ReactNode;
+  trigger?: ReactNode;
   footer?: ReactNode;
   variant?: StudyDialogVariant;
   size?: StudyDialogSize;
@@ -33,6 +37,20 @@ export type StudyDialogProps = {
   showCloseButton?: boolean;
   closeLabel?: string;
   headerSeparator?: StudyDialogSeparator;
+  contentProps?: BoxProps;
+};
+
+type StudyDialogContentProps = {
+  title: ReactNode;
+  description?: ReactNode;
+  children: ReactNode;
+  footer?: ReactNode;
+  variant: StudyDialogVariant;
+  size: StudyDialogSize;
+  animationVariant: StudyDialogAnimation;
+  showCloseButton: boolean;
+  closeLabel: string;
+  headerSeparator: StudyDialogSeparator;
   contentProps?: BoxProps;
 };
 
@@ -75,19 +93,19 @@ export function StudyDialogTrigger({ children }: StudyDialogTriggerProps) {
   return <Dialog.Trigger asChild>{children}</Dialog.Trigger>;
 }
 
-export function StudyDialog({
+function StudyDialogContent({
   title,
   description,
   children,
   footer,
-  variant = "default",
-  size = "md",
-  animationVariant = "scaleInFast",
-  showCloseButton = true,
-  closeLabel = "Close dialog",
-  headerSeparator = "none",
+  variant,
+  size,
+  animationVariant,
+  showCloseButton,
+  closeLabel,
+  headerSeparator,
   contentProps,
-}: StudyDialogProps) {
+}: StudyDialogContentProps) {
   const hasBottomHeaderSeparator = headerSeparator === "bottom";
   const hasBelowTitleSeparator = headerSeparator === "belowTitle";
 
@@ -177,5 +195,42 @@ export function StudyDialog({
         </Dialog.Content>
       </Dialog.Positioner>
     </Portal>
+  );
+}
+
+export function StudyDialog({
+  title,
+  description,
+  children,
+  trigger,
+  footer,
+  variant = "default",
+  size = "md",
+  animationVariant = "scaleInFast",
+  showCloseButton = true,
+  closeLabel = "Close dialog",
+  headerSeparator = "none",
+  contentProps,
+  ...rootProps
+}: StudyDialogProps) {
+  return (
+    <Dialog.Root {...rootProps}>
+      {trigger && <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>}
+
+      <StudyDialogContent
+        title={title}
+        description={description}
+        footer={footer}
+        variant={variant}
+        size={size}
+        animationVariant={animationVariant}
+        showCloseButton={showCloseButton}
+        closeLabel={closeLabel}
+        headerSeparator={headerSeparator}
+        contentProps={contentProps}
+      >
+        {children}
+      </StudyDialogContent>
+    </Dialog.Root>
   );
 }

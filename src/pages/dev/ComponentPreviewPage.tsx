@@ -121,7 +121,7 @@ const studentColumns: StudyTableColumn<DemoStudent>[] = [
     header: "Name",
     render: (student) => (
       <HStack gap={3}>
-        <StudyAvatar fullName={student.name} size="sm" />
+        <StudyAvatar name={student.name} size="sm" />
         <Stack gap={0}>
           <StudyText variant="label">{student.name}</StudyText>
           <StudyText variant="subtle">{student.email}</StudyText>
@@ -446,9 +446,9 @@ export function ComponentPreviewPage() {
       >
         <PreviewCard title="Avatar sizes" tokenPath="StudyAvatar.size">
           <HStack gap={4} align="center" wrap="wrap">
-            <StudyAvatar fullName="Ali Hassan" size="sm" />
-            <StudyAvatar fullName="Emma Larsen" size="md" />
-            <StudyAvatar fullName="Jonas Mikkelsen" size="lg" />
+            <StudyAvatar name="Ali Hassan" size="sm" />
+            <StudyAvatar name="Emma Larsen" size="md" />
+            <StudyAvatar name="Jonas Mikkelsen" size="lg" />
           </HStack>
         </PreviewCard>
 
@@ -457,11 +457,11 @@ export function ComponentPreviewPage() {
           tokenPath="StudyAvatar.avatarVariant"
         >
           <HStack gap={4} align="center" wrap="wrap">
-            <StudyAvatar fullName="Accent User" avatarVariant="accent" />
-            <StudyAvatar fullName="Neutral User" avatarVariant="neutral" />
-            <StudyAvatar fullName="Success User" avatarVariant="success" />
-            <StudyAvatar fullName="Warning User" avatarVariant="warning" />
-            <StudyAvatar fullName="Danger User" avatarVariant="danger" />
+            <StudyAvatar name="Accent User" avatarVariant="accent" />
+            <StudyAvatar name="Neutral User" avatarVariant="neutral" />
+            <StudyAvatar name="Success User" avatarVariant="success" />
+            <StudyAvatar name="Warning User" avatarVariant="warning" />
+            <StudyAvatar name ="Danger User" avatarVariant="danger" />
             <StudyAvatar shape="rounded" />
           </HStack>
         </PreviewCard>
