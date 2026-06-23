@@ -1,4 +1,4 @@
-export * from "./AnnouncementList";
+export * from "../announcementList/AnnouncementList";
 
 export * from "./CourseOverviewBox";
 export * from "./CourseOverviewGrid";

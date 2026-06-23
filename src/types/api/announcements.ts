@@ -6,6 +6,8 @@ export type AnnouncementDto = {
   content: string | null;
   courseId: Guid;
   courseName: string | null;
+  teacherId?: Guid | null;
+  teacherName?: string | null;
   fileCount: number;
   createdAt: ApiDate;
   updatedAt: ApiDate | null;
