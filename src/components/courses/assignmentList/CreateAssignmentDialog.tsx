@@ -6,6 +6,7 @@ type CreateAssignmentDialogProps = {
   courseId: Guid;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: () => Promise<void> | void;
 };
 
 const createAssignmentDialogText = {
@@ -17,6 +18,7 @@ export function CreateAssignmentDialog({
   courseId,
   open,
   onOpenChange,
+  onSuccess,
 }: CreateAssignmentDialogProps) {
   return (
     <StudyDialog
@@ -29,9 +31,9 @@ export function CreateAssignmentDialog({
     >
       <CreateAssignmentForm
         courseId={courseId}
-        onSubmit={(values) => {
-          console.log(values);
+        onSuccess={async () => {
           onOpenChange(false);
+          await onSuccess?.();
         }}
       />
     </StudyDialog>

@@ -45,7 +45,7 @@ export function AnnouncementCard({
       <Stack gap={4}>
         <HStack align="start" gap={3}>
           <StudyAvatar
-            fullName={teacherName}
+            name={teacherName}
             size="sm"
             flexShrink={0}
           />

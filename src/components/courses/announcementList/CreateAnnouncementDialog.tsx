@@ -29,8 +29,7 @@ export function CreateAnnouncementDialog({
     >
       <CreateAnnouncementForm
         courseId={courseId}
-        onSubmit={(values) => {
-          console.log(values);
+        onSuccess={() => {
           onOpenChange(false);
         }}
       />

@@ -1,82 +1,190 @@
-import { useState, type SyntheticEvent } from "react";
-import { z } from "zod";
+import { Stack } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
-import { getFirstFieldErrors } from "@/utils/forms/getFirstFieldErrors";
-import { CreateAssignmentFormContent } from "./CreateAssignmentFormContent";
+import { teacherApi } from "@/api/teacherApi";
 import {
-  createAssignmentSubmitSchema,
-  type CreateAssignmentFormValues,
-  type CreateAssignmentSubmitValues,
+  StudyField,
+  StudyFilePicker,
+  StudyInput,
+  StudyTextarea,
+} from "@/components/forms";
+import { StudyButton } from "@/components/ui";
+import type { Guid } from "@/types/api";
+
+import {
+  createAssignmentSchema,
+  type CreateAssignmentFormData,
 } from "./createAssignmentSchema";
 
-type CreateAssignmentFormErrors = Partial<
-  Record<keyof CreateAssignmentFormValues, string>
->;
-
 type CreateAssignmentFormProps = {
-  courseId: string;
-  isSubmitting?: boolean;
-  onSubmit: (values: CreateAssignmentSubmitValues) => Promise<void> | void;
+  courseId: Guid;
+  onSuccess?: () => Promise<void> | void;
 };
+
+const defaultValues: CreateAssignmentFormData = {
+  name: "",
+  description: "",
+  deadline: "",
+};
+
+function toIsoDateTime(value?: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+
+  return date.toISOString();
+}
 
 export function CreateAssignmentForm({
   courseId,
-  isSubmitting = false,
-  onSubmit,
+  onSuccess,
 }: CreateAssignmentFormProps) {
-  const [values, setValues] = useState<CreateAssignmentFormValues>({
-    name: "",
-    description: "",
-    deadline: "",
-    courseId,
+  const queryClient = useQueryClient();
+  const [files, setFiles] = useState<File[]>([]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateAssignmentFormData>({
+    resolver: zodResolver(createAssignmentSchema),
+    defaultValues,
   });
 
-  const [errors, setErrors] = useState<CreateAssignmentFormErrors>({});
+  const createAssignmentMutation = useMutation({
+    mutationFn: async (data: CreateAssignmentFormData) => {
+      const assignment = await teacherApi.assignments.createAssignment({
+        name: data.name.trim(),
+        description: data.description?.trim() ?? "",
+        deadline: toIsoDateTime(data.deadline),
+        courseId,
+      });
 
-  function updateField<TField extends keyof CreateAssignmentFormValues>(
-    field: TField,
-    value: CreateAssignmentFormValues[TField],
-  ) {
-    setValues((currentValues) => ({
-      ...currentValues,
-      [field]: value,
-    }));
+      if (files.length > 0) {
+        await Promise.all(
+          files.map((file) =>
+            teacherApi.assignments.uploadFile(assignment.id, file),
+          ),
+        );
+      }
 
-    setErrors((currentErrors) => ({
-      ...currentErrors,
-      [field]: undefined,
-    }));
-  }
+      return assignment;
+    },
 
-  async function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
-    event.preventDefault();
+    onSuccess: async (assignment) => {
+      reset(defaultValues);
+      setFiles([]);
 
-    const result = createAssignmentSubmitSchema.safeParse({
-      ...values,
-      courseId,
-    });
+      await onSuccess?.();
 
-    if (!result.success) {
-      setErrors(
-        getFirstFieldErrors<CreateAssignmentFormValues>(
-          z.flattenError(result.error).fieldErrors,
-        ),
-      );
-      return;
-    }
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["teacher-assignments"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["teacher-course-assignments", courseId],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["assignment-files", assignment.id],
+        }),
+      ]);
+    },
 
-    setErrors({});
-    await onSubmit(result.data);
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  function onSubmit(data: CreateAssignmentFormData) {
+    createAssignmentMutation.mutate(data);
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      <CreateAssignmentFormContent
-        values={values}
-        errors={errors}
-        isSubmitting={isSubmitting}
-        updateField={updateField}
+    <CreateAssignmentFormContent
+      register={register}
+      errors={errors}
+      files={files}
+      isSubmitting={createAssignmentMutation.isPending}
+      onFilesChange={setFiles}
+      onSubmit={handleSubmit(onSubmit)}
+    />
+  );
+}
+
+type CreateAssignmentFormContentProps = {
+  register: ReturnType<typeof useForm<CreateAssignmentFormData>>["register"];
+  errors: ReturnType<
+    typeof useForm<CreateAssignmentFormData>
+  >["formState"]["errors"];
+  files: File[];
+  isSubmitting: boolean;
+  onFilesChange: (files: File[]) => void;
+  onSubmit: () => void;
+};
+
+function CreateAssignmentFormContent({
+  register,
+  errors,
+  files,
+  isSubmitting,
+  onFilesChange,
+  onSubmit,
+}: CreateAssignmentFormContentProps) {
+  return (
+    <Stack as="form" gap={4} onSubmit={onSubmit}>
+      <StudyField label="Name" errorText={errors.name?.message} required>
+        <StudyInput
+          placeholder="Assignment name"
+          disabled={isSubmitting}
+          {...register("name")}
+        />
+      </StudyField>
+
+      <StudyField label="Description" errorText={errors.description?.message}>
+        <StudyTextarea
+          minH="160px"
+          resize="vertical"
+          placeholder="Write the assignment description..."
+          disabled={isSubmitting}
+          {...register("description")}
+        />
+      </StudyField>
+
+      <StudyField label="Deadline" errorText={errors.deadline?.message}>
+        <StudyInput
+          type="datetime-local"
+          disabled={isSubmitting}
+          {...register("deadline")}
+        />
+      </StudyField>
+
+      <StudyFilePicker
+        files={files}
+        onFilesChange={onFilesChange}
+        label="Add files"
+        helperText="Optional assignment attachments."
+        maxFiles={10}
+        disabled={isSubmitting}
       />
-    </form>
+
+      <StudyButton
+        type="submit"
+        variant="primary"
+        loading={isSubmitting}
+        alignSelf="flex-end"
+      >
+        Create assignment
+      </StudyButton>
+    </Stack>
   );
 }
