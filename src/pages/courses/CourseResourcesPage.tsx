@@ -1,25 +1,64 @@
 import { Stack } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+import { LuFolderOpen } from "react-icons/lu";
 
-import { PageHeader } from "@/components/layout/PageHeader";
-import { Section } from "@/components/layout/Section";
-import { StudyText } from "@/components/ui/StudyText";
+import { CourseResourceBrowser } from "@/components/courses";
+import { ErrorState, LoadingState } from "@/components/feedback";
+import { StudySectionHeader } from "@/components/ui";
+import { useCourseResources, useFileDownload, useRequiredParam } from "@/hooks";
+import type { Guid } from "@/types/api";
+import type { CourseResourceRow } from "@/utils/resources/buildCourseResourceRows";
+
+const courseResourcesPageText = {
+  title: "Resources",
+  loading: "Loading resources...",
+  errorTitle: "Could not load resources.",
+};
 
 export function CourseResourcesPage() {
-  const { courseId } = useParams();
+  const courseId = useRequiredParam("courseId") as Guid;
+  const { downloadFile } = useFileDownload();
+
+  const {
+    data: content,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+    canManageResources,
+  } = useCourseResources(courseId);
+
+  function handleDownloadFile(row: CourseResourceRow) {
+    if (!row.file) {
+      return;
+    }
+
+    void downloadFile(row.file.id, row.file.fileName ?? undefined);
+  }
+
+  if (isLoading) {
+    return <LoadingState text={courseResourcesPageText.loading} />;
+  }
+
+  if (isError || !content) {
+    return <ErrorState title={courseResourcesPageText.errorTitle} />;
+  }
 
   return (
     <Stack gap={6}>
-      <PageHeader
-        title="Resources"
-        description="Course resources and study material will be shown here."
+      <StudySectionHeader
+        title={courseResourcesPageText.title}
+        titleSize="header"
+        icon={<LuFolderOpen />}
       />
 
-      <Section title="Resources">
-        <StudyText color="textMuted">
-          Empty resources page for course: {courseId}
-        </StudyText>
-      </Section>
+      <CourseResourceBrowser
+        folders={content.folders}
+        files={content.files}
+        canManageResources={canManageResources}
+        isRefreshing={isFetching}
+        onRefresh={() => void refetch()}
+        onDownloadFile={handleDownloadFile}
+      />
     </Stack>
   );
 }

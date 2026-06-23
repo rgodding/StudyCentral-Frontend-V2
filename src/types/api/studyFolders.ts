@@ -1,4 +1,5 @@
 import type { ApiDate, Guid } from "@/types/api/common";
+import type { StudyFileDto } from "@/types/api/studyFiles";
 
 export type StudyFolderDto = {
   id: Guid;
@@ -10,6 +11,13 @@ export type StudyFolderDto = {
   fileCount: number;
   createdAt: ApiDate;
   updatedAt: ApiDate | null;
+};
+
+export type CourseStudyFolderContentDto = {
+  courseId: Guid;
+  courseName: string | null;
+  folders: StudyFolderDto[];
+  files: StudyFileDto[];
 };
 
 export type CreateStudyFolderDto = {

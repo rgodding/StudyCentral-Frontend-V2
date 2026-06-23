@@ -1,6 +1,7 @@
 import { apiClient } from "@/api/axiosClient";
 import { apiRoutes } from "@/config/apiRoutes";
 import type {
+  CourseStudyFolderContentDto,
   CreateStudyFolderDto,
   Guid,
   MoveFolderDto,
@@ -34,8 +35,10 @@ export const teacherStudyFolderApi = {
     return response.data;
   },
 
-  getCourseContent: async (courseId: Guid): Promise<unknown> => {
-    const response = await apiClient.get<unknown>(
+  getCourseContent: async (
+    courseId: Guid,
+  ): Promise<CourseStudyFolderContentDto> => {
+    const response = await apiClient.get<CourseStudyFolderContentDto>(
       apiRoutes.teacher.studyFolders.getCourseContent(courseId),
     );
 
@@ -65,10 +68,6 @@ export const teacherStudyFolderApi = {
     return response.data;
   },
 
-  deleteFolder: async (folderId: Guid): Promise<void> => {
-    await apiClient.delete(apiRoutes.teacher.studyFolders.delete(folderId));
-  },
-
   moveFolder: async (
     folderId: Guid,
     dto: MoveFolderDto,
@@ -79,6 +78,10 @@ export const teacherStudyFolderApi = {
     );
 
     return response.data;
+  },
+
+  deleteFolder: async (folderId: Guid): Promise<void> => {
+    await apiClient.delete(apiRoutes.teacher.studyFolders.delete(folderId));
   },
 
   getFiles: async (folderId: Guid): Promise<StudyFileDto[]> => {
@@ -95,36 +98,5 @@ export const teacherStudyFolderApi = {
     );
 
     return response.data;
-  },
-
-  uploadFile: async (
-    folderId: Guid,
-    file: File,
-    altText?: string,
-  ): Promise<StudyFileDto> => {
-    const formData = new FormData();
-    formData.append("File", file);
-
-    if (altText) {
-      formData.append("AltText", altText);
-    }
-
-    const response = await apiClient.post<StudyFileDto>(
-      apiRoutes.teacher.studyFolders.uploadFile(folderId),
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
-    );
-
-    return response.data;
-  },
-
-  removeFile: async (folderId: Guid, fileId: Guid): Promise<void> => {
-    await apiClient.delete(
-      apiRoutes.teacher.studyFolders.removeFile(folderId, fileId),
-    );
   },
 };

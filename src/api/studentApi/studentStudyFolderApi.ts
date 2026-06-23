@@ -1,6 +1,11 @@
 import { apiClient } from "@/api/axiosClient";
 import { apiRoutes } from "@/config/apiRoutes";
-import type { Guid, StudyFileDto, StudyFolderDto } from "@/types/api";
+import type {
+  CourseStudyFolderContentDto,
+  Guid,
+  StudyFileDto,
+  StudyFolderDto,
+} from "@/types/api";
 
 export const studentStudyFolderApi = {
   getFoldersByCourse: async (
@@ -27,8 +32,10 @@ export const studentStudyFolderApi = {
     return response.data;
   },
 
-  getCourseContent: async (courseId: Guid): Promise<unknown> => {
-    const response = await apiClient.get<unknown>(
+  getCourseContent: async (
+    courseId: Guid,
+  ): Promise<CourseStudyFolderContentDto> => {
+    const response = await apiClient.get<CourseStudyFolderContentDto>(
       apiRoutes.student.studyFolders.getCourseContent(courseId),
     );
 

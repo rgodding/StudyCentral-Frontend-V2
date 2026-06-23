@@ -4,24 +4,25 @@ import {
   type RouteObject,
 } from "react-router-dom";
 
-import { routes } from "@/app/routes/routes";
-import { AppLayoutRoute } from "./appLayoutRoute";
-import { GuestRoute, ProtectedRoute } from "./ProtectedRoutes";
+import { routePaths, routes } from "@/app/routes/routes";
 import {
-  HomePage,
-  UnauthorizedPage,
-  ThemePreviewPage,
+  AccountPage,
   ComponentPreviewPage,
-  LoginPage,
-  RegisterPage,
-  DashboardPage,
-  CoursesPage,
-  CourseDetailsPage,
   CourseAnnouncementsPage,
   CourseAssignmentsPage,
+  CourseDetailsPage,
   CourseResourcesPage,
-  AccountPage,
+  CoursesPage,
+  DashboardPage,
+  HomePage,
+  LoginPage,
+  RegisterPage,
+  ThemePreviewPage,
+  UnauthorizedPage,
 } from "@/pages";
+
+import { AppLayoutRoute } from "./appLayoutRoute";
+import { GuestRoute, ProtectedRoute } from "./ProtectedRoutes";
 
 // REQUIREMENT: None
 const publicRoutes: RouteObject[] = [
@@ -90,19 +91,19 @@ const protectedRoutes: RouteObject[] = [
         element: <CoursesPage />,
       },
       {
-        path: `${routes.courses}/:courseId`,
+        path: routePaths.courseDetails(":courseId"),
         element: <CourseDetailsPage />,
       },
       {
-        path: `${routes.courses}/:courseId/announcements`,
+        path: routePaths.courseAnnouncements(":courseId"),
         element: <CourseAnnouncementsPage />,
       },
       {
-        path: `${routes.courses}/:courseId/assignments`,
+        path: routePaths.courseAssignments(":courseId"),
         element: <CourseAssignmentsPage />,
       },
       {
-        path: `${routes.courses}/:courseId/resources`,
+        path: routePaths.courseResources(":courseId"),
         element: <CourseResourcesPage />,
       },
       {
