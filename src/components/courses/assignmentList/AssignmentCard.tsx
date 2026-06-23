@@ -1,8 +1,8 @@
 import { HStack, Stack } from "@chakra-ui/react";
 
 import {
+  StudyActionCard,
   StudyBadge,
-  StudyCard,
   StudyHeading,
   StudyText,
   type StudyBadgeVariant,
@@ -18,6 +18,7 @@ type AssignmentCardStatusMeta = {
 type AssignmentCardProps = {
   assignment: Pick<AssignmentDto, "name" | "deadline">;
   statusMeta: AssignmentCardStatusMeta;
+  onClick: () => void;
 };
 
 const assignmentCardText = {
@@ -27,26 +28,29 @@ const assignmentCardText = {
 export function AssignmentCard({
   assignment,
   statusMeta,
+  onClick,
 }: AssignmentCardProps) {
   return (
-    <StudyCard size="sm">
+    <StudyActionCard onClick={onClick} p={3}>
       <Stack gap={2}>
-        <HStack justify="space-between" align="start" gap={3}>
-          <StudyHeading variant="card" fontSize="sm" lineClamp={2}>
-            {assignment.name?.trim() || assignmentCardText.untitled}
-          </StudyHeading>
-        </HStack>
+        <StudyHeading variant="card" fontSize="sm" lineClamp={2}>
+          {assignment.name?.trim() || assignmentCardText.untitled}
+        </StudyHeading>
 
         <HStack align="center" justify="space-between" gap={4}>
-          <StudyText variant="subtle">
+          <StudyText variant="subtle" fontSize="xs">
             {formatAssignmentDeadline(assignment.deadline)}
           </StudyText>
 
-          <StudyBadge variant={statusMeta.badgeVariant} flexShrink={0} size="xs">
+          <StudyBadge
+            variant={statusMeta.badgeVariant}
+            size="xs"
+            flexShrink={0}
+          >
             {statusMeta.label}
           </StudyBadge>
         </HStack>
       </Stack>
-    </StudyCard>
+    </StudyActionCard>
   );
 }

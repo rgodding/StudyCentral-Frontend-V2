@@ -5,6 +5,7 @@ import { LuClipboardList } from "react-icons/lu";
 import { EmptyState } from "@/components/feedback";
 import { Section } from "@/components/layout";
 import { StudyCollapse, StudySegmentedControl } from "@/components/ui";
+
 import type { StudentAssignmentDto } from "@/types/api";
 import {
   getStudentAssignmentGroups,
@@ -12,6 +13,7 @@ import {
 } from "@/utils/assignments";
 
 import { AssignmentCard } from "./AssignmentCard";
+import { AssignmentQuickReviewDialog } from "./AssignmentQuickReviewDialog";
 
 type StudentAssignmentListProps = {
   assignments: StudentAssignmentDto[];
@@ -33,11 +35,12 @@ const studentAssignmentListText = {
     noDeadline: "No deadline",
   },
 };
-
 export function StudentAssignmentList({
   assignments,
 }: StudentAssignmentListProps) {
   const [filter, setFilter] = useState<AssignmentFilter>("active");
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<StudentAssignmentDto | null>(null);
 
   const groups = useMemo(
     () => getStudentAssignmentGroups(assignments),
@@ -50,22 +53,22 @@ export function StudentAssignmentList({
   const isCompletedFilter = filter === "completed";
 
   const activeGroupSections = [
-  {
-    label: studentAssignmentListText.groups.overdue,
-    assignments: groups.overdue,
-    defaultOpen: false,
-  },
-  {
-    label: studentAssignmentListText.groups.upcoming,
-    assignments: groups.upcoming,
-    defaultOpen: true,
-  },
-  {
-    label: studentAssignmentListText.groups.noDeadline,
-    assignments: groups.noDeadline,
-    defaultOpen: false,
-  },
-];
+    {
+      label: studentAssignmentListText.groups.overdue,
+      assignments: groups.overdue,
+      defaultOpen: false,
+    },
+    {
+      label: studentAssignmentListText.groups.upcoming,
+      assignments: groups.upcoming,
+      defaultOpen: true,
+    },
+    {
+      label: studentAssignmentListText.groups.noDeadline,
+      assignments: groups.noDeadline,
+      defaultOpen: false,
+    },
+  ];
 
   return (
     <Section
@@ -109,6 +112,7 @@ export function StudentAssignmentList({
               key={assignment.id}
               assignment={assignment}
               statusMeta={getStudentAssignmentStatusMeta(assignment)}
+              onClick={() => setSelectedAssignment(assignment)}
             />
           ))}
         </Stack>
@@ -127,6 +131,7 @@ export function StudentAssignmentList({
                     key={assignment.id}
                     assignment={assignment}
                     statusMeta={getStudentAssignmentStatusMeta(assignment)}
+                    onClick={() => setSelectedAssignment(assignment)}
                   />
                 ))}
               </Stack>
@@ -134,6 +139,16 @@ export function StudentAssignmentList({
           ))}
         </Stack>
       )}
+
+      <AssignmentQuickReviewDialog
+        assignment={selectedAssignment}
+        open={selectedAssignment != null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedAssignment(null);
+          }
+        }}
+      />
     </Section>
   );
 }

@@ -1,5 +1,5 @@
 import { Stack } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { LuClipboardList } from "react-icons/lu";
 
 import { EmptyState } from "@/components/feedback";
@@ -12,6 +12,7 @@ import {
 } from "@/utils/assignments";
 
 import { AssignmentCard } from "./AssignmentCard";
+import { AssignmentQuickReviewDialog } from "@/components/courses/assignmentList/AssignmentQuickReviewDialog";
 
 type TeacherAssignmentListProps = {
   assignments: AssignmentDto[];
@@ -31,6 +32,9 @@ const teacherAssignmentListText = {
 export function TeacherAssignmentList({
   assignments,
 }: TeacherAssignmentListProps) {
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<AssignmentDto | null>(null);
+
   const groups = useMemo(
     () => getTeacherAssignmentGroups(assignments),
     [assignments],
@@ -82,6 +86,7 @@ export function TeacherAssignmentList({
                     key={assignment.id}
                     assignment={assignment}
                     statusMeta={getTeacherAssignmentStatusMeta(assignment)}
+                    onClick={() => setSelectedAssignment(assignment)}
                   />
                 ))}
               </Stack>
@@ -89,6 +94,15 @@ export function TeacherAssignmentList({
           ))}
         </Stack>
       )}
+      <AssignmentQuickReviewDialog
+        assignment={selectedAssignment}
+        open={selectedAssignment != null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedAssignment(null);
+          }
+        }}
+      />
     </Section>
   );
 }

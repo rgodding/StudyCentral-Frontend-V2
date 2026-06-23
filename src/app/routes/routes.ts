@@ -9,8 +9,6 @@ export const routes = {
   courses: "/courses",
   settings: "/settings",
   assignments: "/assignments",
-  assignmentDetails: (courseId: string, assignmentId: string) =>
-  `${routes.courses}/${courseId}/assignments/${assignmentId}`,
   announcements: "/announcements",
 
   themePreview: "/theme-preview",
@@ -19,4 +17,7 @@ export const routes = {
 
 export const routePaths = {
   courseDetails: (courseId: string) => `${routes.courses}/${courseId}`,
+
+  assignmentDetails: (courseId: string, assignmentId: string) =>
+    `${routes.courses}/${courseId}/assignments/${assignmentId}`,
 } as const;
