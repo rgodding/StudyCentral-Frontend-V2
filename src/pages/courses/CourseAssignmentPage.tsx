@@ -87,7 +87,7 @@ export function CourseAssignmentsPage() {
               <AssignmentsEmptyState />
             )
           ) : studentAssignments.length > 0 ? (
-            <StudentAssignmentList assignments={studentAssignments} />
+            <StudentAssignmentList assignments={studentAssignments} filter="active" />
           ) : (
             <AssignmentsEmptyState />
           )}

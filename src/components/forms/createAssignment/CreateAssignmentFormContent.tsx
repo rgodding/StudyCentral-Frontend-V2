@@ -2,19 +2,19 @@ import { Stack } from "@chakra-ui/react";
 
 import { StudyField, StudyInput, StudyTextarea } from "@/components/forms";
 import { StudyButton, StudyDivider, StudyText } from "@/components/ui";
-import type { CreateAssignmentFormValues } from "./createAssignmentSchema";
+import type { CreateAssignmentFormData  } from "./createAssignmentSchema";
 
 type CreateAssignmentFormErrors = Partial<
-  Record<keyof CreateAssignmentFormValues, string>
+  Record<keyof CreateAssignmentFormData, string>
 >;
 
 type CreateAssignmentFormContentProps = {
-  values: CreateAssignmentFormValues;
+  values: CreateAssignmentFormData;
   errors: CreateAssignmentFormErrors;
   isSubmitting: boolean;
-  updateField: <TField extends keyof CreateAssignmentFormValues>(
+  updateField: <TField extends keyof CreateAssignmentFormData>(
     field: TField,
-    value: CreateAssignmentFormValues[TField],
+    value: CreateAssignmentFormData[TField],
   ) => void;
 };
 

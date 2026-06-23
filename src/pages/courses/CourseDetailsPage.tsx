@@ -66,9 +66,7 @@ export function CourseDetailsPage() {
     user?.role === "Teacher" ? (
       <TeacherAssignmentList assignments={assignments as AssignmentDto[]} />
     ) : (
-      <StudentAssignmentList
-        assignments={assignments as StudentAssignmentDto[]}
-      />
+      <StudentAssignmentList assignments={assignments as StudentAssignmentDto[]} filter="active" />
     );
 
   return (

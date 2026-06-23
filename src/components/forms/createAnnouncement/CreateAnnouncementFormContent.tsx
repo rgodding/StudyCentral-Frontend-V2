@@ -2,19 +2,19 @@ import { Stack } from "@chakra-ui/react";
 
 import { StudyField, StudyInput, StudyTextarea } from "@/components/forms";
 import { StudyButton, StudyDivider, StudyText } from "@/components/ui";
-import type { CreateAnnouncementFormValues } from "./createAnnouncementSchema";
+import type { CreateAnnouncementFormData } from "./createAnnouncementSchema";
 
 type CreateAnnouncementFormErrors = Partial<
-  Record<keyof CreateAnnouncementFormValues, string>
+  Record<keyof CreateAnnouncementFormData, string>
 >;
 
 type CreateAnnouncementFormContentProps = {
-  values: CreateAnnouncementFormValues;
+  values: CreateAnnouncementFormData;
   errors: CreateAnnouncementFormErrors;
   isSubmitting: boolean;
-  updateField: <TField extends keyof CreateAnnouncementFormValues>(
+  updateField: <TField extends keyof CreateAnnouncementFormData>(
     field: TField,
-    value: CreateAnnouncementFormValues[TField],
+    value: CreateAnnouncementFormData[TField],
   ) => void;
 };
 
@@ -40,11 +40,7 @@ export function CreateAnnouncementFormContent({
           {createAnnouncementFormText.sectionLabel}
         </StudyText>
 
-        <StudyField
-          label={createAnnouncementFormText.nameLabel}
-          errorText={errors.name}
-          required
-        >
+        <StudyField label={createAnnouncementFormText.nameLabel} errorText={errors.name} required>
           <StudyInput
             value={values.name}
             maxLength={100}
@@ -72,7 +68,7 @@ export function CreateAnnouncementFormContent({
 
       <StudyDivider />
 
-      <StudyButton type="submit" loading={isSubmitting} alignSelf="end">
+      <StudyButton type="submit" width="full" loading={isSubmitting}>
         {createAnnouncementFormText.submitLabel}
       </StudyButton>
     </Stack>
