@@ -46,6 +46,10 @@ export const chatApi = {
     return response.data;
   },
 
+  markAllSeen: async (): Promise<void> => {
+    await apiClient.post(apiRoutes.chat.markAllSeen);
+  },
+
   getHubUrl: (): string => {
     return getAbsoluteApiUrl(apiRoutes.chat.hub);
   },

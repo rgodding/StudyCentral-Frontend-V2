@@ -1,37 +1,47 @@
-import type { ChatRoomDto } from "@/types/api";
-import {
-  Badge,
-  Box,
-  Collapsible,
-  HStack,
-  IconButton,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { Badge, Box, Collapsible, HStack, Stack, Text } from "@chakra-ui/react";
+import { useState, type ReactNode } from "react";
 import { LuChevronDown, LuChevronRight } from "react-icons/lu";
 
+import { StudyIconButton } from "@/components/ui";
+import type { ChatRoomDto } from "@/types/api";
 
-type Props = {
+import { ChatMarkAllSeenButton } from "./ChatMarkAllSeenButton";
+
+type ChatListViewProps = {
   courseChats: ChatRoomDto[];
-  privateChats?: ChatRoomDto[];
   onSelectChat: (chat: ChatRoomDto) => void;
+  onReloadChats?: () => Promise<void> | void;
+};
+
+const privateChats: ChatRoomDto[] = [];
+
+const chatListViewText = {
+  courseChats: "Course Chats",
+  privateChats: "Private Chats",
+  noPrivateChats: "No private chats",
+  unreadMessages: "Unread messages:",
+  noMessagesYet: "No messages yet",
+  members: "members",
+  toggle: "Toggle",
 };
 
 export function ChatListView({
   courseChats,
-  privateChats = [],
   onSelectChat,
-}: Props) {
+  onReloadChats,
+}: ChatListViewProps) {
+  const totalUnreadCount = courseChats.reduce(
+    (total, chat) => total + chat.unreadCount,
+    0,
+  );
+
   return (
     <Stack gap={2} p={4}>
       <ChatSection
-        title="Course Chats"
+        title={chatListViewText.courseChats}
         count={courseChats.length}
-        unreadCount={courseChats.reduce(
-          (total, chat) => total + chat.unreadCount,
-          0,
-        )}
+        unreadCount={totalUnreadCount}
+        onMarkedAllSeen={onReloadChats}
       >
         {courseChats.map((chat) => (
           <ChatListItem
@@ -42,10 +52,10 @@ export function ChatListView({
         ))}
       </ChatSection>
 
-      <ChatSection title="Private Chats" count={privateChats.length}>
+      <ChatSection title={chatListViewText.privateChats} count={privateChats.length}>
         {privateChats.length === 0 ? (
-          <Text px={3} py={2} color="gray.500" fontSize="sm">
-            No private chats
+          <Text px={3} py={2} color="textMuted" fontSize="sm">
+            {chatListViewText.noPrivateChats}
           </Text>
         ) : (
           privateChats.map((chat) => (
@@ -61,39 +71,62 @@ export function ChatListView({
   );
 }
 
+type ChatSectionProps = {
+  title: string;
+  count: number;
+  unreadCount?: number;
+  onMarkedAllSeen?: () => Promise<void> | void;
+  children: ReactNode;
+};
+
 function ChatSection({
   title,
   count,
   unreadCount = 0,
+  onMarkedAllSeen,
   children,
-}: {
-  title: string;
-  count: number;
-  unreadCount?: number;
-  children: React.ReactNode;
-}) {
+}: ChatSectionProps) {
   const [open, setOpen] = useState(true);
+  const hasUnreadMessages = unreadCount > 0;
 
   return (
-    <Collapsible.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
-      <HStack justify="space-between" py={2}>
-        <Box>
-          <HStack gap={2}>
-            <Text fontWeight="semibold">{title}</Text>
-            <Badge variant="subtle">{count}</Badge>
+    <Collapsible.Root open={open} onOpenChange={(details) => setOpen(details.open)}>
+      <HStack justify="space-between" align="start" py={2} gap={3}>
+        <Box minW={0} flex="1">
+          <HStack gap={2} wrap="wrap">
+            <Text fontWeight="semibold" color="textMain">
+              {title}
+            </Text>
+
+            <Badge variant="subtle" w="fit-content">
+              {count}
+            </Badge>
           </HStack>
 
-          {unreadCount > 0 && (
-            <Text fontSize="xs" color="red.500">
-              Unread messages: {unreadCount}
-            </Text>
+          {hasUnreadMessages && (
+            <HStack mt={1.5} gap={3} justify="space-between" align="center">
+              <Text fontSize="xs" color="dangerText">
+                {chatListViewText.unreadMessages} {unreadCount}
+              </Text>
+
+              <ChatMarkAllSeenButton
+                size="xs"
+                variant="secondary"
+                onMarkedAllSeen={onMarkedAllSeen}
+              />
+            </HStack>
           )}
         </Box>
 
         <Collapsible.Trigger asChild>
-          <IconButton variant="ghost" size="sm" aria-label={`Toggle ${title}`}>
+          <StudyIconButton
+            variant="ghost"
+            size="sm"
+            aria-label={`${chatListViewText.toggle} ${title}`}
+            flexShrink={0}
+          >
             {open ? <LuChevronDown /> : <LuChevronRight />}
-          </IconButton>
+          </StudyIconButton>
         </Collapsible.Trigger>
       </HStack>
 
@@ -104,35 +137,55 @@ function ChatSection({
   );
 }
 
-function ChatListItem({
-  chat,
-  onClick,
-}: {
+type ChatListItemProps = {
   chat: ChatRoomDto;
   onClick: () => void;
-}) {
+};
+
+function ChatListItem({ chat, onClick }: ChatListItemProps) {
   return (
     <Box
       px={3}
       py={3}
-      rounded="md"
+      rounded="card"
       cursor="pointer"
-      _hover={{ bg: "gray.100" }}
+      borderWidth="1px"
+      borderColor="transparent"
+      transitionDuration="fast"
+      _hover={{
+        bg: "panelBgSubtle",
+        borderColor: "borderSubtle",
+      }}
       onClick={onClick}
     >
-      <HStack justify="space-between" align="start">
-        <Box>
-          <Text fontWeight="medium">{chat.name}</Text>
-          <Text fontSize="sm" color="gray.500">
-            {chat.lastMessagePreview || "No messages yet"}
+      <HStack justify="space-between" align="start" gap={3}>
+        <Box minW={0}>
+          <Text fontWeight="medium" color="textMain" truncate>
+            {chat.name}
           </Text>
-          <Text fontSize="xs" color="gray.400">
-            {chat.memberCount} members
+
+          <Text fontSize="sm" color="textMuted" lineClamp={1}>
+            {chat.lastMessagePreview || chatListViewText.noMessagesYet}
+          </Text>
+
+          <Text fontSize="xs" color="textSubtle">
+            {chat.memberCount} {chatListViewText.members}
           </Text>
         </Box>
 
         {chat.unreadCount > 0 && (
-          <Badge colorPalette="red" borderRadius="full">
+          <Badge
+            bg="dangerText"
+            color="white"
+            rounded="full"
+            minW="5"
+            h="5"
+            px={1.5}
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            flexShrink={0}
+          >
             {chat.unreadCount}
           </Badge>
         )}

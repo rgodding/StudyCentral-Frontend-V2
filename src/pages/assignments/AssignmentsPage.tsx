@@ -6,19 +6,42 @@ import { LuClipboardList } from "react-icons/lu";
 import { studentApi } from "@/api/studentApi";
 import { teacherApi } from "@/api/teacherApi";
 import { CreateAssignmentAction } from "@/components/courses/assignmentList/CreateAssignmentAction";
-import { CreateAssignmentForm } from "@/components/forms/createAssignment";
 import { StudentAssignmentList } from "@/components/courses/assignmentList/StudentAssignmentList";
 import { TeacherAssignmentList } from "@/components/courses/assignmentList/TeacherAssignmentList";
 import { EmptyState, ErrorState, LoadingState } from "@/components/feedback";
+import { CreateAssignmentForm } from "@/components/forms/createAssignment";
 import { Section } from "@/components/layout";
-import { StudyDialog, StudyText } from "@/components/ui";
+import { StudyDialog, StudySegmentedControl, StudyText } from "@/components/ui";
 import { useAuth } from "@/hooks";
 import type { Guid } from "@/types/api";
 
+type AssignmentFilter = "active" | "completed";
+
+const assignmentsPageText = {
+  title: "Assignments",
+  createTitle: "Create assignment",
+  createDescription: "Choose a course and create a new assignment.",
+  loadingAssignments: "Loading assignments...",
+  loadingCourses: "Loading courses...",
+  loadAssignmentsError: "Could not load assignments.",
+  loadCoursesError: "Could not load courses.",
+  selectCourse: "Select course",
+  selectCourseBeforeCreate: "Select a course before creating an assignment.",
+  noCoursesTitle: "No courses available",
+  noCoursesDescription: "You need a course before creating assignments.",
+  noAssignmentsTitle: "No assignments yet",
+  noAssignmentsDescription: "Assignments will appear here.",
+  active: "Active",
+  completed: "Completed",
+};
+
 export function AssignmentsPage() {
   const { user } = useAuth();
+
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState<Guid | "">("");
+  const [studentAssignmentFilter, setStudentAssignmentFilter] =
+    useState<AssignmentFilter>("active");
 
   const isTeacher = user?.role === "Teacher";
   const isStudent = user?.role === "Student";
@@ -47,7 +70,7 @@ export function AssignmentsPage() {
   const isError =
     teacherAssignmentsQuery.isError || studentAssignmentsQuery.isError;
 
-  const handleCreateOpenChange = async (open: boolean) => {
+  async function handleCreateOpenChange(open: boolean) {
     setIsCreateOpen(open);
 
     if (open) {
@@ -56,14 +79,20 @@ export function AssignmentsPage() {
 
     setSelectedCourseId("");
     await teacherAssignmentsQuery.refetch();
-  };
+  }
+
+  async function handleCreateSuccess() {
+    setIsCreateOpen(false);
+    setSelectedCourseId("");
+    await teacherAssignmentsQuery.refetch();
+  }
 
   if (isLoading) {
-    return <LoadingState text="Loading assignments..." />;
+    return <LoadingState text={assignmentsPageText.loadingAssignments} />;
   }
 
   if (isError) {
-    return <ErrorState title="Could not load assignments." />;
+    return <ErrorState title={assignmentsPageText.loadAssignmentsError} />;
   }
 
   const teacherCourses = teacherCoursesQuery.data ?? [];
@@ -72,12 +101,31 @@ export function AssignmentsPage() {
     <>
       <Stack gap={6}>
         <Section
-          title="Assignments"
+          title={assignmentsPageText.title}
           headerIcon={<LuClipboardList />}
           actions={
             isTeacher ? (
               <CreateAssignmentAction onClick={() => setIsCreateOpen(true)} />
-            ) : undefined
+            ) : (
+              <StudySegmentedControl
+                value={studentAssignmentFilter}
+                onValueChange={(details) =>
+                  setStudentAssignmentFilter(details.value as AssignmentFilter)
+                }
+                controlVariant="subtle"
+                controlSize="xs"
+                items={[
+                  {
+                    value: "active",
+                    label: assignmentsPageText.active,
+                  },
+                  {
+                    value: "completed",
+                    label: assignmentsPageText.completed,
+                  },
+                ]}
+              />
+            )
           }
         >
           {isTeacher ? (
@@ -87,6 +135,7 @@ export function AssignmentsPage() {
           ) : (
             <StudentAssignmentsContent
               assignments={studentAssignmentsQuery.data ?? []}
+              filter={studentAssignmentFilter}
             />
           )}
         </Section>
@@ -95,17 +144,17 @@ export function AssignmentsPage() {
       {isTeacher && (
         <StudyDialog
           open={isCreateOpen}
-          onOpenChange={(details) => handleCreateOpenChange(details.open)}
-          title="Create assignment"
-          description="Choose a course and create a new assignment."
+          onOpenChange={(details) => void handleCreateOpenChange(details.open)}
+          title={assignmentsPageText.createTitle}
+          description={assignmentsPageText.createDescription}
           size="md"
           headerSeparator="belowTitle"
         >
           <Stack gap={4}>
             {teacherCoursesQuery.isLoading ? (
-              <LoadingState text="Loading courses..." />
+              <LoadingState text={assignmentsPageText.loadingCourses} />
             ) : teacherCoursesQuery.isError ? (
-              <ErrorState title="Could not load courses." />
+              <ErrorState title={assignmentsPageText.loadCoursesError} />
             ) : teacherCourses.length > 0 ? (
               <>
                 <NativeSelect.Root>
@@ -121,7 +170,7 @@ export function AssignmentsPage() {
                     borderColor="borderSubtle"
                     cursor="pointer"
                   >
-                    <option value="">Select course</option>
+                    <option value="">{assignmentsPageText.selectCourse}</option>
 
                     {teacherCourses.map((course) => (
                       <option key={course.id} value={course.id}>
@@ -134,22 +183,19 @@ export function AssignmentsPage() {
                 {selectedCourseId ? (
                   <CreateAssignmentForm
                     courseId={selectedCourseId}
-                    onSuccess={() => {
-                      setIsCreateOpen(false);
-                      setSelectedCourseId("");
-                    }}
+                    onSuccess={handleCreateSuccess}
                   />
                 ) : (
                   <StudyText variant="muted">
-                    Select a course before creating an assignment.
+                    {assignmentsPageText.selectCourseBeforeCreate}
                   </StudyText>
                 )}
               </>
             ) : (
               <EmptyState
                 icon={<LuClipboardList />}
-                title="No courses available"
-                description="You need a course before creating assignments."
+                title={assignmentsPageText.noCoursesTitle}
+                description={assignmentsPageText.noCoursesDescription}
               />
             )}
           </Stack>
@@ -179,16 +225,18 @@ type StudentAssignmentsContentProps = {
   assignments: Awaited<
     ReturnType<typeof studentApi.assignments.getAssignments>
   >;
+  filter: AssignmentFilter;
 };
 
 function StudentAssignmentsContent({
   assignments,
+  filter,
 }: StudentAssignmentsContentProps) {
   if (assignments.length === 0) {
     return <AssignmentsEmptyState />;
   }
 
-  return <StudentAssignmentList assignments={assignments} />;
+  return <StudentAssignmentList assignments={assignments} filter={filter} />;
 }
 
 function AssignmentsEmptyState() {
@@ -196,8 +244,8 @@ function AssignmentsEmptyState() {
     <Box>
       <EmptyState
         icon={<LuClipboardList />}
-        title="No assignments yet"
-        description="Assignments will appear here."
+        title={assignmentsPageText.noAssignmentsTitle}
+        description={assignmentsPageText.noAssignmentsDescription}
       />
     </Box>
   );

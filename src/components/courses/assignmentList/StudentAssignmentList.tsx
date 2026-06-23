@@ -3,13 +3,10 @@ import { useMemo, useState } from "react";
 import { LuClipboardList } from "react-icons/lu";
 
 import { EmptyState } from "@/components/feedback";
-import { Section } from "@/components/layout";
 import {
   StudyCollapse,
   StudyFilterToggleGroup,
-  StudySegmentedControl,
 } from "@/components/ui";
-
 import type { StudentAssignmentDto, SubmissionStatus } from "@/types/api";
 import {
   getStudentAssignmentGroups,
@@ -19,21 +16,19 @@ import {
 import { AssignmentCard } from "./AssignmentCard";
 import { AssignmentQuickReviewDialog } from "./AssignmentQuickReviewDialog";
 
-type StudentAssignmentListProps = {
-  assignments: StudentAssignmentDto[];
-};
-
-type AssignmentFilter = "active" | "completed";
+export type AssignmentFilter = "active" | "completed";
 
 type CompletedAssignmentFilter = Extract<
   SubmissionStatus,
   "Submitted" | "SubmittedLate" | "Passed" | "Failed"
 >;
 
+type StudentAssignmentListProps = {
+  assignments: StudentAssignmentDto[];
+  filter: AssignmentFilter;
+};
+
 const studentAssignmentListText = {
-  title: "Assignments",
-  active: "Active",
-  completed: "Completed",
   emptyTitle: "No active assignments",
   emptyDescription: "Active assignments for this course will appear here.",
   noCompletedTitle: "No completed assignments",
@@ -56,8 +51,8 @@ const studentAssignmentListText = {
 
 export function StudentAssignmentList({
   assignments,
+  filter,
 }: StudentAssignmentListProps) {
-  const [filter, setFilter] = useState<AssignmentFilter>("active");
   const [completedFilters, setCompletedFilters] = useState<
     CompletedAssignmentFilter[]
   >([]);
@@ -89,12 +84,12 @@ export function StudentAssignmentList({
     {
       label: studentAssignmentListText.groups.overdue,
       assignments: groups.overdue,
-      defaultOpen: false,
+      defaultOpen: groups.overdue.length > 0,
     },
     {
       label: studentAssignmentListText.groups.upcoming,
       assignments: groups.upcoming,
-      defaultOpen: true,
+      defaultOpen: groups.overdue.length === 0,
     },
     {
       label: studentAssignmentListText.groups.noDeadline,
@@ -104,105 +99,90 @@ export function StudentAssignmentList({
   ];
 
   return (
-    <Section
-      title={studentAssignmentListText.title}
-      headerIcon={<LuClipboardList />}
-      actions={
-        <StudySegmentedControl
-          value={filter}
-          onValueChange={(details) =>
-            setFilter(details.value as AssignmentFilter)
-          }
-          controlVariant="subtle"
-          controlSize="xs"
-          items={[
-            { value: "active", label: studentAssignmentListText.active },
-            { value: "completed", label: studentAssignmentListText.completed },
-          ]}
-        />
-      }
-    >
-      {isCompletedFilter && groups.completed.length > 0 && (
-        <StudyFilterToggleGroup
-          values={completedFilters}
-          onValuesChange={(values) =>
-            setCompletedFilters(values as CompletedAssignmentFilter[])
-          }
-          items={[
-            {
-              value: "Passed",
-              label: studentAssignmentListText.completedFilters.passed,
-            },
-            {
-              value: "Failed",
-              label: studentAssignmentListText.completedFilters.failed,
-            },
-            {
-              value: "Submitted",
-              label: studentAssignmentListText.completedFilters.submitted,
-            },
-            {
-              value: "SubmittedLate",
-              label: studentAssignmentListText.completedFilters.submittedLate,
-            },
-          ]}
-        />
-      )}
+    <>
+      <Stack gap={4}>
+        {isCompletedFilter && groups.completed.length > 0 && (
+          <StudyFilterToggleGroup
+            values={completedFilters}
+            onValuesChange={(values) =>
+              setCompletedFilters(values as CompletedAssignmentFilter[])
+            }
+            items={[
+              {
+                value: "Passed",
+                label: studentAssignmentListText.completedFilters.passed,
+              },
+              {
+                value: "Failed",
+                label: studentAssignmentListText.completedFilters.failed,
+              },
+              {
+                value: "Submitted",
+                label: studentAssignmentListText.completedFilters.submitted,
+              },
+              {
+                value: "SubmittedLate",
+                label: studentAssignmentListText.completedFilters.submittedLate,
+              },
+            ]}
+          />
+        )}
 
-      {visibleAssignments.length === 0 ? (
-        <EmptyState
-          size="sm"
-          flex="1"
-          icon={<LuClipboardList />}
-          title={
-            isCompletedFilter && hasActiveCompletedFilters
-              ? studentAssignmentListText.noFilteredCompletedTitle
-              : isCompletedFilter
-                ? studentAssignmentListText.noCompletedTitle
-                : studentAssignmentListText.emptyTitle
-          }
-          description={
-            isCompletedFilter && hasActiveCompletedFilters
-              ? studentAssignmentListText.noFilteredCompletedDescription
-              : isCompletedFilter
-                ? studentAssignmentListText.noCompletedDescription
-                : studentAssignmentListText.emptyDescription
-          }
-        />
-      ) : isCompletedFilter ? (
-        <Stack gap={3}>
-          {completedAssignments.map((assignment) => (
-            <AssignmentCard
-              key={assignment.id}
-              assignment={assignment}
-              statusMeta={getStudentAssignmentStatusMeta(assignment)}
-              onClick={() => setSelectedAssignment(assignment)}
-            />
-          ))}
-        </Stack>
-      ) : (
-        <Stack gap={4}>
-          {activeGroupSections.map((group) => (
-            <StudyCollapse
-              key={group.label}
-              label={group.label}
-              count={group.assignments.length}
-              defaultOpen={group.defaultOpen}
-            >
-              <Stack gap={3}>
-                {group.assignments.map((assignment) => (
-                  <AssignmentCard
-                    key={assignment.id}
-                    assignment={assignment}
-                    statusMeta={getStudentAssignmentStatusMeta(assignment)}
-                    onClick={() => setSelectedAssignment(assignment)}
-                  />
-                ))}
-              </Stack>
-            </StudyCollapse>
-          ))}
-        </Stack>
-      )}
+        {visibleAssignments.length === 0 ? (
+          <EmptyState
+            size="sm"
+            flex="1"
+            icon={<LuClipboardList />}
+            title={
+              isCompletedFilter && hasActiveCompletedFilters
+                ? studentAssignmentListText.noFilteredCompletedTitle
+                : isCompletedFilter
+                  ? studentAssignmentListText.noCompletedTitle
+                  : studentAssignmentListText.emptyTitle
+            }
+            description={
+              isCompletedFilter && hasActiveCompletedFilters
+                ? studentAssignmentListText.noFilteredCompletedDescription
+                : isCompletedFilter
+                  ? studentAssignmentListText.noCompletedDescription
+                  : studentAssignmentListText.emptyDescription
+            }
+          />
+        ) : isCompletedFilter ? (
+          <Stack gap={3}>
+            {completedAssignments.map((assignment) => (
+              <AssignmentCard
+                key={assignment.id}
+                assignment={assignment}
+                statusMeta={getStudentAssignmentStatusMeta(assignment)}
+                onClick={() => setSelectedAssignment(assignment)}
+              />
+            ))}
+          </Stack>
+        ) : (
+          <Stack gap={4}>
+            {activeGroupSections.map((group) => (
+              <StudyCollapse
+                key={group.label}
+                label={group.label}
+                count={group.assignments.length}
+                defaultOpen={group.defaultOpen}
+              >
+                <Stack gap={3}>
+                  {group.assignments.map((assignment) => (
+                    <AssignmentCard
+                      key={assignment.id}
+                      assignment={assignment}
+                      statusMeta={getStudentAssignmentStatusMeta(assignment)}
+                      onClick={() => setSelectedAssignment(assignment)}
+                    />
+                  ))}
+                </Stack>
+              </StudyCollapse>
+            ))}
+          </Stack>
+        )}
+      </Stack>
 
       <AssignmentQuickReviewDialog
         assignment={selectedAssignment}
@@ -213,6 +193,6 @@ export function StudentAssignmentList({
           }
         }}
       />
-    </Section>
+    </>
   );
 }

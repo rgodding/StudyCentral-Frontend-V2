@@ -1,5 +1,4 @@
 import type { Guid } from "@/types/api";
-
 import { apiBaseRoutes } from "./apiBaseRoutes";
 
 export const chatApiRoutes = {
@@ -8,6 +7,8 @@ export const chatApiRoutes = {
 
   messages: (chatRoomId: Guid) =>
     `${apiBaseRoutes.chat}/rooms/${chatRoomId}/messages`,
+
+  markAllSeen: `${apiBaseRoutes.chat}/rooms/mark-all-seen`,
 
   hub: apiBaseRoutes.hubs.chat,
 } as const;

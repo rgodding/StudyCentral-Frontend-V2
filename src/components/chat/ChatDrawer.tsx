@@ -47,13 +47,8 @@ export function ChatDrawer(props: ChatDrawerProps) {
 
   const hasUnreadMessages = totalUnreadCount > 0;
 
-  const {
-    messages,
-    onlineUsers,
-    sendMessage,
-    leaveRoom,
-    status,
-  } = useChatConnection(selectedChat?.courseId);
+  const { messages, onlineUsers, sendMessage, leaveRoom, status } =
+    useChatConnection(selectedChat?.courseId);
 
   const handleSendMessage = async () => {
     const trimmed = message.trim();
@@ -235,6 +230,7 @@ export function ChatDrawer(props: ChatDrawerProps) {
                 <ChatListView
                   courseChats={courseChats}
                   onSelectChat={handleSelectChat}
+                  onReloadChats={reloadCourseChats}
                 />
               )}
             </Drawer.Body>
